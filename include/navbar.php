@@ -1,0 +1,136 @@
+<!--=============== HEADER ===============-->
+<header class="header">
+      <!-- <div class="header__top">
+        <div class="header__container container">
+          <div class="header__contact">
+            <span>(+01) - 2345 - 6789</span>
+            <span>Our location</span>
+          </div>
+          <p class="header__alert-news">
+            Super Values Deals - Save more coupons
+          </p>
+          <a href="login-register.html" class="header__top-action">
+            Log In / Sign Up
+          </a>
+        </div>
+      </div> -->
+
+      <nav class="nav">
+        <a href="index.html" class="nav__logo">
+          <img
+            class="nav__logo-img"
+            src="assets/img/logo.svg"
+            alt="website logo"
+          />
+        </a>
+        <div class="nav__menu" id="nav-menu">
+          <div class="nav__menu-top">
+            <a href="index.html" class="nav__menu-logo">
+              <img src="./assets/img/logo.svg" alt="">
+            </a>
+            <div class="nav__close" id="nav-close">
+              <i class="fi fi-rs-cross-small"></i>
+            </div>
+          </div>
+          <ul class="nav__list">
+            <li class="nav__item">
+              <a href="index.html" class="nav__link active-link">Home</a>
+            </li>
+            <li class="nav__item">
+              <a href="shop.html" class="nav__link">Shop</a>
+            </li>
+            <li class="nav__item">
+              <a href="accounts.html" class="nav__link">My Account</a>
+            </li>
+            <li class="nav__item">
+              <a href="compare.html" class="nav__link">Compare</a>
+            </li>
+            <li class="nav__item">
+              <a href="login-register.html" class="nav__link">Login</a>
+            </li>
+          </ul>
+          <div class="header__search">
+            <input
+              type="text"
+              placeholder="Search For Items..."
+              class="form__input"
+            />
+            <button class="search__btn">
+              <img src="assets/img/search.png" alt="search icon" />
+            </button>
+          </div>
+        </div>
+        <div class="header__user-actions">
+          <a href="wishlist.html" class="header__action-btn" title="Wishlist" style="color:black;">
+            <i class="fa-regular fa-heart"></i>
+            <span class="count">3</span>
+          </a>
+          <a href="cart.html" class="header__action-btn" title="Cart" style="color:black;">
+            <i class="fa-regular fa-chart-bar"></i>
+            <span class="count">3</span>
+          </a>
+          <div class="header__action-btn nav__toggle" id="nav-toggle">
+            <img src="./assets//img/menu-burger.svg" alt="">
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <nav class="navs">
+      <ul class="nav__lists">
+         <li>
+            <a href="#home" class="nav__links active-link" style="color:black;">
+              <i class="fa-solid fa-home" aria-hidden="true"></i>
+            </a>
+         </li>
+
+         <li>
+            <a href="#about" class="nav__link" style="color:black;">
+              <i class="fa-regular fa-user"></i>
+            </a>
+         </li>
+
+         <!-- Expand list -->
+         <li>
+            <button class="nav__expands" id="nav-expand">
+               <i class="ri-add-line nav__expand-icons" id="nav-expand-icon"></i>
+            </button>
+
+            <ul class="nav__expand-lists" id="nav-expand-list">
+               <li>
+                  <a href="#" class="nav__expand-link" style="color:black;">
+                     <i class="ri-archive-line"></i>
+                     <span>Gallery</span>
+                  </a>
+               </li>
+
+               <li>
+                  <a href="#" class="nav__expand-links" style="color:black;">
+                     <i class="ri-archive-line"></i>
+                     <span>Files</span>
+                  </a>
+               </li>
+
+               <li>
+                  <a href="#" class="nav__expand-links" style="color:black;">
+                     <i class="ri-bookmark-3-line"></i>
+                     <span>Saved</span>
+                  </a>
+               </li>
+            </ul>
+         </li>
+
+         <li>
+            <a href="#projects" class="nav__links" style="color:black;">
+              <i class="fa-solid fa-briefcase"></i>
+            </a>
+         </li>
+
+         <li>
+            <a href="#contact" class="nav__links" style="color:black;">
+              <i class="fa-solid fa-link"></i>
+            </a>
+         </li>
+      </ul>
+   </nav>
+
