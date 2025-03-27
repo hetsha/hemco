@@ -5,67 +5,67 @@
           <div class="swiper-wrapper">
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-1.jpg"
+                src="assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
-              <h3 class="category__title">T-Shirt</h3>
+              <h3 class="category__title">child</h3>
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-2.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
-              <h3 class="category__title">Bags</h3>
+              <h3 class="category__title">Mens</h3>
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-3.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
-              <h3 class="category__title">Sandal</h3>
+              <h3 class="category__title">Childerns</h3>
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-4.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
-              <h3 class="category__title">Scarf Cap</h3>
+              <h3 class="category__title">Sunglasses</h3>
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-5.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
-              <h3 class="category__title">Shoes</h3>
+              <h3 class="category__title">Glasses</h3>
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-6.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
-              <h3 class="category__title">Pillowcase</h3>
+              <h3 class="category__title">Women's</h3>
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-7.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
-              <h3 class="category__title">Jumpsuit</h3>
+              <h3 class="category__title">essentials</h3>
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-8.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
-              <h3 class="category__title">Hats</h3>
+              <h3 class="category__title">EyeGlasses</h3>
             </a>
           </div>
 
@@ -84,7 +84,7 @@
           <div class="swiper-wrapper">
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-1.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
@@ -92,7 +92,7 @@
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-2.jpg"
+                src="assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
@@ -100,7 +100,7 @@
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-3.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
@@ -108,44 +108,12 @@
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-4.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
               <h3 class="category__title">Scarf Cap</h3>
             </a>
-            <!-- <a href="shop.html" class="category__item swiper-slide">
-              <img
-                src="assets/img/category-5.jpg"
-                alt=""
-                class="category__img"
-              />
-              <h3 class="category__title">Shoes</h3>
-            </a>
-            <a href="shop.html" class="category__item swiper-slide">
-              <img
-                src="assets/img/category-6.jpg"
-                alt=""
-                class="category__img"
-              />
-              <h3 class="category__title">Pillowcase</h3>
-            </a>
-            <a href="shop.html" class="category__item swiper-slide">
-              <img
-                src="assets/img/category-7.jpg"
-                alt=""
-                class="category__img"
-              />
-              <h3 class="category__title">Jumpsuit</h3>
-            </a>
-            <a href="shop.html" class="category__item swiper-slide">
-              <img
-                src="assets/img/category-8.jpg"
-                alt=""
-                class="category__img"
-              />
-              <h3 class="category__title">Hats</h3>
-            </a> -->
           </div>
 
           <div class="swiper-button-prev">
@@ -163,7 +131,7 @@
           <div class="swiper-wrapper">
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-1.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
@@ -171,7 +139,7 @@
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-2.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
@@ -179,7 +147,7 @@
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-3.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
@@ -187,44 +155,13 @@
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-4.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
               <h3 class="category__title">Scarf Cap</h3>
             </a>
-            <!-- <a href="shop.html" class="category__item swiper-slide">
-              <img
-                src="assets/img/category-5.jpg"
-                alt=""
-                class="category__img"
-              />
-              <h3 class="category__title">Shoes</h3>
-            </a>
-            <a href="shop.html" class="category__item swiper-slide">
-              <img
-                src="assets/img/category-6.jpg"
-                alt=""
-                class="category__img"
-              />
-              <h3 class="category__title">Pillowcase</h3>
-            </a>
-            <a href="shop.html" class="category__item swiper-slide">
-              <img
-                src="assets/img/category-7.jpg"
-                alt=""
-                class="category__img"
-              />
-              <h3 class="category__title">Jumpsuit</h3>
-            </a>
-            <a href="shop.html" class="category__item swiper-slide">
-              <img
-                src="assets/img/category-8.jpg"
-                alt=""
-                class="category__img"
-              />
-              <h3 class="category__title">Hats</h3>
-            </a> -->
+
           </div>
 
           <div class="swiper-button-prev">
@@ -242,7 +179,7 @@
           <div class="swiper-wrapper">
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-1.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
@@ -250,7 +187,7 @@
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-2.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
@@ -258,7 +195,7 @@
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-3.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
@@ -266,44 +203,12 @@
             </a>
             <a href="shop.html" class="category__item swiper-slide">
               <img
-                src="assets/img/category-4.jpg"
+                src=" assets/cat/test.jpg"
                 alt=""
                 class="category__img"
               />
               <h3 class="category__title">Scarf Cap</h3>
             </a>
-            <!-- <a href="shop.html" class="category__item swiper-slide">
-              <img
-                src="assets/img/category-5.jpg"
-                alt=""
-                class="category__img"
-              />
-              <h3 class="category__title">Shoes</h3>
-            </a>
-            <a href="shop.html" class="category__item swiper-slide">
-              <img
-                src="assets/img/category-6.jpg"
-                alt=""
-                class="category__img"
-              />
-              <h3 class="category__title">Pillowcase</h3>
-            </a>
-            <a href="shop.html" class="category__item swiper-slide">
-              <img
-                src="assets/img/category-7.jpg"
-                alt=""
-                class="category__img"
-              />
-              <h3 class="category__title">Jumpsuit</h3>
-            </a>
-            <a href="shop.html" class="category__item swiper-slide">
-              <img
-                src="assets/img/category-8.jpg"
-                alt=""
-                class="category__img"
-              />
-              <h3 class="category__title">Hats</h3>
-            </a> -->
           </div>
 
           <div class="swiper-button-prev">

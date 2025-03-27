@@ -6,12 +6,12 @@
               <div class="product__banner">
                 <a href="details.html" class="product__images">
                   <img
-                    src="assets/img/product-1-1.jpg"
+                    src="assets\goggles\blue-block-phone---computer-glasses_-grey-full-rim-round-lenskart-blu-lb-e16221-c3_csvfile-1700459976479-img_5347.webp"
                     alt=""
                     class="product__img default"
                   />
                   <img
-                    src="assets/img/product-1-2.jpg"
+                    src="assets\goggles\blue-block-phone---computer-glasses_-grey-full-rim-round-lenskart-blu-lb-e16221-c3_csvfile-1700459976479-img_5347.webp"
                     alt=""
                     class="product__img hover"
                   />
@@ -32,7 +32,7 @@
               <div class="product__content">
                 <span class="product__category">Clothing</span>
                 <a href="details.html">
-                  <h3 class="product__title">Colorful Pattern Shirts</h3>
+                  <h3 class="product__title">Men's Glasses</h3>
                 </a>
                 <div class="product__rating">
                   <i class="fi fi-rs-star"></i>
@@ -58,12 +58,12 @@
               <div class="product__banner">
                 <a href="details.html" class="product__images">
                   <img
-                    src="assets/img/product-2-1.jpg"
+                    src="assets\goggles\blue-block-phone-&-computer-glasses_-matte-black-full-rim-round-lenskart-blu-lb-e13528-c1_vincent-chase-vc-e13528-c1-eyeglasses_g_840322_02_2022.webp"
                     alt=""
                     class="product__img default"
                   />
                   <img
-                    src="assets/img/product-2-2.jpg"
+                    src="assets\goggles\blue-block-phone-&-computer-glasses_-matte-black-full-rim-round-lenskart-blu-lb-e13736-c1_lenskart-blu-lb-e13736-c1-eyeglasses_g_855323_02_2022.webp"
                     alt=""
                     class="product__img hover"
                   />
@@ -84,7 +84,7 @@
               <div class="product__content">
                 <span class="product__category">Clothing</span>
                 <a href="details.html">
-                  <h3 class="product__title">Colorful Pattern Shirts</h3>
+                  <h3 class="product__title">normal Glasses</h3>
                 </a>
                 <div class="product__rating">
                   <i class="fi fi-rs-star"></i>
@@ -110,12 +110,12 @@
               <div class="product__banner">
                 <a href="details.html" class="product__images">
                   <img
-                    src="assets/img/product-3-1.jpg"
+                    src="assets\goggles\blue-block-screen-glasses_--rose-gold-purple-full-rim-cat-eye-lenskart-blu-screen-glasses-blu-computer-glasses-lb-e17488-eyeglasses__dsc9705_12_11_2024.webp"
                     alt=""
                     class="product__img default"
                   />
                   <img
-                    src="assets/img/product-3-2.jpg"
+                    src="assets\goggles\blue-block-screen-glasses_--rose-gold-purple-full-rim-cat-eye-lenskart-blu-screen-glasses-blu-computer-glasses-lb-e17488-eyeglasses__dsc9705_12_11_2024.webp"
                     alt=""
                     class="product__img hover"
                   />
@@ -136,7 +136,7 @@
               <div class="product__content">
                 <span class="product__category">Clothing</span>
                 <a href="details.html">
-                  <h3 class="product__title">Colorful Pattern Shirts</h3>
+                  <h3 class="product__title">Women's Glasses</h3>
                 </a>
                 <div class="product__rating">
                   <i class="fi fi-rs-star"></i>
@@ -162,12 +162,12 @@
               <div class="product__banner">
                 <a href="details.html" class="product__images">
                   <img
-                    src="assets/img/product-4-1.jpg"
+                    src="assets\goggles\blue-block-screen-glasses_--rose-gold-purple-full-rim-cat-eye-lenskart-blu-screen-glasses-blu-computer-glasses-lb-e17488-eyeglasses__dsc9705_12_11_2024.webp"
                     alt=""
                     class="product__img default"
                   />
                   <img
-                    src="assets/img/product-4-2.jpg"
+                    src="assets\goggles\blue-block-screen-glasses_--rose-gold-purple-full-rim-cat-eye-lenskart-blu-screen-glasses-blu-computer-glasses-lb-e17488-eyeglasses__dsc9705_12_11_2024.webp"
                     alt=""
                     class="product__img hover"
                   />
@@ -188,7 +188,7 @@
               <div class="product__content">
                 <span class="product__category">Clothing</span>
                 <a href="details.html">
-                  <h3 class="product__title">Colorful Pattern Shirts</h3>
+                  <h3 class="product__title">Computer Glasses
                 </a>
                 <div class="product__rating">
                   <i class="fi fi-rs-star"></i>
@@ -214,12 +214,12 @@
               <div class="product__banner">
                 <a href="details.html" class="product__images">
                   <img
-                    src="assets/img/product-5-1.jpg"
+                    src="assets\goggles\blue-block-screen-glasses_--rose-gold-purple-full-rim-cat-eye-lenskart-blu-screen-glasses-blu-computer-glasses-lb-e17488-eyeglasses__dsc9705_12_11_2024.webp"
                     alt=""
                     class="product__img default"
                   />
                   <img
-                    src="assets/img/product-5-2.jpg"
+                    src="assets\goggles\blue-block-screen-glasses_--rose-gold-purple-full-rim-cat-eye-lenskart-blu-screen-glasses-blu-computer-glasses-lb-e17488-eyeglasses__dsc9705_12_11_2024.webp"
                     alt=""
                     class="product__img hover"
                   />
@@ -240,7 +240,7 @@
               <div class="product__content">
                 <span class="product__category">Clothing</span>
                 <a href="details.html">
-                  <h3 class="product__title">Colorful Pattern Shirts</h3>
+                  <h3 class="product__title">Childern's Glasses</h3>
                 </a>
                 <div class="product__rating">
                   <i class="fi fi-rs-star"></i>
@@ -266,12 +266,12 @@
               <div class="product__banner">
                 <a href="details.html" class="product__images">
                   <img
-                    src="assets/img/product-6-1.jpg"
+                    src="assets\goggles\lenskart-blu-lb-e16218-c1-eyeglasses_img_9126_26_12_2023.webp"
                     alt=""
                     class="product__img default"
                   />
                   <img
-                    src="assets/img/product-6-2.jpg"
+                    src="assets\goggles\lenskart-blu-lb-e16217-c1-eyeglasses_img_3346_14_03_2024.webp"
                     alt=""
                     class="product__img hover"
                   />
@@ -292,7 +292,7 @@
               <div class="product__content">
                 <span class="product__category">Clothing</span>
                 <a href="details.html">
-                  <h3 class="product__title">Colorful Pattern Shirts</h3>
+                  <h3 class="product__title">Design</h3>
                 </a>
                 <div class="product__rating">
                   <i class="fi fi-rs-star"></i>
@@ -318,12 +318,12 @@
               <div class="product__banner">
                 <a href="details.html" class="product__images">
                   <img
-                    src="assets/img/product-7-1.jpg"
+                    src="assets\goggles\lenskart-blu-lb-e16384-c1-eyeglasses_img_3528_14_03_2024.webp"
                     alt=""
                     class="product__img default"
                   />
                   <img
-                    src="assets/img/product-7-2.jpg"
+                    src="assets\goggles\silver-black-full-rim-square-vincent-chase-sleek-steel-vc-e14938-c2-eyeglasses_g_0372_09_july_2022.webp"
                     alt=""
                     class="product__img hover"
                   />
@@ -344,7 +344,7 @@
               <div class="product__content">
                 <span class="product__category">Clothing</span>
                 <a href="details.html">
-                  <h3 class="product__title">Colorful Pattern Shirts</h3>
+                  <h3 class="product__title">Transparent</h3>
                 </a>
                 <div class="product__rating">
                   <i class="fi fi-rs-star"></i>

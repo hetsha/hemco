@@ -18,9 +18,10 @@
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
 <script src="https://kit.fontawesome.com/7ab3ddf28f.js" crossorigin="anonymous"></script>
     <!--=============== CSS ===============-->
-    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>" />
 
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>" />
+
 
     <title>Ecommerce Website</title>
   </head>

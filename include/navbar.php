@@ -9,23 +9,23 @@
           <p class="header__alert-news">
             Super Values Deals - Save more coupons
           </p>
-          <a href="login-register.html" class="header__top-action">
+          <a href="login-register.php" class="header__top-action">
             Log In / Sign Up
           </a>
         </div>
       </div> -->
 
       <nav class="nav">
-        <a href="index.html" class="nav__logo">
+        <a href="index.php" class="nav__logo">
           <img
             class="nav__logo-img"
-            src="assets/img/logo.svg"
+            src="assets/img/logo.png"
             alt="website logo"
           />
         </a>
         <div class="nav__menu" id="nav-menu">
           <div class="nav__menu-top">
-            <a href="index.html" class="nav__menu-logo">
+            <a href="index.php" class="nav__menu-logo">
               <img src="./assets/img/logo.svg" alt="">
             </a>
             <div class="nav__close" id="nav-close">
@@ -34,19 +34,19 @@
           </div>
           <ul class="nav__list">
             <li class="nav__item">
-              <a href="index.html" class="nav__link active-link">Home</a>
+              <a href="index.php" class="nav__link active-link">Home</a>
             </li>
             <li class="nav__item">
-              <a href="shop.html" class="nav__link">Shop</a>
+              <a href="shop.php" class="nav__link">Shop</a>
             </li>
             <li class="nav__item">
-              <a href="accounts.html" class="nav__link">My Account</a>
+              <a href="accounts.php" class="nav__link">My Account</a>
             </li>
             <li class="nav__item">
-              <a href="compare.html" class="nav__link">Compare</a>
+              <a href="compare.php" class="nav__link">Compare</a>
             </li>
             <li class="nav__item">
-              <a href="login-register.html" class="nav__link">Login</a>
+              <a href="login-register.php" class="nav__link">Login</a>
             </li>
           </ul>
           <div class="header__search">
@@ -61,11 +61,11 @@
           </div>
         </div>
         <div class="header__user-actions">
-          <a href="wishlist.html" class="header__action-btn" title="Wishlist" style="color:black;">
+          <a href="wishlist.php" class="header__action-btn" title="Wishlist" style="color:black;">
             <i class="fa-regular fa-heart"></i>
             <span class="count">3</span>
           </a>
-          <a href="cart.html" class="header__action-btn" title="Cart" style="color:black;">
+          <a href="cart.php" class="header__action-btn" title="Cart" style="color:black;">
             <i class="fa-regular fa-chart-bar"></i>
             <span class="count">3</span>
           </a>
@@ -133,4 +133,20 @@
          </li>
       </ul>
    </nav>
+<script>
+  // Get current page URL
+const currentLocation = window.location.href;
 
+// Get all nav links
+const navLinks = document.querySelectorAll('.nav__link');
+
+// Loop through links and add 'active-link' to the current page link
+navLinks.forEach((link) => {
+  if (link.href === currentLocation) {
+    link.classList.add('active-link');
+  } else {
+    link.classList.remove('active-link');
+  }
+});
+
+</script>

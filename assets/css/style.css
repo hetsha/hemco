@@ -383,7 +383,7 @@
 @media screen and (max-width: 767px){
     /* mobile */
     .carousel{
-        height: 600px;
+        height: 800px;
     }
     .carousel .list .item{
         width: 100%;

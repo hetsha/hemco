@@ -2,7 +2,7 @@
       <div class="footer__container grid">
         <div class="footer__content">
           <a href="index.html" class="footer__logo">
-            <img src="./assets/img/logo.svg" alt="" class="footer__logo-img" />
+            <img src="./assets/img/logo.png" alt="" class="footer__logo-img" />
           </a>
           <h4 class="footer__subtitle">Contact</h4>
           <p class="footer__description">
