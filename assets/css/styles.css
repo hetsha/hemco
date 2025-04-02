@@ -1934,6 +1934,8 @@ table {
 
   .nav__logo-img {
     width: 116px;
+    margin-top: 10px;
+    height: 90px;
   }
 
   .nav__menu {

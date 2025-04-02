@@ -16,6 +16,7 @@
       </div> -->
 
       <nav class="nav">
+
         <a href="index.php" class="nav__logo">
           <img
             class="nav__logo-img"
@@ -62,11 +63,11 @@
         </div>
         <div class="header__user-actions">
           <a href="wishlist.php" class="header__action-btn" title="Wishlist" style="color:black;">
-            <i class="fa-regular fa-heart"></i>
+          <i class="fa-regular fa-heart"></i>
             <span class="count">3</span>
           </a>
           <a href="cart.php" class="header__action-btn" title="Cart" style="color:black;">
-            <i class="fa-regular fa-chart-bar"></i>
+          <i class="fa-regular fa-cart-shopping-fast"></i>
             <span class="count">3</span>
           </a>
           <div class="header__action-btn nav__toggle" id="nav-toggle">
@@ -79,19 +80,19 @@
     <nav class="navs">
       <ul class="nav__lists">
          <li>
-            <a href="#home" class="nav__links active-link" style="color:black;">
-              <i class="fa-solid fa-home" aria-hidden="true"></i>
+            <a href="index.php" class="nav__links active-link" style="color:black;">
+            <i class="fa-regular fa-house"></i>
             </a>
          </li>
 
          <li>
-            <a href="#about" class="nav__link" style="color:black;">
+            <a href="accounts.php" class="nav__link" style="color:black;">
               <i class="fa-regular fa-user"></i>
             </a>
          </li>
 
          <!-- Expand list -->
-         <li>
+         <!-- <li>
             <button class="nav__expands" id="nav-expand">
                <i class="ri-add-line nav__expand-icons" id="nav-expand-icon"></i>
             </button>
@@ -99,7 +100,7 @@
             <ul class="nav__expand-lists" id="nav-expand-list">
                <li>
                   <a href="#" class="nav__expand-link" style="color:black;">
-                     <i class="ri-archive-line"></i>
+                  <i class="fa-regular fa-house"></i>
                      <span>Gallery</span>
                   </a>
                </li>
@@ -118,17 +119,17 @@
                   </a>
                </li>
             </ul>
-         </li>
+         </li> -->
 
          <li>
-            <a href="#projects" class="nav__links" style="color:black;">
-              <i class="fa-solid fa-briefcase"></i>
+            <a href="wishlist.php" class="nav__links" style="color:black;">
+              <i class="fa-regular fa-heart"></i>
             </a>
          </li>
 
          <li>
-            <a href="#contact" class="nav__links" style="color:black;">
-              <i class="fa-solid fa-link"></i>
+            <a href="cart.php" class="nav__links" style="color:black;">
+              <i class="fa-regular fa-cart-shopping-fast"></i>
             </a>
          </li>
       </ul>
