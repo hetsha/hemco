@@ -41,13 +41,23 @@ if (isset($_GET['id'])) {
         <h3 class="details__title"><?php echo $row['name']; ?></h3>
         <p class="details__brand">Brand: <span><?php echo $row['material']; ?></span></p>
         <div class="details__price flex">
-          <span class="new__price">$<?php echo $row['price']; ?></span>
+          <span class="new__price">Rs<?php echo $row['price']; ?></span>
         </div>
         <p class="short__description"><?php echo $row['description']; ?></p>
-
+        <ul class="products__list">
+              <li class="list__item flex">
+                <i class="fi-rs-crown"></i> 1 Year Al Jazeera Brand Warranty
+              </li>
+              <li class="list__item flex">
+                <i class="fi-rs-refresh"></i> 30 Days Return Policy
+              </li>
+              <li class="list__item flex">
+                <i class="fi-rs-credit-card"></i> Cash on Delivery available
+              </li>
+            </ul>
         <div class="details__action">
           <input type="number" class="quantity" value="1" />
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#lenscat">
             Add to Cart
           </button>
         </div>
@@ -217,7 +227,7 @@ if (isset($_GET['id'])) {
       </div>
     </div>
   </section>
-  <?php include('test.php') ?>
+  <?php include('lenscat.php') ?>
   <?php include('include/product.php') ?>
   <?php include('include/news.php') ?>
 

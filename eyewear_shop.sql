@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 02, 2025 at 04:39 PM
+-- Generation Time: Apr 02, 2025 at 09:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,27 +24,114 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `employees`
+-- Table structure for table `admin`
 --
 
-CREATE TABLE `employees` (
-  `id` int(11) NOT NULL,
+CREATE TABLE `admin` (
+  `admin_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `role` enum('admin','manager','staff') NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `employees`
+-- Dumping data for table `admin`
 --
 
-INSERT INTO `employees` (`id`, `name`, `email`, `password`, `phone`, `role`, `created_at`) VALUES
-(1, 'Admin User', 'admin@example.com', 'hashed_password', '9876500000', 'admin', '2025-04-02 13:46:59'),
-(2, 'Manager One', 'manager@example.com', 'hashed_password', '9765400000', 'manager', '2025-04-02 13:46:59'),
-(3, 'Staff Member', 'staff@example.com', 'hashed_password', '9654300000', 'staff', '2025-04-02 13:46:59');
+INSERT INTO `admin` (`admin_id`, `name`, `email`, `password`, `created_at`) VALUES
+(1, 'Admin One', 'admin1@example.com', 'adminpass1', '2025-04-02 19:05:31'),
+(2, 'Admin Two', 'admin2@example.com', 'adminpass2', '2025-04-02 19:05:31');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `brand`
+--
+
+CREATE TABLE `brand` (
+  `brand_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `brand`
+--
+
+INSERT INTO `brand` (`brand_id`, `name`) VALUES
+(3, 'Gucci'),
+(2, 'Oakley'),
+(1, 'Ray-Ban');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart`
+--
+
+CREATE TABLE `cart` (
+  `cart_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`cart_id`, `user_id`, `created_at`) VALUES
+(1, 1, '2025-04-02 19:05:51'),
+(2, 2, '2025-04-02 19:05:51'),
+(3, 1, '2025-04-02 19:06:43'),
+(4, 2, '2025-04-02 19:06:43');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart_items`
+--
+
+CREATE TABLE `cart_items` (
+  `cart_item_id` int(11) NOT NULL,
+  `cart_id` int(11) DEFAULT NULL,
+  `frame_id` int(11) DEFAULT NULL,
+  `lens_id` int(11) DEFAULT NULL,
+  `prescription_id` int(11) DEFAULT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cart_items`
+--
+
+INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `frame_id`, `lens_id`, `prescription_id`, `quantity`, `price`) VALUES
+(4, 1, 1, 1, 1, 1, 200.00),
+(5, 1, 2, 3, 1, 1, 250.00),
+(6, 2, 2, 2, 2, 1, 180.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee`
+--
+
+CREATE TABLE `employee` (
+  `employee_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `employee`
+--
+
+INSERT INTO `employee` (`employee_id`, `name`, `email`, `password`, `role`, `created_at`) VALUES
+(1, 'John Doe', 'employee1@example.com', 'emp123', 'Manager', '2025-04-02 19:05:31'),
+(2, 'Jane Smith', 'employee2@example.com', 'emp456', 'Sales', '2025-04-02 19:05:31');
 
 -- --------------------------------------------------------
 
@@ -53,54 +140,113 @@ INSERT INTO `employees` (`id`, `name`, `email`, `password`, `phone`, `role`, `cr
 --
 
 CREATE TABLE `frames` (
-  `id` int(11) NOT NULL,
+  `frame_id` int(11) NOT NULL,
+  `brand_id` int(11) DEFAULT NULL,
+  `gender` enum('men','women','child') NOT NULL,
+  `description` text DEFAULT NULL,
   `name` varchar(255) NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `material` varchar(100) DEFAULT NULL,
-  `description` text NOT NULL,
-  `color` varchar(50) DEFAULT NULL,
-  `shape` varchar(50) DEFAULT NULL,
-  `image1` varchar(255) DEFAULT NULL,
-  `image2` varchar(255) DEFAULT NULL,
-  `image3` varchar(255) DEFAULT NULL,
-  `image4` varchar(255) DEFAULT NULL,
-  `image5` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `material` varchar(255) NOT NULL,
+  `shape` varchar(100) NOT NULL,
+  `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `frames`
 --
 
-INSERT INTO `frames` (`id`, `name`, `price`, `material`, `description`, `color`, `shape`, `image1`, `image2`, `image3`, `image4`, `image5`, `created_at`) VALUES
-(1, 'Classic Black Frame', 49.99, 'Metal', 'Premium eyewear for daily use.', 'Black', 'Rectangle', 'black1.jpg', 'black2.jpg', 'black3.jpg', 'black4.jpg', 'black5.jpg', '2025-04-02 13:46:59'),
-(2, 'Round Silver Frame', 59.99, 'Metal', 'Premium eyewear for daily use.', 'Silver', 'Round', 'silver1.jpg', 'silver2.jpg', 'silver3.jpg', 'silver4.jpg', 'silver5.jpg', '2025-04-02 13:46:59'),
-(3, 'Aviator Gold Frame', 79.99, 'Titanium', 'Premium eyewear for daily use.', 'Gold', 'Aviator', 'gold1.jpg', 'gold2.jpg', 'gold3.jpg', 'gold4.jpg', 'gold5.jpg', '2025-04-02 13:46:59');
+INSERT INTO `frames` (`frame_id`, `brand_id`, `gender`, `description`, `name`, `material`, `shape`, `price`) VALUES
+(1, 1, 'men', 'Classic black frame', 'Ray-Ban Aviator', 'Metal', 'Round', 150.00),
+(2, 2, 'women', 'Lightweight design', 'Oakley Sports', 'Plastic', 'Rectangle', 120.00);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `lenses`
+-- Table structure for table `frame_details`
 --
 
-CREATE TABLE `lenses` (
-  `id` int(11) NOT NULL,
-  `type` enum('single vision','bifocal','progressive') NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+CREATE TABLE `frame_details` (
+  `detail_id` int(11) NOT NULL,
+  `frame_id` int(11) DEFAULT NULL,
+  `size` varchar(50) NOT NULL,
+  `color` varchar(100) NOT NULL,
+  `weight` decimal(5,2) NOT NULL,
+  `hinge_type` varchar(100) DEFAULT NULL,
+  `nose_pad` tinyint(1) DEFAULT 1,
+  `uv_protection` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `lenses`
+-- Dumping data for table `frame_details`
 --
 
-INSERT INTO `lenses` (`id`, `type`, `price`, `created_at`) VALUES
-(1, 'single vision', 29.99, '2025-04-02 13:46:59'),
-(2, 'bifocal', 49.99, '2025-04-02 13:46:59'),
-(3, 'progressive', 69.99, '2025-04-02 13:46:59'),
-(4, 'single vision', 29.99, '2025-04-02 13:46:59'),
-(5, 'bifocal', 49.99, '2025-04-02 13:46:59'),
-(6, 'progressive', 69.99, '2025-04-02 13:46:59');
+INSERT INTO `frame_details` (`detail_id`, `frame_id`, `size`, `color`, `weight`, `hinge_type`, `nose_pad`, `uv_protection`) VALUES
+(1, 1, 'Medium', 'Black', 30.00, 'Spring Hinge', 1, 1),
+(2, 2, 'Large', 'Blue', 28.50, 'Standard', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `frame_images`
+--
+
+CREATE TABLE `frame_images` (
+  `image_id` int(11) NOT NULL,
+  `frame_id` int(11) DEFAULT NULL,
+  `image_url` varchar(500) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `frame_images`
+--
+
+INSERT INTO `frame_images` (`image_id`, `frame_id`, `image_url`) VALUES
+(1, 1, 'https://example.com/image1.jpg'),
+(2, 1, 'https://example.com/image2.jpg'),
+(3, 2, 'https://example.com/image3.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lens`
+--
+
+CREATE TABLE `lens` (
+  `lens_id` int(11) NOT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  `type` varchar(255) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `lens`
+--
+
+INSERT INTO `lens` (`lens_id`, `category_id`, `type`, `price`, `description`) VALUES
+(1, 1, 'Basic Single Vision', 50.00, 'Affordable single vision lenses'),
+(2, 2, 'Bifocal Standard', 75.00, 'Traditional bifocal lenses'),
+(3, 3, 'Premium Progressive', 120.00, 'High-quality progressive lenses');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lens_category`
+--
+
+CREATE TABLE `lens_category` (
+  `category_id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `lens_category`
+--
+
+INSERT INTO `lens_category` (`category_id`, `type`, `description`) VALUES
+(1, 'Single Vision', 'Corrects for one field of vision'),
+(2, 'Bifocal', 'Lenses with two focal points'),
+(3, 'Progressive', 'Seamless transition between multiple focal points');
 
 -- --------------------------------------------------------
 
@@ -109,10 +255,10 @@ INSERT INTO `lenses` (`id`, `type`, `price`, `created_at`) VALUES
 --
 
 CREATE TABLE `orders` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `total_price` decimal(10,2) NOT NULL,
-  `status` enum('pending','confirmed','shipped','delivered','cancelled') DEFAULT 'pending',
+  `status` enum('pending','shipped','delivered','cancelled') NOT NULL DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -120,10 +266,11 @@ CREATE TABLE `orders` (
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `user_id`, `total_price`, `status`, `created_at`) VALUES
-(1, 1, 99.98, 'pending', '2025-04-02 13:46:59'),
-(2, 2, 129.98, 'confirmed', '2025-04-02 13:46:59'),
-(3, 3, 149.99, 'shipped', '2025-04-02 13:46:59');
+INSERT INTO `orders` (`order_id`, `user_id`, `total_price`, `status`, `created_at`) VALUES
+(1, 1, 450.00, 'pending', '2025-04-02 19:05:59'),
+(2, 2, 180.00, 'shipped', '2025-04-02 19:05:59'),
+(3, 1, 450.00, 'pending', '2025-04-02 19:06:49'),
+(4, 2, 180.00, 'shipped', '2025-04-02 19:06:49');
 
 -- --------------------------------------------------------
 
@@ -132,11 +279,12 @@ INSERT INTO `orders` (`id`, `user_id`, `total_price`, `status`, `created_at`) VA
 --
 
 CREATE TABLE `order_items` (
-  `id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
+  `order_item_id` int(11) NOT NULL,
+  `order_id` int(11) DEFAULT NULL,
   `frame_id` int(11) DEFAULT NULL,
   `lens_id` int(11) DEFAULT NULL,
-  `quantity` int(11) NOT NULL,
+  `prescription_id` int(11) DEFAULT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -144,10 +292,10 @@ CREATE TABLE `order_items` (
 -- Dumping data for table `order_items`
 --
 
-INSERT INTO `order_items` (`id`, `order_id`, `frame_id`, `lens_id`, `quantity`, `price`) VALUES
-(1, 1, 1, 1, 1, 79.98),
-(2, 2, 2, 2, 1, 99.98),
-(3, 3, 3, 3, 1, 129.99);
+INSERT INTO `order_items` (`order_item_id`, `order_id`, `frame_id`, `lens_id`, `prescription_id`, `quantity`, `price`) VALUES
+(4, 1, 1, 1, 1, 1, 200.00),
+(5, 1, 2, 3, 1, 1, 250.00),
+(6, 2, 2, 2, 2, 1, 180.00);
 
 -- --------------------------------------------------------
 
@@ -156,13 +304,11 @@ INSERT INTO `order_items` (`id`, `order_id`, `frame_id`, `lens_id`, `quantity`, 
 --
 
 CREATE TABLE `payments` (
-  `id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `payment_id` int(11) NOT NULL,
+  `order_id` int(11) DEFAULT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `payment_method` enum('credit card','debit card','paypal','UPI','cash on delivery') NOT NULL,
-  `payment_status` enum('pending','completed','failed','refunded') DEFAULT 'pending',
-  `transaction_id` varchar(255) DEFAULT NULL,
+  `payment_method` enum('credit_card','paypal','bank_transfer','cod') NOT NULL,
+  `status` enum('pending','completed','failed') NOT NULL DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -170,39 +316,34 @@ CREATE TABLE `payments` (
 -- Dumping data for table `payments`
 --
 
-INSERT INTO `payments` (`id`, `order_id`, `user_id`, `amount`, `payment_method`, `payment_status`, `transaction_id`, `created_at`) VALUES
-(1, 1, 1, 99.98, 'credit card', 'completed', 'TXN123456', '2025-04-02 13:46:59'),
-(2, 2, 2, 129.98, 'paypal', 'completed', 'TXN123457', '2025-04-02 13:46:59'),
-(3, 3, 3, 149.99, 'UPI', 'pending', 'TXN123458', '2025-04-02 13:46:59');
+INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `payment_method`, `status`, `created_at`) VALUES
+(1, 1, 450.00, 'credit_card', 'completed', '2025-04-02 19:07:04'),
+(2, 2, 180.00, 'paypal', 'completed', '2025-04-02 19:07:04');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `prescriptions`
+-- Table structure for table `prescription`
 --
 
-CREATE TABLE `prescriptions` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `left_eye_sphere` decimal(5,2) NOT NULL,
-  `left_eye_cylinder` decimal(5,2) DEFAULT NULL,
-  `left_eye_axis` int(11) DEFAULT NULL,
-  `right_eye_sphere` decimal(5,2) NOT NULL,
-  `right_eye_cylinder` decimal(5,2) DEFAULT NULL,
-  `right_eye_axis` int(11) DEFAULT NULL,
-  `additional_notes` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+CREATE TABLE `prescription` (
+  `prescription_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `left_eye_sph` varchar(10) DEFAULT NULL,
+  `right_eye_sph` varchar(10) DEFAULT NULL,
+  `left_eye_cyl` varchar(10) DEFAULT NULL,
+  `right_eye_cyl` varchar(10) DEFAULT NULL,
+  `axis` varchar(10) DEFAULT NULL,
+  `addition` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `prescriptions`
+-- Dumping data for table `prescription`
 --
 
-INSERT INTO `prescriptions` (`id`, `user_id`, `order_id`, `left_eye_sphere`, `left_eye_cylinder`, `left_eye_axis`, `right_eye_sphere`, `right_eye_cylinder`, `right_eye_axis`, `additional_notes`, `created_at`) VALUES
-(1, 1, 1, -2.50, -0.75, 90, -2.00, -0.50, 85, 'Anti-glare coating required', '2025-04-02 13:46:59'),
-(2, 2, 2, -1.25, -1.00, 100, -1.75, -0.50, 95, 'Blue light protection', '2025-04-02 13:46:59'),
-(3, 3, 3, -3.00, -0.50, 85, -2.50, -0.75, 80, 'Photochromic lenses preferred', '2025-04-02 13:46:59');
+INSERT INTO `prescription` (`prescription_id`, `user_id`, `left_eye_sph`, `right_eye_sph`, `left_eye_cyl`, `right_eye_cyl`, `axis`, `addition`) VALUES
+(1, 1, '-2.50', '-2.75', '-1.00', '-1.25', '90', '2.00'),
+(2, 2, '-1.75', '-2.00', '-0.75', '-1.00', '85', '1.50');
 
 -- --------------------------------------------------------
 
@@ -211,13 +352,11 @@ INSERT INTO `prescriptions` (`id`, `user_id`, `order_id`, `left_eye_sphere`, `le
 --
 
 CREATE TABLE `shipping` (
-  `id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `shipping_id` int(11) NOT NULL,
+  `order_id` int(11) DEFAULT NULL,
   `tracking_number` varchar(255) DEFAULT NULL,
-  `carrier` varchar(255) DEFAULT NULL,
-  `estimated_delivery` date DEFAULT NULL,
-  `status` enum('processing','shipped','out for delivery','delivered') DEFAULT 'processing',
+  `shipping_address` text NOT NULL,
+  `status` enum('pending','in_transit','delivered') NOT NULL DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -225,106 +364,155 @@ CREATE TABLE `shipping` (
 -- Dumping data for table `shipping`
 --
 
-INSERT INTO `shipping` (`id`, `order_id`, `user_id`, `tracking_number`, `carrier`, `estimated_delivery`, `status`, `created_at`) VALUES
-(1, 1, 1, 'TRK123456', 'FedEx', '2025-04-05', 'processing', '2025-04-02 13:46:59'),
-(2, 2, 2, 'TRK123457', 'UPS', '2025-04-03', 'shipped', '2025-04-02 13:46:59'),
-(3, 3, 3, 'TRK123458', 'DHL', '2025-04-07', 'out for delivery', '2025-04-02 13:46:59');
+INSERT INTO `shipping` (`shipping_id`, `order_id`, `tracking_number`, `shipping_address`, `status`, `created_at`) VALUES
+(1, 1, 'TRACK12345', '123 Main St, NY', 'in_transit', '2025-04-02 19:07:10'),
+(2, 2, 'TRACK67890', '456 Elm St, CA', 'delivered', '2025-04-02 19:07:10');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `user`
 --
 
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+CREATE TABLE `user` (
+  `user_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `address` text DEFAULT NULL,
+  `phone` varchar(15) NOT NULL,
+  `address` text NOT NULL,
+  `zip_code` varchar(10) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `user`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `phone`, `address`, `created_at`) VALUES
-(1, 'John Doe', 'john@example.com', 'hashed_password', '9876543210', '123 Main St, NY', '2025-04-02 13:46:59'),
-(2, 'Alice Smith', 'alice@example.com', 'hashed_password', '9765432109', '456 Oak St, CA', '2025-04-02 13:46:59'),
-(3, 'Bob Johnson', 'bob@example.com', 'hashed_password', '9654321098', '789 Pine St, TX', '2025-04-02 13:46:59');
+INSERT INTO `user` (`user_id`, `name`, `email`, `password`, `phone`, `address`, `zip_code`, `created_at`) VALUES
+(1, 'Alice Brown', 'alice@example.com', 'alicepass', '9876543210', '123 Main St, NY', '10001', '2025-04-02 19:05:31'),
+(2, 'Bob White', 'bob@example.com', 'bobpass', '8765432109', '456 Elm St, CA', '90001', '2025-04-02 19:05:31');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `employees`
+-- Indexes for table `admin`
 --
-ALTER TABLE `employees`
-  ADD PRIMARY KEY (`id`),
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`admin_id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `brand`
+--
+ALTER TABLE `brand`
+  ADD PRIMARY KEY (`brand_id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `cart`
+--
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`cart_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `cart_items`
+--
+ALTER TABLE `cart_items`
+  ADD PRIMARY KEY (`cart_item_id`),
+  ADD KEY `cart_id` (`cart_id`),
+  ADD KEY `frame_id` (`frame_id`),
+  ADD KEY `lens_id` (`lens_id`),
+  ADD KEY `prescription_id` (`prescription_id`);
+
+--
+-- Indexes for table `employee`
+--
+ALTER TABLE `employee`
+  ADD PRIMARY KEY (`employee_id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `frames`
 --
 ALTER TABLE `frames`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`frame_id`),
+  ADD KEY `brand_id` (`brand_id`);
 
 --
--- Indexes for table `lenses`
+-- Indexes for table `frame_details`
 --
-ALTER TABLE `lenses`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `frame_details`
+  ADD PRIMARY KEY (`detail_id`),
+  ADD KEY `frame_id` (`frame_id`);
+
+--
+-- Indexes for table `frame_images`
+--
+ALTER TABLE `frame_images`
+  ADD PRIMARY KEY (`image_id`),
+  ADD KEY `frame_id` (`frame_id`);
+
+--
+-- Indexes for table `lens`
+--
+ALTER TABLE `lens`
+  ADD PRIMARY KEY (`lens_id`),
+  ADD KEY `category_id` (`category_id`);
+
+--
+-- Indexes for table `lens_category`
+--
+ALTER TABLE `lens_category`
+  ADD PRIMARY KEY (`category_id`),
+  ADD UNIQUE KEY `type` (`type`);
 
 --
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`order_id`),
   ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `order_items`
 --
 ALTER TABLE `order_items`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`order_item_id`),
   ADD KEY `order_id` (`order_id`),
   ADD KEY `frame_id` (`frame_id`),
-  ADD KEY `lens_id` (`lens_id`);
+  ADD KEY `lens_id` (`lens_id`),
+  ADD KEY `prescription_id` (`prescription_id`);
 
 --
 -- Indexes for table `payments`
 --
 ALTER TABLE `payments`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `transaction_id` (`transaction_id`),
-  ADD KEY `order_id` (`order_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`payment_id`),
+  ADD KEY `order_id` (`order_id`);
 
 --
--- Indexes for table `prescriptions`
+-- Indexes for table `prescription`
 --
-ALTER TABLE `prescriptions`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `order_id` (`order_id`);
+ALTER TABLE `prescription`
+  ADD PRIMARY KEY (`prescription_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `shipping`
 --
 ALTER TABLE `shipping`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `tracking_number` (`tracking_number`),
-  ADD KEY `order_id` (`order_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`shipping_id`),
+  ADD KEY `order_id` (`order_id`);
 
 --
--- Indexes for table `users`
+-- Indexes for table `user`
 --
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
@@ -332,97 +520,176 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `employees`
+-- AUTO_INCREMENT for table `admin`
 --
-ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `admin`
+  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `brand`
+--
+ALTER TABLE `brand`
+  MODIFY `brand_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `cart`
+--
+ALTER TABLE `cart`
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `cart_items`
+--
+ALTER TABLE `cart_items`
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `employee`
+--
+ALTER TABLE `employee`
+  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `frames`
 --
 ALTER TABLE `frames`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `frame_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `lenses`
+-- AUTO_INCREMENT for table `frame_details`
 --
-ALTER TABLE `lenses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+ALTER TABLE `frame_details`
+  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `frame_images`
+--
+ALTER TABLE `frame_images`
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `lens`
+--
+ALTER TABLE `lens`
+  MODIFY `lens_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `lens_category`
+--
+ALTER TABLE `lens_category`
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `prescriptions`
+-- AUTO_INCREMENT for table `prescription`
 --
-ALTER TABLE `prescriptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `prescription`
+  MODIFY `prescription_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `shipping`
 --
 ALTER TABLE `shipping`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `shipping_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT for table `user`
 --
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `user`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
 --
 
 --
+-- Constraints for table `cart`
+--
+ALTER TABLE `cart`
+  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cart_items`
+--
+ALTER TABLE `cart_items`
+  ADD CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`frame_id`) REFERENCES `frames` (`frame_id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `cart_items_ibfk_3` FOREIGN KEY (`lens_id`) REFERENCES `lens` (`lens_id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `cart_items_ibfk_4` FOREIGN KEY (`prescription_id`) REFERENCES `prescription` (`prescription_id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `frames`
+--
+ALTER TABLE `frames`
+  ADD CONSTRAINT `frames_ibfk_1` FOREIGN KEY (`brand_id`) REFERENCES `brand` (`brand_id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `frame_details`
+--
+ALTER TABLE `frame_details`
+  ADD CONSTRAINT `frame_details_ibfk_1` FOREIGN KEY (`frame_id`) REFERENCES `frames` (`frame_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `frame_images`
+--
+ALTER TABLE `frame_images`
+  ADD CONSTRAINT `frame_images_ibfk_1` FOREIGN KEY (`frame_id`) REFERENCES `frames` (`frame_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `lens`
+--
+ALTER TABLE `lens`
+  ADD CONSTRAINT `lens_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `lens_category` (`category_id`) ON DELETE SET NULL;
+
+--
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `order_items`
 --
 ALTER TABLE `order_items`
-  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`frame_id`) REFERENCES `frames` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `order_items_ibfk_3` FOREIGN KEY (`lens_id`) REFERENCES `lenses` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`frame_id`) REFERENCES `frames` (`frame_id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `order_items_ibfk_3` FOREIGN KEY (`lens_id`) REFERENCES `lens` (`lens_id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `order_items_ibfk_4` FOREIGN KEY (`prescription_id`) REFERENCES `prescription` (`prescription_id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `payments`
 --
 ALTER TABLE `payments`
-  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `payments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `prescriptions`
+-- Constraints for table `prescription`
 --
-ALTER TABLE `prescriptions`
-  ADD CONSTRAINT `prescriptions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `prescriptions_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
+ALTER TABLE `prescription`
+  ADD CONSTRAINT `prescription_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `shipping`
 --
 ALTER TABLE `shipping`
-  ADD CONSTRAINT `shipping_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `shipping_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `shipping_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
