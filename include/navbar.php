@@ -47,6 +47,9 @@
               <a href="compare.php" class="nav__link">Compare</a>
             </li>
             <li class="nav__item">
+              <a href="contact.php" class="nav__link">Contact</a>
+            </li>
+            <li class="nav__item">
               <a href="login-register.php" class="nav__link">Login</a>
             </li>
           </ul>
