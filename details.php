@@ -3,14 +3,18 @@ include('include/db_connect.php');
 include('include/header.php');
 include('include/navbar.php');
 
-if (isset($_GET['id'])) {
-  $product_id = $_GET['id'];
+if (isset($_GET['frame_id'])) {
+  $product_id = $_GET['frame_id'];
 
-  $query = "SELECT * FROM frames WHERE id = $product_id";
-  $result = $conn->query(query: $query);
+  $productQuery = "SELECT * FROM frames WHERE frame_id = $product_id";
+  $productResult = $conn->query($productQuery);
 
-  if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
+  $imageQuery = "SELECT * FROM frame_images WHERE frame_id = $product_id";
+  $imageResult = $conn->query($imageQuery);
+
+  if ($productResult->num_rows > 0 && $imageResult->num_rows > 0) {
+    $productRow = $productResult->fetch_assoc();
+    $imageRow = $imageResult->fetch_assoc();
   } else {
     echo "Product not found!";
     exit();
@@ -35,26 +39,26 @@ if (isset($_GET['id'])) {
   <section class="details section--lg">
     <div class="details__container container grid">
       <div class="details__group">
-        <img src="uploads<?php echo $row['image']; ?>" alt="img" class="details__img" />
+        <img src="<?php echo $imageRow['image_url']; ?>" alt="img" class="details__img" />
       </div>
       <div class="details__group">
-        <h3 class="details__title"><?php echo $row['name']; ?></h3>
-        <p class="details__brand">Brand: <span><?php echo $row['material']; ?></span></p>
+        <h3 class="details__title"><?php echo $productRow['name']; ?></h3>
+        <p class="details__brand">Brand: <span><?php echo $productRow['material']; ?></span></p>
         <div class="details__price flex">
-          <span class="new__price">Rs<?php echo $row['price']; ?></span>
+          <span class="new__price">Rs<?php echo $productRow['price']; ?></span>
         </div>
-        <p class="short__description"><?php echo $row['description']; ?></p>
+        <p class="short__description"><?php echo $productRow['description']; ?></p>
         <ul class="products__list">
-              <li class="list__item flex">
-                <i class="fi-rs-crown"></i> 1 Year Al Jazeera Brand Warranty
-              </li>
-              <li class="list__item flex">
-                <i class="fi-rs-refresh"></i> 30 Days Return Policy
-              </li>
-              <li class="list__item flex">
-                <i class="fi-rs-credit-card"></i> Cash on Delivery available
-              </li>
-            </ul>
+          <li class="list__item flex">
+            <i class="fi-rs-crown"></i> 1 Year Al Jazeera Brand Warranty
+          </li>
+          <li class="list__item flex">
+            <i class="fi-rs-refresh"></i> 30 Days Return Policy
+          </li>
+          <li class="list__item flex">
+            <i class="fi-rs-credit-card"></i> Cash on Delivery available
+          </li>
+        </ul>
         <div class="details__action">
           <input type="number" class="quantity" value="1" />
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#lenscat">

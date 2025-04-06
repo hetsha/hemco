@@ -1,3 +1,13 @@
+<?php
+// Database connection
+$mysqli = new mysqli("localhost", "root", "", "eyewear_shop");
+
+if ($mysqli->connect_error) {
+  die("Connection failed: " . $mysqli->connect_error);
+}
+
+?>
+
 <!--=============== HEADER ===============-->
 <header class="header">
       <!-- <div class="header__top">
