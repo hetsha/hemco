@@ -2,10 +2,11 @@
 // Fetch frames with a single main image (first one), along with details
 // Fetch frames with only one (the first) image using subquery
 $sql = "
-  SELECT f.frame_id, f.name, f.price, f.description, f.gender,
+  SELECT f.frame_id, f.name, f.price, f.description,
          fd.size, fd.color, fd.weight,
          first_image.image_url AS first_image,
-         second_image.image_url AS second_image
+         second_image.image_url AS second_image,
+         fc.name AS gender
   FROM frames f
   LEFT JOIN frame_details fd ON f.frame_id = fd.frame_id
   LEFT JOIN (
@@ -30,9 +31,14 @@ $sql = "
       )
     )
   ) AS second_image ON f.frame_id = second_image.frame_id
+  LEFT JOIN frame_category_map fcm ON f.frame_id = fcm.frame_id
+  LEFT JOIN frame_category fc ON fcm.category_id = fc.category_id
+  WHERE fc.name IN ('Men', 'Women', 'Child')
+  GROUP BY f.frame_id
   ORDER BY f.frame_id DESC
-  LIMIT 10
+  LIMIT 8
 ";
+
 
 
 $result = $mysqli->query($sql);
@@ -43,7 +49,6 @@ $result = $mysqli->query($sql);
   <h3 class="section__title"><span>New</span> Arrivals</h3>
   <div class="new__container swiper">
     <div class="swiper-wrapper">
-
       <?php while ($row = $result->fetch_assoc()): ?>
         <?php
         $firstImage = !empty($row['first_image']) ? $row['first_image'] : 'assets/default.jpg';
