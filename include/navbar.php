@@ -1,6 +1,6 @@
 <?php
 // Database connection
-$mysqli = new mysqli("localhost", "root", "", "eyewear_shop");
+$mysqli = new mysqli("localhost", "root", "", "testing");
 
 if ($mysqli->connect_error) {
   die("Connection failed: " . $mysqli->connect_error);

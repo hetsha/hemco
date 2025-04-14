@@ -6,9 +6,9 @@ function getFramesByTag($mysqli, $tag) {
         f.frame_id,
         f.name AS frame_name,
         f.price,
-        b.name AS brand_name,
-        GROUP_CONCAT(DISTINCT fi.image_url ORDER BY fi.image_id ASC) AS images,
-        GROUP_CONCAT(DISTINCT fc.name) AS categories
+        COALESCE(b.name, 'Unknown') AS brand_name,
+        GROUP_CONCAT(DISTINCT fi.image_url ORDER BY fi.image_id ASC SEPARATOR ',') AS images,
+        GROUP_CONCAT(DISTINCT fc.name SEPARATOR ', ') AS categories
     FROM frames f
     LEFT JOIN brand b ON f.brand_id = b.brand_id
     LEFT JOIN frame_images fi ON f.frame_id = fi.frame_id
@@ -17,7 +17,7 @@ function getFramesByTag($mysqli, $tag) {
     WHERE f.tag = ?
     GROUP BY f.frame_id
     LIMIT 8
-");
+  ");
 
   $stmt->bind_param("s", $tag);
   $stmt->execute();
@@ -27,7 +27,7 @@ function getFramesByTag($mysqli, $tag) {
   while ($row = $result->fetch_assoc()) {
     $imageList = explode(',', $row['images']);
     $row['default_image'] = $imageList[0] ?? 'assets/no-image.webp';
-    $row['hover_image']   = $imageList[1] ?? $row['default_image']; // fallback
+    $row['hover_image']   = $imageList[1] ?? $row['default_image'];
     $frames[] = $row;
   }
 
@@ -184,4 +184,16 @@ $new      = getFramesByTag($mysqli, 'new');
       </div>
     </div>
   </div>
-</section>
+</section><script>
+document.querySelectorAll('.tab__btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab__btn').forEach(b => b.classList.remove('active-tab'));
+    document.querySelectorAll('.tab__item').forEach(item => item.classList.remove('active-tab'));
+
+    btn.classList.add('active-tab');
+    const target = btn.getAttribute('data-target');
+    document.querySelector(target).classList.add('active-tab');
+  });
+});
+</script>
+
