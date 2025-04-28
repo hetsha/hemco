@@ -31,7 +31,7 @@ if ($mysqli->connect_error) {
           <img
             class="nav__logo-img"
             src="assets/img/logo.png"
-            alt="website logo"
+            alt="website logo" style="width:70px; height: auto;"
           />
         </a>
         <div class="nav__menu" id="nav-menu">

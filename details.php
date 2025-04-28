@@ -39,7 +39,8 @@ if (isset($_GET['frame_id'])) {
   <section class="details section--lg">
     <div class="details__container container grid">
       <div class="details__group">
-        <img src="<?php echo $imageRow['image_url']; ?>" alt="img" class="details__img" />
+      <img src="<?php echo $imageRow['image_url']; ?>" alt="img" class="details__img">
+
       </div>
       <div class="details__group">
         <h3 class="details__title"><?php echo $productRow['name']; ?></h3>
