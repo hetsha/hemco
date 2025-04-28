@@ -1,7 +1,7 @@
 <?php
 // Reusable function to get frames by tag
-function getFramesByTag($mysqli, $tag) {
-  $stmt = $mysqli->prepare("
+function getFramesByTag($conn, $tag) {
+  $stmt = $conn->prepare("
     SELECT
         f.frame_id,
         f.name AS frame_name,
@@ -35,9 +35,9 @@ function getFramesByTag($mysqli, $tag) {
 }
 
 
-$featured = getFramesByTag($mysqli, 'featured');
-$popular  = getFramesByTag($mysqli, 'popular');
-$new      = getFramesByTag($mysqli, 'new');
+$featured = getFramesByTag($conn, 'featured');
+$popular  = getFramesByTag($conn, 'popular');
+$new      = getFramesByTag($conn, 'new');
 ?>
 
 <section class="products container section">
@@ -196,4 +196,3 @@ document.querySelectorAll('.tab__btn').forEach(btn => {
   });
 });
 </script>
-

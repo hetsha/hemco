@@ -44,6 +44,10 @@
     href="https://site-assets.fontawesome.com/releases/v6.7.2/css/brands.css" />
   <title>Ecommerce Website</title>
 </head>
+<?php
+session_start();
+include('include/db_connect.php');
+?>
 <style>
   .fa-regular {
     font-size: 25px;

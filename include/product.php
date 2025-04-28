@@ -41,7 +41,7 @@ $sql = "
 
 
 
-$result = $mysqli->query($sql);
+$result = $conn->query($sql);
 
 ?>
 

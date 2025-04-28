@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 14, 2025 at 08:29 AM
+-- Generation Time: Apr 28, 2025 at 10:27 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -80,10 +80,10 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`cart_id`, `user_id`, `created_at`) VALUES
-(1, 1, '2025-04-02 19:05:51'),
-(2, 2, '2025-04-02 19:05:51'),
-(3, 1, '2025-04-02 19:06:43'),
-(4, 2, '2025-04-02 19:06:43');
+(1, 4, '2025-04-02 19:05:51'),
+(2, 4, '2025-04-02 19:05:51'),
+(3, 5, '2025-04-02 19:06:43'),
+(4, 3, '2025-04-02 19:06:43');
 
 -- --------------------------------------------------------
 
@@ -240,9 +240,9 @@ CREATE TABLE `frame_images` (
 --
 
 INSERT INTO `frame_images` (`image_id`, `frame_id`, `image_url`) VALUES
-(1, 1, 'https://example.com/image1.jpg'),
-(2, 1, 'https://example.com/image2.jpg'),
-(3, 2, 'https://example.com/image3.jpg');
+(1, 1, 'images/img1.png'),
+(2, 1, 'images/img2.png'),
+(3, 2, 'images/img3.png');
 
 -- --------------------------------------------------------
 
@@ -431,7 +431,23 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`user_id`, `name`, `email`, `password`, `phone`, `address`, `zip_code`, `created_at`) VALUES
 (1, 'Alice Brown', 'alice@example.com', 'alicepass', '9876543210', '123 Main St, NY', '10001', '2025-04-02 19:05:31'),
-(2, 'Bob White', 'bob@example.com', 'bobpass', '8765432109', '456 Elm St, CA', '90001', '2025-04-02 19:05:31');
+(2, 'Bob White', 'bob@example.com', 'bobpass', '8765432109', '456 Elm St, CA', '90001', '2025-04-02 19:05:31'),
+(3, 'het shah', 'hetshah6312@gmail.com', '', '', '', '', '2025-04-28 05:51:11'),
+(4, 'het shah', 'hetshah6315@gmail.com', '', '', '', '', '2025-04-28 18:18:19'),
+(5, 'het', 'hetshah6313@gmail.com', '$2y$10$4uw.Lp2IvFTH6xCcMHDN6uqjiZq34XmcV.vFrPDRlRRv4cX6tNX4O', '', '', '', '2025-04-28 19:43:37');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wishlist`
+--
+
+CREATE TABLE `wishlist` (
+  `wishlist_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -570,6 +586,14 @@ ALTER TABLE `user`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Indexes for table `wishlist`
+--
+ALTER TABLE `wishlist`
+  ADD PRIMARY KEY (`wishlist_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -679,7 +703,13 @@ ALTER TABLE `shipping`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `wishlist`
+--
+ALTER TABLE `wishlist`
+  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -763,6 +793,13 @@ ALTER TABLE `prescription`
 --
 ALTER TABLE `shipping`
   ADD CONSTRAINT `shipping_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `wishlist`
+--
+ALTER TABLE `wishlist`
+  ADD CONSTRAINT `wishlist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+  ADD CONSTRAINT `wishlist_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `frames` (`frame_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
