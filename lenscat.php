@@ -152,56 +152,193 @@
         }
     </style>
 </head>
-<?php include('lens.php'); ?>
 <body>
-    <div class="modal fade" id="lenscat">
-        <div class="modal-dialog">
-            <div class="modal-header">
-            <!-- <i class="fa fa-window-close" aria-hidden="true"></i> -->
-            <!-- <button type="button" class="btn-close fa fa-window-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                <svg width="1em" class="btn-close fa fa-window-close" data-bs-dismiss="modal" height="1em" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9.085 1.53 8.08.529.383 8.208l.049.05 7.648 7.63 1.005-1.002-5.983-5.968h15.99v-1.42H3.101l5.983-5.967Z" fill="currentColor"></path>
-                </svg>
-                <h1>Select Lenscat Type</h1>
-                <svg width="1em" class="btn-close fa fa-window-close" data-bs-dismiss="modal" height="1em" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="m1.064 18.593 8.133-8.114 8.13 8.114 1.007-1.006-8.133-8.113 8.133-8.111L17.327.358l-8.13 8.114L1.064.358.057 1.363l8.132 8.11-8.132 8.114 1.007 1.006Z" fill="currentColor"></path>
-                </svg>
-            </div>
-            <div class="modal-body">
-                <ul class="list-group">
-                    <li class="list-group-item" data-bs-toggle="modal" data-bs-target="#lens">
-                    <!-- <button type="button" data-bs-toggle="modal" data-bs-target="#lens"> -->
-                        <img src="https://via.placeholder.com/50" alt="Product 1">
-                        <div>
-                            <h6>Product 1</h6>
-                            <p>- High quality material</p>
-                            <p>- Affordable price</p>
-                        </div>
-                        <!-- </button> -->
-                    </li>
-                    <li class="list-group-item">
-                        <img src="https://via.placeholder.com/50" alt="Product 2">
-                        <div>
-                            <h6>Product 2</h6>
-                            <p>- Stylish design</p>
-                            <p>- Durable and long-lasting</p>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <img src="https://via.placeholder.com/50" alt="Product 3">
-                        <div>
-                            <h6>Product 3</h6>
-                            <p>- Lightweight and comfortable</p>
-                            <p>- Available in multiple colors</p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+<!-- Lens Category Modal -->
+<div class="modal fade" id="lenscat">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h1>Select Lens Category</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <!-- Dynamic content inserted here -->
         </div>
     </div>
+</div>
+
+<!-- Lens Company Modal -->
+<div class="modal fade" id="lenscompany">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h1>Select Lens Company</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <!-- Dynamic content inserted here -->
+        </div>
+    </div>
+</div>
+
+<!-- Lens Type (Prescription Details) Modal -->
+<div class="modal fade" id="lenstype">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h1>Enter Prescription</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <!-- Input fields for prescription details (left, right eye, etc.) -->
+            <input type="text" id="power_left" placeholder="Power Left" class="form-control mt-2">
+            <input type="text" id="power_right" placeholder="Power Right" class="form-control mt-2">
+            <input type="text" id="cyc_left" placeholder="CYC Left" class="form-control mt-2">
+            <input type="text" id="cyc_right" placeholder="CYC Right" class="form-control mt-2">
+        </div>
+    </div>
+</div>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+let selectedFrameId = null;
+let selectedCategoryId = null;
+let selectedCompanyId = null;
+let selectedLensId = null;
+let prescriptionDetails = {};
+
+// When clicking "Add to Cart"
+document.getElementById("addToCartBtn").addEventListener("click", function() {
+    const frameId = getFrameIdFromUrl();
+
+    if (frameId) {
+        openLensCategoryModal(frameId);  // Open the lens category modal if a frame is selected
+    } else {
+        alert("Frame ID not found!");
+    }
+});
+
+// Function to get the frame ID from the URL
+function getFrameIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('frame_id'); // Frame ID passed in the URL
+}
+
+// Open Lens Category Modal
+function openLensCategoryModal(frameId) {
+    selectedFrameId = frameId;
+    $.ajax({
+        url: 'get_lens_categories.php',
+        method: 'GET',
+        success: function(data) {
+            const categories = JSON.parse(data);
+            let html = '';
+            categories.forEach(cat => {
+                html += `<div onclick="selectCategory(${cat.id})" class="list-group-item">${cat.category_name}</div>`;
+            });
+            $('#lenscat .modal-body').html(html);
+            $('#lenscat').modal('show');
+        },
+        error: function() {
+            console.log("Error fetching lens categories");
+        }
+    });
+}
+
+// Select Lens Category
+function selectCategory(categoryId) {
+    selectedCategoryId = categoryId;
+    $.ajax({
+        url: 'get_lens_companies.php?category_id=' + categoryId,
+        method: 'GET',
+        success: function(data) {
+            const companies = JSON.parse(data);
+            let html = '';
+            companies.forEach(company => {
+                html += `<div onclick="selectCompany(${company.id})" class="list-group-item">${company.company_name}</div>`;
+            });
+            $('#lenscompany .modal-body').html(html);
+            $('#lenscompany').modal('show');
+        },
+        error: function() {
+            console.log("Error fetching lens companies");
+        }
+    });
+}
+
+// Select Lens Company
+function selectCompany(companyId) {
+    selectedCompanyId = companyId;
+    $.ajax({
+        url: 'get_lenses.php?company_id=' + companyId,
+        method: 'GET',
+        success: function(data) {
+            const lenses = JSON.parse(data);
+            let html = '<select id="lens_select" class="form-select">';
+            lenses.forEach(lens => {
+                html += `<option value="${lens.id}">${lens.lens_name}</option>`;
+            });
+            html += '</select>';
+            $('#lenstype .modal-body').html(html);
+            $('#lenstype').modal('show');
+        },
+        error: function() {
+            console.log("Error fetching lenses");
+        }
+    });
+}
+
+// Handle Prescription Input and Add to Cart
+function handlePrescriptionAndAddToCart() {
+    selectedLensId = $('#lens_select').val();  // Get selected lens id
+    prescriptionDetails = {
+        powerLeft: $('#power_left').val(),
+        powerRight: $('#power_right').val(),
+        cycLeft: $('#cyc_left').val(),
+        cycRight: $('#cyc_right').val()
+    };
+
+    // Save data to Cart (in a session or database)
+    $.ajax({
+        url: 'add_to_cart.php',
+        method: 'POST',
+        data: {
+            frame_id: selectedFrameId,
+            lens_id: selectedLensId,
+            prescription: prescriptionDetails,
+            quantity: 1
+        },
+        success: function(response) {
+            console.log(response);
+            alert("Added to cart successfully");
+        },
+        error: function() {
+            console.log("Error adding to cart");
+        }
+    });
+}
+
+// If user chooses to just add the frame
+function addFrameToCart() {
+    $.ajax({
+        url: 'add_to_cart.php',
+        method: 'POST',
+        data: {
+            frame_id: selectedFrameId,
+            lens_id: null,  // No lens selected
+            prescription: null,  // No prescription
+            quantity: 1
+        },
+        success: function(response) {
+            console.log(response);
+            alert("Frame added to cart");
+        },
+        error: function() {
+            console.log("Error adding frame to cart");
+        }
+    });
+}
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
