@@ -5,7 +5,7 @@ const navMenu = document.getElementById("nav-menu"),
 
 /*===== Menu Show =====*/
 /* Validate if constant exists */
-if (navToggle) {
+if (navToggle && navMenu) {
   navToggle.addEventListener("click", () => {
     navMenu.classList.add("show-menu");
   });
@@ -13,7 +13,7 @@ if (navToggle) {
 
 /*===== Hide Show =====*/
 /* Validate if constant exists */
-if (navClose) {
+if (navClose && navMenu) {
   navClose.addEventListener("click", () => {
     navMenu.classList.remove("show-menu");
   });
@@ -21,8 +21,11 @@ if (navClose) {
 
 /*=============== IMAGE GALLERY ===============*/
 function imgGallery() {
-  const mainImg = document.querySelector(".details__img"),
-    smallImg = document.querySelectorAll(".details__small-img");
+  const mainImg = document.querySelector(".details__img");
+  if (!mainImg) return; // Exit if main image doesn't exist
+
+  const smallImg = document.querySelectorAll(".details__small-img");
+  if (!smallImg.length) return; // Exit if no small images
 
   smallImg.forEach((img) => {
     img.addEventListener("click", function () {
@@ -31,7 +34,10 @@ function imgGallery() {
   });
 }
 
-imgGallery();
+// Only run imgGallery if we're on a page with the gallery
+if (document.querySelector('.details__img')) {
+  imgGallery();
+}
 
 /*=============== SWIPER CATEGORIES ===============*/
 let swiperCategories = new Swiper(".categories__container", {
@@ -118,31 +124,40 @@ const navExpand = document.getElementById('nav-expand'),
       navExpandList = document.getElementById('nav-expand-list'),
       navExpandIcon = document.getElementById('nav-expand-icon')
 
-navExpand.addEventListener('click', () => {
-   // Expand list
-   navExpandList.classList.toggle('show-list')
+if (navExpand && navExpandList && navExpandIcon) {
+    navExpand.addEventListener('click', () => {
+       // Expand list
+       navExpandList.classList.toggle('show-list')
 
-   // Rotate icon
-   navExpandIcon.classList.toggle('rotate-icon')
-})
+       // Rotate icon
+       navExpandIcon.classList.toggle('rotate-icon')
+    })
+}
 
 /*=============== SCROLL SECTIONS ACTIVE LINK ===============*/
 const sections = document.querySelectorAll('section[id]')
 
 const scrollActive = () =>{
-  	const scrollDown = window.scrollY
+    if (!sections.length) return;
+    
+    const scrollDown = window.scrollY
 
-	sections.forEach(current =>{
-		const sectionHeight = current.offsetHeight,
-			  sectionTop = current.offsetTop - 58,
-			  sectionId = current.getAttribute('id'),
-			  sectionsClass = document.querySelector('.nav__list a[href*=' + sectionId + ']')
+    sections.forEach(current =>{
+        const sectionHeight = current.offsetHeight,
+              sectionTop = current.offsetTop - 58,
+              sectionId = current.getAttribute('id'),
+              sectionsClass = document.querySelector('.nav__list a[href*=' + sectionId + ']')
 
-		if(scrollDown > sectionTop && scrollDown <= sectionTop + sectionHeight){
-			sectionsClass.classList.add('active-link')
-		}else{
-			sectionsClass.classList.remove('active-link')
-		}
-	})
+        if (!sectionsClass) return;
+
+        if(scrollDown > sectionTop && scrollDown <= sectionTop + sectionHeight){
+            sectionsClass.classList.add('active-link')
+        }else{
+            sectionsClass.classList.remove('active-link')
+        }
+    })
 }
-window.addEventListener('scroll', scrollActive)
+
+if (sections.length) {
+    window.addEventListener('scroll', scrollActive)
+}

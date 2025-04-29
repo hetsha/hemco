@@ -252,7 +252,7 @@ if (isset($_GET['frame_id'])) {
                 </button>
             </div>
             <div class="modal-body">
-                <form id="prescriptionForm">
+                <form id="prescriptionForm" onsubmit="submitPrescription(event);">
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="left_eye_sph" class="form-label">Left Eye Spherical</label>
@@ -284,6 +284,13 @@ if (isset($_GET['frame_id'])) {
                             <input type="text" id="addition" class="form-control" placeholder="Enter Addition value" required>
                         </div>
                     </div>
+                    <div class="row mt-3">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary">Submit Prescription</button>
+                            <button type="button" class="btn btn-secondary" onclick="skipPrescription()">Skip Prescription</button>
+                        </div>
+                    </div>
+                </form>    
                     <br>
                     <hr>
                     <h5>Or Upload Prescription Image</h5>
@@ -298,9 +305,7 @@ if (isset($_GET['frame_id'])) {
 
                 <div class="mt-4 d-flex justify-content-between">
                     <!-- Submit Button with Icon -->
-                    <button class="btn btn-success" onclick="submitPrescription()">
-                        <i class="bi bi-check-circle"></i> Submit Prescription
-                    </button>
+                    <button type="button" class="btn btn-primary" id="submitPrescriptionBtn" onclick="submitPrescription()">Submit</button>
                     <!-- Skip Button with Icon -->
                     <button class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close" onclick="skipPrescription()">
                         <i class="bi bi-x-circle"></i> Skip
@@ -310,8 +315,6 @@ if (isset($_GET['frame_id'])) {
         </div>
     </div>
 </div>
-
-
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -324,9 +327,17 @@ if (isset($_GET['frame_id'])) {
         $(modalId).siblings('.modal').modal('hide');
     }
 
+    // Global variables
+    let selectedLensId = null;
+    let selectedLensCategoryId = null;
+
     // Example of opening the modal with a close button functionality
-    $('#addToCartBtn').click(function() {
-        openLensCategoryModal();
+    $(document).ready(function() {
+        $('#addToCartBtn').click(function() {
+            if (!selectedLensId) {
+                openLensCategoryModal();
+            }
+        });
     });
 
     function openLensCategoryModal() {
@@ -371,27 +382,45 @@ if (isset($_GET['frame_id'])) {
         });
     }
 
-    function selectLens(lensId) {
+    function selectLens(lensId, lensCategoryId) {
+        selectedLensId = lensId;
+        selectedLensCategoryId = lensCategoryId;
         $('#lenscompany').modal('hide');
-        $('#prescriptionModal').modal('show');
+        updateLensSelection(lensId);
     }
 
-    function submitPrescription() {
-        const formData = new FormData(document.getElementById('prescriptionForm'));
-        const image = $('#prescription_image')[0].files[0];
-        if (image) {
-            formData.append('prescription_image', image);
-        }
+    function submitPrescription(event) {
+        event.preventDefault(); // Prevent form from submitting normally
+        const frameId = <?php echo $productRow['frame_id']; ?>;
+        const quantity = document.querySelector(".quantity").value;
 
+        // Get all prescription values
+        const prescriptionData = {
+            frame_id: frameId,
+            lens_id: selectedLensId,
+            quantity: quantity,
+            left_eye_sph: document.getElementById("left_eye_sph").value,
+            right_eye_sph: document.getElementById("right_eye_sph").value,
+            left_eye_cyl: document.getElementById("left_eye_cyl").value,
+            right_eye_cyl: document.getElementById("right_eye_cyl").value,
+            axis: document.getElementById("axis").value,
+            addition: document.getElementById("addition").value
+        };
+
+        // First save prescription
         $.ajax({
             url: 'save_prescription.php',
             type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
+            data: JSON.stringify(prescriptionData),
+            contentType: 'application/json',
             success: function(response) {
-                alert('Prescription saved!');
-                $('#prescriptionModal').modal('hide');
+                const result = JSON.parse(response);
+                if (result.success) {
+                    // Now add to cart with the prescription ID
+                    addToCartWithPrescription(prescriptionData, result.prescription_id);
+                } else {
+                    alert(result.message || 'Failed to save prescription');
+                }
             },
             error: function() {
                 alert('Failed to save prescription');
@@ -400,46 +429,113 @@ if (isset($_GET['frame_id'])) {
     }
 
     function skipPrescription() {
-        $.ajax({
-            url: 'save_prescription.php',
-            type: 'POST',
-            data: { skip: true },
-            success: function(response) {
+        if (!currentCartItemId) {
+            alert('Please complete frame and lens selection first');
+            return;
+        }
+
+        fetch('add_to_cart.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                action: 'update_prescription',
+                cart_item_id: currentCartItemId,
+                prescription_id: null
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
                 alert('We will call you for prescription details.');
                 $('#prescriptionModal').modal('hide');
-            },
-            error: function() {
-                alert('Failed to process your request.');
+                window.location.href = 'cart.php'; // Redirect to cart
+            } else {
+                alert(data.message || 'Failed to process your request');
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to process your request');
         });
     }
 </script>
-<script>
-  document.getElementById('addToCartBtn').addEventListener('click', function() {
-    const frame_id = <?php echo $productRow['frame_id']; ?>;
-    const lens_id = selectedLensId; // You need to get the selected lens ID
-    const quantity = document.querySelector('.quantity').value;
-    const prescription_id = selectedPrescriptionId; // Get the prescription ID
 
-    const formData = new FormData();
-    formData.append('frame_id', frame_id);
-    formData.append('lens_id', lens_id);
-    formData.append('quantity', quantity);
-    formData.append('prescription_id', prescription_id);
+ <script>
+    let currentCartItemId = null;
 
-    fetch('add_to_cart.php', {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.text())
-    .then(data => {
-      alert(data);
-      if (data === 'Item added to cart successfully!') {
-        window.location.href = 'cart.php'; // Redirect to cart page
-      }
-    })
-    .catch(error => console.error('Error:', error));
-  });
+    function addFrameToCart() {
+        const frameId = <?php echo $productRow['frame_id']; ?>;
+        const quantity = document.querySelector(".quantity").value;
+
+        fetch('add_to_cart.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                action: 'add_frame',
+                frame_id: frameId,
+                quantity: quantity
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                currentCartItemId = data.cart_item_id;
+                openLensCategoryModal(); // Show lens selection modal
+            } else {
+                alert(data.message || 'Failed to add frame to cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to add frame to cart');
+        });
+    }
+
+    function updateLensSelection(lensId) {
+        if (!currentCartItemId) {
+            alert('Please select a frame first');
+            return;
+        }
+
+        fetch('add_to_cart.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                action: 'update_lens',
+                cart_item_id: currentCartItemId,
+                lens_id: lensId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                $('#prescriptionModal').modal('show'); // Show prescription modal
+            } else {
+                alert(data.message || 'Failed to update lens selection');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to update lens selection');
+        });
+    }
+
+    // Initialize event listeners when document is ready
+    $(document).ready(function() {
+        const addToCartBtn = document.getElementById("addToCartBtn");
+        if (addToCartBtn) {
+            addToCartBtn.addEventListener("click", addFrameToCart);
+        }
+    });
+
+    // Remove any existing event listeners when the page unloads
+    $(window).on('unload', function() {
+        const addToCartBtn = document.getElementById("addToCartBtn");
+        if (addToCartBtn) {
+            addToCartBtn.replaceWith(addToCartBtn.cloneNode(true));
+        }
+    });
+
 </script>
 
   <?php include('include/footer.php'); ?>
