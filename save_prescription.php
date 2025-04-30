@@ -36,19 +36,19 @@ if (isset($data['skip']) && $data['skip'] === true) {
 }
 
 // Validate required fields
-if (!isset($data['left_eye_sph']) || !isset($data['right_eye_sph']) || 
-    !isset($data['left_eye_cyl']) || !isset($data['right_eye_cyl']) || 
+if (!isset($data['left_eye_sph']) || !isset($data['right_eye_sph']) ||
+    !isset($data['left_eye_cyl']) || !isset($data['right_eye_cyl']) ||
     !isset($data['axis']) || !isset($data['addition'])) {
     echo json_encode(['success' => false, 'message' => 'Missing required prescription data']);
     exit;
 }
 
 // Insert prescription data
-$prescriptionQuery = "INSERT INTO prescriptions (user_id, left_eye_sph, right_eye_sph, left_eye_cyl, right_eye_cyl, axis, addition) 
+$prescriptionQuery = "INSERT INTO prescriptions (user_id, left_eye_sph, right_eye_sph, left_eye_cyl, right_eye_cyl, axis, addition)
                      VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($prescriptionQuery);
-$stmt->bind_param("issssss", 
+$stmt->bind_param("issssss",
     $user_id,
     $data['left_eye_sph'],
     $data['right_eye_sph'],
@@ -69,4 +69,7 @@ if ($stmt->execute()) {
     echo json_encode(['success' => false, 'message' => 'Failed to save prescription: ' . $stmt->error]);
 }
 
+?>
+ $e->getMessage()]);
+}
 ?>

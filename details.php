@@ -212,330 +212,159 @@ if (isset($_GET['frame_id'])) {
     </div>
   </section>
 
-  <!-- Lens Category Type Modal -->
-<div class="modal fade" id="lenscat">
-    <div class="modal-dialog">
-        <div class="modal-header">
-          <h1>Select Lens Type</h1>
-          <!-- Close Button -->
-          <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
-            <!-- Back Button -->
-            <!-- <button type="button" class="btn btn-secondary" onclick="goBackToPreviousModal('#lenscompany')">Back</button> -->
+  <!-- Lens Category Modal -->
+<div class="modal fade" id="lensCategoryModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Lens Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group" id="lensCategoryList">
+                    <!-- Categories will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-body pt-2">
+                <div id="lensCategoryList" class="list-group list-group-flush"></div>
+            </div>
         </div>
-        <div class="modal-body"></div>
     </div>
 </div>
 
- <!-- Lens Modal -->
-<div class="modal fade" id="lenscompany">
-    <div class="modal-dialog">
-        <div class="modal-header">
-          <!-- Close Button -->
-          <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
-            <h1>Select Lens</h1>
-            <!-- Back Button -->
-            <button type="button" class="btn btn-secondary" onclick="goBackToPreviousModal('#lenscat')">Back</button>
+<!-- Lens Company Modal -->
+<div class="modal fade" id="lensCompanyModal" tabindex="-1" aria-labelledby="lensCompanyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0 pb-0">
+                <div class="w-100 d-flex justify-content-between align-items-center">
+                    <h4 class="modal-title fw-bold" id="lensCompanyModalLabel">Select Lens Type</h4>
+                    <div>
+                        <button type="button" class="btn btn-outline-secondary btn-sm me-2" onclick="goBackToPreviousModal('#lenscat')">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body pt-2"></div>
         </div>
-        <div class="modal-body"></div>
     </div>
 </div>
 
 <!-- Prescription Modal -->
 <div class="modal fade" id="prescriptionModal" tabindex="-1" aria-labelledby="prescriptionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title" id="prescriptionModalLabel">Enter Prescription</h1>
-                <!-- Back Button with Icon -->
-                <button type="button" class="btn btn-secondary" onclick="goBackToPreviousModal('#lenscompany')">
-                    <i class="bi bi-arrow-left-circle"></i> Back
-                </button>
+            <div class="modal-header border-bottom-0 pb-0">
+                <div class="w-100 d-flex justify-content-between align-items-center">
+                    <h4 class="modal-title fw-bold" id="prescriptionModalLabel">Enter Prescription</h4>
+                    <div>
+                        <button type="button" class="btn btn-outline-secondary btn-sm me-2" onclick="goBackToPreviousModal('#lenscompany')">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
             </div>
             <div class="modal-body">
-                <form id="prescriptionForm" onsubmit="submitPrescription(event);">
+                <form id="prescriptionForm" onsubmit="submitPrescription(event)">
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="left_eye_sph" class="form-label">Left Eye Spherical</label>
-                            <input type="text" id="left_eye_sph" class="form-control" placeholder="Enter Spherical value" required>
+                            <input type="text" id="left_eye_sph" name="left_eye_sph" class="form-control" placeholder="Enter Spherical value" required>
                         </div>
-                        <br>
                         <div class="col-md-6 mb-3">
                             <label for="right_eye_sph" class="form-label">Right Eye Spherical</label>
-                            <input type="text" id="right_eye_sph" class="form-control" placeholder="Enter Spherical value" required>
+                            <input type="text" id="right_eye_sph" name="right_eye_sph" class="form-control" placeholder="Enter Spherical value" required>
                         </div>
-                        <Br>
                         <div class="col-md-6 mb-3">
                             <label for="left_eye_cyl" class="form-label">Left Eye Cylindrical</label>
-                            <input type="text" id="left_eye_cyl" class="form-control" placeholder="Enter Cylindrical value" required>
+                            <input type="text" id="left_eye_cyl" name="left_eye_cyl" class="form-control" placeholder="Enter Cylindrical value" required>
                         </div>
-                        <br>
                         <div class="col-md-6 mb-3">
                             <label for="right_eye_cyl" class="form-label">Right Eye Cylindrical</label>
-                            <input type="text" id="right_eye_cyl" class="form-control" placeholder="Enter Cylindrical value" required>
+                            <input type="text" id="right_eye_cyl" name="right_eye_cyl" class="form-control" placeholder="Enter Cylindrical value" required>
                         </div>
-                        <br>
                         <div class="col-md-6 mb-3">
                             <label for="axis" class="form-label">Axis</label>
-                            <input type="text" id="axis" class="form-control" placeholder="Enter Axis value" required>
+                            <input type="text" id="axis" name="axis" class="form-control" placeholder="Enter Axis value" required>
                         </div>
-                        <br>
                         <div class="col-md-6 mb-3">
                             <label for="addition" class="form-label">Addition</label>
-                            <input type="text" id="addition" class="form-control" placeholder="Enter Addition value" required>
+                            <input type="text" id="addition" name="addition" class="form-control" placeholder="Enter Addition value">
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-12 text-center">
-                            <button type="submit" class="btn btn-primary">Submit Prescription</button>
-                            <button type="button" class="btn btn-secondary" onclick="skipPrescription()">Skip Prescription</button>
+                    
+                    <div class="mb-4">
+                        <h5>Or Upload Prescription Image</h5>
+                        <div class="input-group">
+                            <input type="file" id="prescription_image" name="prescription_image" class="form-control" accept="image/*">
+                            <label class="input-group-text" for="prescription_image"><i class="bi bi-file-earmark-image"></i></label>
                         </div>
+                        <small class="text-muted">If you don't have a prescription now, you can skip and we will call you.</small>
                     </div>
-                </form>    
-                    <br>
-                    <hr>
-                    <h5>Or Upload Prescription Image</h5>
-                    <div class="input-group mb-3">
-                        <input type="file" id="prescription_image" class="form-control" accept="image/*">
-                        <label class="input-group-text" for="prescription_image"><i class="bi bi-file-earmark-image"></i></label>
-                    </div>
-                    <br>
-                    <hr>
-                    <p class="text-muted">If you don't have a prescription now, you can skip and we will call you.</p>
-                </form>
 
-                <div class="mt-4 d-flex justify-content-between">
-                    <!-- Submit Button with Icon -->
-                    <button type="button" class="btn btn-primary" id="submitPrescriptionBtn" onclick="submitPrescription()">Submit</button>
-                    <!-- Skip Button with Icon -->
-                    <button class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close" onclick="skipPrescription()">
-                        <i class="bi bi-x-circle"></i> Skip
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Submit Prescription
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="skipPrescription()">
+                            <i class="bi bi-x-circle"></i> Skip Prescription
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Prescription Modal -->
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center pb-4">
+                <div class="mb-4">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                </div>
+                <h4 class="fw-bold mb-3">Added to Cart!</h4>
+                <p class="text-muted mb-4">Your item has been successfully added to your cart.</p>
+                <div class="d-grid gap-2">
+                    <a href="cart.php" class="btn btn-primary">
+                        <i class="bi bi-cart me-2"></i>View Cart
+                    </a>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Continue Shopping
                     </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!-- End of Success Modal -->
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<?php include 'include/news.php'; ?>
+<?php include 'include/footer.php'; ?>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <?php include('include/news.php'); ?>
-  <script>
-    // Close and Back button functionality
-    function goBackToPreviousModal(modalId) {
-        $(modalId).modal('show');
-        $(modalId).siblings('.modal').modal('hide');
-    }
-
-    // Global variables
-    let selectedLensId = null;
-    let selectedLensCategoryId = null;
-
-    // Example of opening the modal with a close button functionality
-    $(document).ready(function() {
-        $('#addToCartBtn').click(function() {
-            if (!selectedLensId) {
-                openLensCategoryModal();
-            }
-        });
+<!-- jQuery first -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Then Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Initialize Bootstrap -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all modals
+    var modals = document.querySelectorAll('.modal');
+    modals.forEach(function(modal) {
+      new bootstrap.Modal(modal);
     });
-
-    function openLensCategoryModal() {
-        $.ajax({
-            url: 'get_lens_categories.php',
-            method: 'GET',
-            success: function(data) {
-                const categories = JSON.parse(data);
-                let html = '';
-                categories.forEach(cat => {
-                    html += `<div onclick="selectCategory(${cat.category_id})" class="list-group-item">${cat.type}</div>`;
-                });
-                $('#lenscat .modal-body').html(html);
-                $('#lenscat').modal('show');
-            },
-            error: function() {
-                console.log("Error fetching lens categories");
-            }
-        });
-    }
-
-    function selectCategory(categoryId) {
-        $.ajax({
-            url: 'get_lenses.php',
-            method: 'GET',
-            data: { category_id: categoryId },
-            success: function(data) {
-                const lenses = JSON.parse(data);
-                let html = '';
-                lenses.forEach(lens => {
-                    html += `<div onclick="selectLens(${lens.lens_id})" class="list-group-item">
-                            ${lens.type} - Rs ${lens.price}
-                        </div>`;
-                });
-                $('#lenscompany .modal-body').html(html);
-                $('#lenscat').modal('hide');
-                $('#lenscompany').modal('show');
-            },
-            error: function() {
-                console.log("Error fetching lenses");
-            }
-        });
-    }
-
-    function selectLens(lensId, lensCategoryId) {
-        selectedLensId = lensId;
-        selectedLensCategoryId = lensCategoryId;
-        $('#lenscompany').modal('hide');
-        updateLensSelection(lensId);
-    }
-
-    function submitPrescription(event) {
-        event.preventDefault(); // Prevent form from submitting normally
-        const frameId = <?php echo $productRow['frame_id']; ?>;
-        const quantity = document.querySelector(".quantity").value;
-
-        // Get all prescription values
-        const prescriptionData = {
-            frame_id: frameId,
-            lens_id: selectedLensId,
-            quantity: quantity,
-            left_eye_sph: document.getElementById("left_eye_sph").value,
-            right_eye_sph: document.getElementById("right_eye_sph").value,
-            left_eye_cyl: document.getElementById("left_eye_cyl").value,
-            right_eye_cyl: document.getElementById("right_eye_cyl").value,
-            axis: document.getElementById("axis").value,
-            addition: document.getElementById("addition").value
-        };
-
-        // First save prescription
-        $.ajax({
-            url: 'save_prescription.php',
-            type: 'POST',
-            data: JSON.stringify(prescriptionData),
-            contentType: 'application/json',
-            success: function(response) {
-                const result = JSON.parse(response);
-                if (result.success) {
-                    // Now add to cart with the prescription ID
-                    addToCartWithPrescription(prescriptionData, result.prescription_id);
-                } else {
-                    alert(result.message || 'Failed to save prescription');
-                }
-            },
-            error: function() {
-                alert('Failed to save prescription');
-            }
-        });
-    }
-
-    function skipPrescription() {
-        if (!currentCartItemId) {
-            alert('Please complete frame and lens selection first');
-            return;
-        }
-
-        fetch('add_to_cart.php', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                action: 'update_prescription',
-                cart_item_id: currentCartItemId,
-                prescription_id: null
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('We will call you for prescription details.');
-                $('#prescriptionModal').modal('hide');
-                window.location.href = 'cart.php'; // Redirect to cart
-            } else {
-                alert(data.message || 'Failed to process your request');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Failed to process your request');
-        });
-    }
+  });
 </script>
-
- <script>
-    let currentCartItemId = null;
-
-    function addFrameToCart() {
-        const frameId = <?php echo $productRow['frame_id']; ?>;
-        const quantity = document.querySelector(".quantity").value;
-
-        fetch('add_to_cart.php', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                action: 'add_frame',
-                frame_id: frameId,
-                quantity: quantity
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                currentCartItemId = data.cart_item_id;
-                openLensCategoryModal(); // Show lens selection modal
-            } else {
-                alert(data.message || 'Failed to add frame to cart');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Failed to add frame to cart');
-        });
-    }
-
-    function updateLensSelection(lensId) {
-        if (!currentCartItemId) {
-            alert('Please select a frame first');
-            return;
-        }
-
-        fetch('add_to_cart.php', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                action: 'update_lens',
-                cart_item_id: currentCartItemId,
-                lens_id: lensId
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                $('#prescriptionModal').modal('show'); // Show prescription modal
-            } else {
-                alert(data.message || 'Failed to update lens selection');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Failed to update lens selection');
-        });
-    }
-
-    // Initialize event listeners when document is ready
-    $(document).ready(function() {
-        const addToCartBtn = document.getElementById("addToCartBtn");
-        if (addToCartBtn) {
-            addToCartBtn.addEventListener("click", addFrameToCart);
-        }
-    });
-
-    // Remove any existing event listeners when the page unloads
-    $(window).on('unload', function() {
-        const addToCartBtn = document.getElementById("addToCartBtn");
-        if (addToCartBtn) {
-            addToCartBtn.replaceWith(addToCartBtn.cloneNode(true));
-        }
-    });
-
-</script>
-
-  <?php include('include/footer.php'); ?>
+<!-- Custom cart functionality -->
+<script src="assets/js/cart.js"></script>
+</body>
+</html>
