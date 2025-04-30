@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Get frame_id from URL parameter
             const urlParams = new URLSearchParams(window.location.search);
             selectedFrameId = urlParams.get('frame_id');
-            
+
             // Load and show lens categories
             loadLensCategories();
         });
@@ -34,16 +34,16 @@ function loadLensCategories() {
             if (data.success) {
                 const categoryList = document.getElementById('lensCategoryList');
                 categoryList.innerHTML = data.categories.map(category => `
-                    <button type="button" class="list-group-item list-group-item-action" 
+                    <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-start"
                             onclick="selectLensCategory(${category.id}, '${category.name}')">
-                        <div>
-                            <h6 class="mb-1">${category.name}</h6>
-                            <p class="mb-1">${category.description}</p>
+                        <div class="ms-2 me-auto">
+                            <div class="fw-semibold fs-6">${category.name}</div>
+                            <small class="text-muted">${category.description}</small>
                         </div>
-                        <i class="bi bi-chevron-right"></i>
+                        <i class="bi bi-chevron-right text-secondary"></i>
                     </button>
                 `).join('');
-                
+
                 const lensCategoryModal = new bootstrap.Modal(document.getElementById('lensCategoryModal'));
                 lensCategoryModal.show();
             }
@@ -57,7 +57,7 @@ function loadLensCategories() {
 // Handle lens category selection
 function selectLensCategory(categoryId, categoryName) {
     selectedCategoryId = categoryId;
-    
+
     // Load lens options for selected category
     loadLensOptions(categoryId);
 }
@@ -128,7 +128,7 @@ function loadLensOptions(categoryId) {
                 if (categoryModal) {
                     categoryModal.hide();
                 }
-                
+
                 // Show lens options modal
                 const lensOptionsModal = document.getElementById('lensCompanyModal');
                 if (!lensOptionsModal) {
@@ -149,13 +149,13 @@ function loadLensOptions(categoryId) {
 // Handle lens option selection
 function selectLensOption(lensId, lensPrice) {
     selectedLensId = lensId;
-    
+
     // Close lens options modal
     const currentModal = bootstrap.Modal.getInstance(document.getElementById('lensOptionsModal'));
     if (currentModal) {
         currentModal.hide();
     }
-    
+
     // Show prescription modal
     const prescriptionModal = new bootstrap.Modal(document.getElementById('prescriptionModal'));
     prescriptionModal.show();
@@ -269,7 +269,7 @@ function goBackToPreviousModal(modalId) {
     if (currentModal) {
         currentModal.hide();
     }
-    
+
     // Show previous modal
     const previousModal = new bootstrap.Modal(document.querySelector(modalId));
     previousModal.show();

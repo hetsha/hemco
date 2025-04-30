@@ -120,6 +120,7 @@ if (isset($_GET['frame_id'])) {
     background-color: white;
     transform: translateY(20px);
     animation: fadeInUp 0.5s ease-in-out forwards;
+    width: 100%;
   }
 
   .list-group-item:nth-child(1) {
@@ -212,25 +213,20 @@ if (isset($_GET['frame_id'])) {
     </div>
   </section>
 
-  <!-- Lens Category Modal -->
+ <!-- Lens Category Modal -->
 <div class="modal fade" id="lensCategoryModal">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+    <div class="modal-dialog">
             <div class="modal-header">
-                <h5 class="modal-title">Select Lens Category</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+              <h5 class="modal-title">Select Lens Category</h5>
             </div>
-            <div class="modal-body">
-                <div class="list-group" id="lensCategoryList">
+            <div class="modal-body" id="lensCategoryList">
                     <!-- Categories will be loaded here -->
-                </div>
             </div>
-            <div class="modal-body pt-2">
-                <div id="lensCategoryList" class="list-group list-group-flush"></div>
-            </div>
-        </div>
+
     </div>
 </div>
+
 
 <!-- Lens Company Modal -->
 <div class="modal fade" id="lensCompanyModal" tabindex="-1" aria-labelledby="lensCompanyModalLabel" aria-hidden="true">
@@ -295,7 +291,7 @@ if (isset($_GET['frame_id'])) {
                             <input type="text" id="addition" name="addition" class="form-control" placeholder="Enter Addition value">
                         </div>
                     </div>
-                    
+
                     <div class="mb-4">
                         <h5>Or Upload Prescription Image</h5>
                         <div class="input-group">
