@@ -67,19 +67,19 @@ WHERE ci.cart_id = $cart_id
           </thead>
           <tbody>
             <?php
-           while ($item = mysqli_fetch_assoc($items_query)) {
-            $frame_name = $item['frame_name'] ?? 'No Frame';
-            $lens_name = $item['lens_name'] ?? 'No Lens';
-            $frame_price = $item['frame_price'] ?? 0;
-            $lens_price = $item['lens_price'] ?? 0;
-            $image = $item['frame_image'] ?? 'assets/img/default.jpg';
-            $qty = $item['quantity'];
+            while ($item = mysqli_fetch_assoc($items_query)) {
+              $frame_name = $item['frame_name'] ?? 'No Frame';
+              $lens_name = $item['lens_name'] ?? 'No Lens';
+              $frame_price = $item['frame_price'] ?? 0;
+              $lens_price = $item['lens_price'] ?? 0;
+              $image = $item['frame_image'] ?? 'assets/img/default.jpg';
+              $qty = $item['quantity'];
 
-            $item_price = $frame_price + $lens_price;
-            $subtotal = $item_price * $qty;
-            $total += $subtotal;
+              $item_price = $frame_price + $lens_price;
+              $subtotal = $item_price * $qty;
+              $total += $subtotal;
 
-            echo "
+              echo "
               <tr>
                 <td><img src='$image' alt='' class='table__img' /></td>
                 <td>
@@ -95,17 +95,15 @@ WHERE ci.cart_id = $cart_id
                 <td><a href='remove_item.php?frame_id={$item['frame_id']}&lens_id={$item['lens_id']}'><i class='fi fi-rs-trash table__trash'></i></a></td>
               </tr>
             ";
-        }
+            }
             ?>
           </tbody>
         </table>
       </div>
 
       <div class="cart__actions">
-        <a href="#" class="btn flex btn__md">
-          <i class="fi-rs-shuffle"></i> Update Cart
-        </a>
-        <a href="#" class="btn flex btn__md">
+
+        <a href="shop.php" class="btn flex btn__md">
           <i class="fi-rs-shopping-bag"></i> Continue Shopping
         </a>
       </div>
@@ -118,20 +116,14 @@ WHERE ci.cart_id = $cart_id
         <div>
           <div class="cart__shippinp">
             <h3 class="section__title">Calculate Shipping</h3>
-            <form action="" class="form grid">
-              <input
-                type="text"
-                class="form__input"
-                placeholder="State / Country" />
+            <form action="shiprocket/CalculateShipping.php" method="POST" class="form grid">
+              <input type="text" name="state" class="form__input" placeholder="State / Country" required />
               <div class="form__group grid">
-                <input type="text" class="form__input" placeholder="City" />
-                <input
-                  type="text"
-                  class="form__input"
-                  placeholder="PostCode" />
+                <input type="text" name="city" class="form__input" placeholder="City" required />
+                <input type="text" name="postcode" class="form__input" placeholder="PostCode" required />
               </div>
               <div class="form__btn">
-                <button class="btn flex btn--sm">
+                <button type="submit" name="calculate_shipping" class="btn flex btn--sm">
                   <i class="fi-rs-shuffle"></i> Update
                 </button>
               </div>
@@ -164,7 +156,10 @@ WHERE ci.cart_id = $cart_id
             </tr>
             <tr>
               <td><span class="cart__total-title">Shipping</span></td>
-              <td><span class="cart__total-price">$10.00</span></td>
+              <?php
+              $shipping = $_SESSION['shipping_cost'] ?? 10.00;
+              ?>
+              <td><span class="cart__total-price">$<?php echo number_format($shipping, 2); ?></span></td>
             </tr>
             <tr>
               <td><span class="cart__total-title">Total</span></td>
