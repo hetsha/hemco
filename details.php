@@ -215,16 +215,19 @@ if (isset($_GET['frame_id'])) {
 
  <!-- Lens Category Modal -->
 <div class="modal fade" id="lensCategoryModal">
-    <div class="modal-dialog">
-            <div class="modal-header">
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
-              <h5 class="modal-title">Select Lens Category</h5>
-            </div>
-            <div class="modal-body" id="lensCategoryList">
-                    <!-- Categories will be loaded here -->
-            </div>
-
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content border-0 rounded-4 shadow-sm">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold fs-4 text-dark">Select Lens Type</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body bg-light-subtle">
+        <div class="d-grid gap-3" id="lensCategoryList">
+          <!-- Categories will be loaded here dynamically -->
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 

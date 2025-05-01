@@ -34,16 +34,18 @@ function loadLensCategories() {
             if (data.success) {
                 const categoryList = document.getElementById('lensCategoryList');
                 categoryList.innerHTML = data.categories.map(category => `
-                    <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-start"
+                    <button type="button" class="border-0 bg-white text-start p-3 rounded-4 shadow-sm d-flex align-items-center justify-content-between"
                             onclick="selectLensCategory(${category.id}, '${category.name}')">
-                        <div class="ms-2 me-auto">
-                            <div class="fw-semibold fs-6">${category.name}</div>
-                            <small class="text-muted">${category.description}</small>
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="icon-placeholder bg-light rounded-circle" style="width: 40px; height: 40px;"></div>
+                        <div>
+                          <div class="fw-semibold fs-6 text-dark">${category.name}</div>
+                          <div class="text-muted small">${category.description}</div>
                         </div>
-                        <i class="bi bi-chevron-right text-secondary"></i>
+                      </div>
+                      <i class="bi bi-chevron-right fs-5 text-muted"></i>
                     </button>
-                `).join('');
-
+                  `).join('');
                 const lensCategoryModal = new bootstrap.Modal(document.getElementById('lensCategoryModal'));
                 lensCategoryModal.show();
             }

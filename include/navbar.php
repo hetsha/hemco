@@ -15,11 +15,19 @@ if (isset($_SESSION['user_id'])) {
   }
 
   // Fetch cart count
-  $cart_result = $conn->query("SELECT COUNT(*) AS count FROM cart WHERE user_id = $user_id");
-  if ($cart_result) {
-    $cart_data = $cart_result->fetch_assoc();
-    $cart_count = $cart_data['count'];
-  }
+ // Get cart_id for the user
+$cart_result = $conn->query("SELECT cart_id FROM cart WHERE user_id = $user_id");
+$cart_data = $cart_result->fetch_assoc();
+$cart_id = $cart_data['cart_id'] ?? 0;
+
+// Count items in cart_items
+$count_result = $conn->query("SELECT SUM(quantity) AS count FROM cart_items WHERE cart_id = $cart_id");
+
+$cart_count = 0;
+if ($count_result) {
+  $count_data = $count_result->fetch_assoc();
+  $cart_count = $count_data['count'] ?? 0;
+}
 }
 ?>
 
