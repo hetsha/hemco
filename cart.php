@@ -150,24 +150,23 @@ WHERE ci.cart_id = $cart_id
         <div class="cart__total">
           <h3 class="section__title">Cart Totals</h3>
           <table class="cart__total-table">
+            <?php
+            $shipping_cost = isset($_SESSION['shipping_cost']) ? floatval($_SESSION['shipping_cost']) : 0;
+            ?>
             <tr>
               <td><span class="cart__total-title">Cart Subtotal</span></td>
-              <td><span class="cart__total-price">$<?php echo number_format($total, 2); ?></span></td>
+              <td><span class="cart__total-price">₹<?php echo number_format($total, 2); ?></span></td>
             </tr>
             <tr>
               <td><span class="cart__total-title">Shipping</span></td>
-              <?php
-              $shipping = $_SESSION['shipping_cost'] ?? 10.00;
-              ?>
-              <td><span class="cart__total-price">$<?php echo number_format($shipping, 2); ?></span></td>
+              <td><span class="cart__total-price">₹<?php echo number_format($shipping_cost, 2); ?></span></td>
             </tr>
             <tr>
               <td><span class="cart__total-title">Total</span></td>
-              <td><span class="cart__total-price">$<?php echo number_format($total + 10, 2); ?></span></td>
+              <td><span class="cart__total-price">₹<?php echo number_format($total + $shipping_cost, 2); ?></span></td>
             </tr>
-
           </table>
-          <a href="checkout.html" class="btn flex btn--md">
+          <a href="checkout.php" class="btn flex btn--md">
             <i class="fi fi-rs-box-alt"></i> Proceed To Checkout
           </a>
         </div>
