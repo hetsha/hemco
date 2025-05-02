@@ -2,7 +2,42 @@
 include('include/db_connect.php');
 include('include/header.php');
 
+$user_id = $_SESSION['user_id'] ?? 0;
+
+$cart_query = mysqli_query($conn, "SELECT cart_id FROM cart WHERE user_id = $user_id");
+$cart = mysqli_fetch_assoc($cart_query);
+$cart_id = $cart['cart_id'] ?? 0;
+
+$total = 0;
+$shipping_cost = $_SESSION['shipping_cost'] ?? 0;
+
+$items_query = mysqli_query($conn, "
+    SELECT
+      ci.cart_item_id,
+      ci.frame_id,
+      ci.lens_id,
+      ci.quantity,
+      f.name AS frame_name,
+      f.price AS frame_price,
+      l.type AS lens_name,
+      l.price AS lens_price,
+      fi.image_url AS frame_image
+    FROM cart_items ci
+    LEFT JOIN frames f ON ci.frame_id = f.frame_id
+    LEFT JOIN lens l ON ci.lens_id = l.lens_id
+    LEFT JOIN (
+      SELECT frame_id, MIN(image_url) AS image_url
+      FROM frame_images
+      GROUP BY frame_id
+    ) fi ON ci.frame_id = fi.frame_id
+    WHERE ci.cart_id = $cart_id
+");
 ?>
+
+<head>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
 <body>
   <!--=============== HEADER ===============-->
   <?php include('include/navbar.php') ?>
@@ -20,261 +55,159 @@ include('include/header.php');
       </ul>
     </section>
 
-      <!--=============== CHECKOUT ===============-->
-      <section class="checkout section--lg">
-        <div class="checkout__container container grid">
-          <div class="checkout__group">
-            <h3 class="section__title">Billing Details</h3>
-            <form class="form grid">
-              <input type="text" placeholder="Name" class="form__input" />
-              <input type="text" placeholder="Address" class="form__input" />
-              <input type="text" placeholder="City" class="form__input" />
-              <input type="text" placeholder="Country" class="form__input" />
-              <input type="text" placeholder="Postcode" class="form__input" />
-              <input type="text" placeholder="Phone" class="form__input" />
-              <input type="email" placeholder="Email" class="form__input" />
-              <h3 class="checkout__title">Additional Information</h3>
-              <textarea
-                name=""
-                placeholder="order note"
-                class="form__input textarea"
-              ></textarea>
-            </form>
-          </div>
-          <div class="checkout__group">
-            <h3 class="section__title">Cart Totals</h3>
-            <table class="order__table">
-              <thead>
-                <tr>
-                  <th colspan="2">Products</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr>
-                  <td>
-                    <img
-                      src="./assets/img/product-1-2.jpg"
-                      alt=""
-                      class="order__img"
-                    />
-                  </td>
-                  <td>
-                    <h3 class="table__title">Yidarton Women Summer Blue</h3>
-                    <p class="table__quantity">x 2</p>
-                  </td>
-                  <td><span class="table__price">$180.00</span></td>
-                </tr>
-                <tr>
-                  <td>
-                    <img
-                      src="./assets/img/product-2-1.jpg"
-                      alt=""
-                      class="order__img"
-                    />
-                  </td>
-                  <td>
-                    <h3 class="table__title">LDB Moon Summer</h3>
-                    <p class="table__quantity">x 1</p>
-                  </td>
-                  <td><span class="table__price">$65.00</span></td>
-                </tr>
-                <tr>
-                  <td>
-                    <img
-                      src="./assets/img/product-7-1.jpg"
-                      alt=""
-                      class="order__img"
-                    />
-                  </td>
-                  <td>
-                    <h3 class="table__title">Women Short Sleeve Loose</h3>
-                    <p class="table__quantity">x 2</p>
-                  </td>
-                  <td><span class="table__price">$35.00</span></td>
-                </tr>
-                <tr>
-                  <td><span class="order__subtitle">Subtotal</span></td>
-                  <td colspan="2"><span class="table__price">$280.00</span></td>
-                </tr>
-                <tr>
-                  <td><span class="order__subtitle">Shipping</span></td>
-                  <td colspan="2">
-                    <span class="table__price">Free Shipping</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td><span class="order__subtitle">Total</span></td>
-                  <td colspan="2">
-                    <span class="order__grand-total">$280.00</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="payment__methods">
-              <h3 class="checkout__title payment__title">Payment</h3>
-              <div class="payment__option flex">
-                <input
-                  type="radio"
-                  name="radio"
-                  id="l1"
-                  checked
-                  class="payment__input"
-                />
-                <label for="l1" class="payment__label"
-                  >Direct Bank Transfer</label
-                >
-              </div>
-              <div class="payment__option flex">
-                <input
-                  type="radio"
-                  name="radio"
-                  id="l2"
-                  class="payment__input"
-                />
-                <label for="l2" class="payment__label">Check Payment</label>
-              </div>
-              <div class="payment__option flex">
-                <input
-                  type="radio"
-                  name="radio"
-                  id="l3"
-                  class="payment__input"
-                />
-                <label for="l3" class="payment__label">Paypal</label>
-              </div>
-            </div>
-            <button class="btn btn--md">Place Order</button>
-          </div>
-        </div>
-      </section>
-
-      <!--=============== NEWSLETTER ===============-->
-      <section class="newsletter section">
-        <div class="newsletter__container container grid">
-          <h3 class="newsletter__title flex">
-            <img
-              src="./assets/img/icon-email.svg"
-              alt=""
-              class="newsletter__icon"
-            />
-            Sign in to Newsletter
-          </h3>
-          <p class="newsletter__description">
-            ...and receive $25 coupon for first shopping.
-          </p>
-          <form action="" class="newsletter__form">
-            <input
-              type="text"
-              placeholder="Enter Your Email"
-              class="newsletter__input"
-            />
-            <button type="submit" class="newsletter__btn">Subscribe</button>
+    <!--=============== CHECKOUT ===============-->
+    <section class="checkout section--lg">
+      <div class="checkout__container container grid">
+        <div class="checkout__group">
+          <h3 class="section__title">Billing Details</h3>
+          <form class="form grid" id="checkout-form">
+            <input type="text" name="name" placeholder="Name" class="form__input" required />
+            <input type="text" name="address" placeholder="Address" class="form__input" required />
+            <input type="text" name="city" placeholder="City" class="form__input" required />
+            <input type="text" name="country" placeholder="Country" class="form__input" required />
+            <input type="text" name="postcode" placeholder="Postcode" class="form__input" required />
+            <input type="text" name="phone" placeholder="Phone" class="form__input" required />
+            <input type="email" name="email" placeholder="Email" class="form__input" required />
+            <textarea name="order_note" placeholder="Order note" class="form__input textarea"></textarea>
           </form>
         </div>
-      </section>
-    </main>
+        <div class="checkout__group">
+          <h3 class="section__title">Cart Totals</h3>
+          <table class="order__table">
+            <thead>
+              <tr>
+                <th colspan="2">Products</th>
+                <th>Total</th>
+              </tr>
+            </thead>
 
-    <!--=============== FOOTER ===============-->
-    <footer class="footer container">
-      <div class="footer__container grid">
-        <div class="footer__content">
-          <a href="index.html" class="footer__logo">
-            <img src="./assets/img/logo.svg" alt="" class="footer__logo-img" />
-          </a>
-          <h4 class="footer__subtitle">Contact</h4>
-          <p class="footer__description">
-            <span>Address:</span> 13 Tlemcen Road, Street 32, Beb-Wahren
-          </p>
-          <p class="footer__description">
-            <span>Phone:</span> +01 2222 365 /(+91) 01 2345 6789
-          </p>
-          <p class="footer__description">
-            <span>Hours:</span> 10:00 - 18:00, Mon - Sat
-          </p>
-          <div class="footer__social">
-            <h4 class="footer__subtitle">Follow Me</h4>
-            <div class="footer__links flex">
-              <a href="#">
-                <img
-                  src="./assets/img/icon-facebook.svg"
-                  alt=""
-                  class="footer__social-icon"
-                />
-              </a>
-              <a href="#">
-                <img
-                  src="./assets/img/icon-twitter.svg"
-                  alt=""
-                  class="footer__social-icon"
-                />
-              </a>
-              <a href="#">
-                <img
-                  src="./assets/img/icon-instagram.svg"
-                  alt=""
-                  class="footer__social-icon"
-                />
-              </a>
-              <a href="#">
-                <img
-                  src="./assets/img/icon-pinterest.svg"
-                  alt=""
-                  class="footer__social-icon"
-                />
-              </a>
-              <a href="#">
-                <img
-                  src="./assets/img/icon-youtube.svg"
-                  alt=""
-                  class="footer__social-icon"
-                />
-              </a>
+            <tbody>
+            <tbody>
+              <?php
+              while ($item = mysqli_fetch_assoc($items_query)) {
+                $frame_name = $item['frame_name'] ?? 'No Frame';
+                $lens_name = $item['lens_name'] ?? 'No Lens';
+                $frame_price = $item['frame_price'] ?? 0;
+                $lens_price = $item['lens_price'] ?? 0;
+                $image = $item['frame_image'] ?? 'assets/img/default.jpg';
+                $qty = $item['quantity'];
+
+                $item_price = $frame_price + $lens_price;
+                $subtotal = $item_price * $qty;
+                $total += $subtotal;
+
+                echo "
+  <tr>
+    <td><img src='$image' alt='' class='order__img' /></td>
+    <td>
+      <h3 class='table__title'>Frame: $frame_name</h3>
+      <p class='table__quantity'>Lens: $lens_name x $qty</p>
+    </td>
+    <td><span class='table__price'>₹" . number_format($subtotal, 2) . "</span></td>
+  </tr>";
+              }
+              ?>
+              <tr>
+                <td><span class="order__subtitle">Subtotal</span></td>
+                <td colspan="2"><span class="table__price">₹<?php echo number_format($total, 2); ?></span></td>
+              </tr>
+              <tr>
+                <td><span class="order__subtitle">Shipping</span></td>
+                <td colspan="2"><span class="table__price">₹<?php echo number_format($shipping_cost, 2); ?></span></td>
+              </tr>
+              <tr>
+                <td><span class="order__subtitle">Total</span></td>
+                <td colspan="2"><span class="order__grand-total">₹<?php echo number_format($total + $shipping_cost, 2); ?></span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="payment__methods">
+            <h3 class="checkout__title payment__title">Payment</h3>
+            <div class="payment__option flex">
+              <input
+                type="radio"
+                name="radio"
+                id="l1"
+                checked
+                class="payment__input" />
+              <label for="l1" class="payment__label">Direct Bank Transfer</label>
+            </div>
+            <div class="payment__option flex">
+              <input
+                type="radio"
+                name="radio"
+                id="l2"
+                class="payment__input" />
+              <label for="l2" class="payment__label">Check Payment</label>
+            </div>
+            <div class="payment__option flex">
+              <input
+                type="radio"
+                name="radio"
+                id="l3"
+                class="payment__input" />
+              <label for="l3" class="payment__label">Paypal</label>
             </div>
           </div>
-        </div>
-        <div class="footer__content">
-          <h3 class="footer__title">Address</h3>
-          <ul class="footer__links">
-            <li><a href="#" class="footer__link">About Us</a></li>
-            <li><a href="#" class="footer__link">Delivery Information</a></li>
-            <li><a href="#" class="footer__link">Privacy Policy</a></li>
-            <li><a href="#" class="footer__link">Terms & Conditions</a></li>
-            <li><a href="#" class="footer__link">Contact Us</a></li>
-            <li><a href="#" class="footer__link">Support Center</a></li>
-          </ul>
-        </div>
-        <div class="footer__content">
-          <h3 class="footer__title">My Account</h3>
-          <ul class="footer__links">
-            <li><a href="#" class="footer__link">Sign In</a></li>
-            <li><a href="#" class="footer__link">View Cart</a></li>
-            <li><a href="#" class="footer__link">My Wishlist</a></li>
-            <li><a href="#" class="footer__link">Track My Order</a></li>
-            <li><a href="#" class="footer__link">Help</a></li>
-            <li><a href="#" class="footer__link">Order</a></li>
-          </ul>
-        </div>
-        <div class="footer__content">
-          <h3 class="footer__title">Secured Payed Gateways</h3>
-          <img
-            src="./assets/img/payment-method.png"
-            alt=""
-            class="payment__img"
-          />
+          <button class="btn btn--md" id="pay-btn">Place Order</button>
         </div>
       </div>
-      <div class="footer__bottom">
-        <p class="copyright">&copy; 2024 Evara. All right reserved</p>
-        <span class="designer">Designer by Crypticalcoder</span>
-      </div>
-    </footer>
+    </section>
 
-    <!--=============== SWIPER JS ===============-->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!--=============== NEWSLETTER ===============-->
+    <?php include('include/news.php') ?>
 
-    <!--=============== MAIN JS ===============-->
-    <script src="assets/js/main.js"></script>
-  </body>
+    <!--=============== FOOTER ===============-->
+  </main>
+
+  <?php include('include/footer.php') ?>
+  <script>
+  document.getElementById('pay-btn').onclick = function(e) {
+    e.preventDefault();
+
+    const form = document.getElementById('checkout-form');
+    const formData = new FormData(form);
+
+    const options = {
+      "key": "YOUR_RAZORPAY_KEY_ID",
+      "amount": <?php echo ($total + $shipping_cost) * 100; ?>,
+      "currency": "INR",
+      "name": "My Shop",
+      "description": "Order Payment",
+      "image": "https://yourdomain.com/logo.png",
+      "handler": function(response) {
+        // Append payment ID to form data
+        formData.append('payment_id', response.razorpay_payment_id);
+
+        // Send everything to backend
+        fetch('payment_success.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            window.location.href = 'thank_you.php';
+          } else {
+            alert('Something went wrong saving your order.');
+          }
+        });
+      },
+      "prefill": {
+        "name": form.name.value,
+        "email": form.email.value,
+        "contact": form.phone.value
+      },
+      "theme": {
+        "color": "#3399cc"
+      }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+  };
+</script>
+
+</body>
+
 </html>
