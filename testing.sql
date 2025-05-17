@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 28, 2025 at 10:27 PM
+-- Generation Time: May 17, 2025 at 12:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,7 +41,8 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`admin_id`, `name`, `email`, `password`, `created_at`) VALUES
 (1, 'Admin One', 'admin1@example.com', 'adminpass1', '2025-04-02 19:05:31'),
-(2, 'Admin Two', 'admin2@example.com', 'adminpass2', '2025-04-02 19:05:31');
+(2, 'Admin Two', 'admin2@example.com', 'adminpass2', '2025-04-02 19:05:31'),
+(3, 'Het Shah', 'hetshah6315@gmail.com', '$2y$10$G2wTiU6tZYNuibK.6qCk3O07GtovnzjC/b9/wB26qN4d.rI36unXW', '2025-05-17 10:09:25');
 
 -- --------------------------------------------------------
 
@@ -61,7 +62,8 @@ CREATE TABLE `brand` (
 INSERT INTO `brand` (`brand_id`, `name`) VALUES
 (3, 'Gucci'),
 (2, 'Oakley'),
-(1, 'Ray-Ban');
+(1, 'Ray-Ban'),
+(4, 'sad');
 
 -- --------------------------------------------------------
 
@@ -83,7 +85,9 @@ INSERT INTO `cart` (`cart_id`, `user_id`, `created_at`) VALUES
 (1, 4, '2025-04-02 19:05:51'),
 (2, 4, '2025-04-02 19:05:51'),
 (3, 5, '2025-04-02 19:06:43'),
-(4, 3, '2025-04-02 19:06:43');
+(4, 3, '2025-04-02 19:06:43'),
+(5, NULL, '2025-05-17 07:40:11'),
+(6, 4, '2025-05-17 07:55:25');
 
 -- --------------------------------------------------------
 
@@ -108,7 +112,12 @@ CREATE TABLE `cart_items` (
 INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `frame_id`, `lens_id`, `prescription_id`, `quantity`, `price`) VALUES
 (4, 1, 1, 1, 1, 1, 200.00),
 (5, 1, 2, 3, 1, 1, 250.00),
-(6, 2, 2, 2, 2, 1, 180.00);
+(7, 5, 1, 1, NULL, 1, 200.00),
+(8, 5, 1, 2, 3, 1, 225.00),
+(9, 5, 1, 2, 4, 1, 225.00),
+(10, 5, 1, 1, 5, 1, 200.00),
+(11, 5, 1, 1, NULL, 1, 200.00),
+(14, 1, 1, 1, NULL, 1, 200.00);
 
 -- --------------------------------------------------------
 
@@ -299,18 +308,21 @@ CREATE TABLE `orders` (
   `user_id` int(11) DEFAULT NULL,
   `total_price` decimal(10,2) NOT NULL,
   `status` enum('pending','shipped','delivered','cancelled') NOT NULL DEFAULT 'pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `order_note` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `user_id`, `total_price`, `status`, `created_at`) VALUES
-(1, 1, 450.00, 'pending', '2025-04-02 19:05:59'),
-(2, 2, 180.00, 'shipped', '2025-04-02 19:05:59'),
-(3, 1, 450.00, 'pending', '2025-04-02 19:06:49'),
-(4, 2, 180.00, 'shipped', '2025-04-02 19:06:49');
+INSERT INTO `orders` (`order_id`, `user_id`, `total_price`, `status`, `created_at`, `order_note`) VALUES
+(1, 1, 450.00, 'pending', '2025-04-02 19:05:59', NULL),
+(2, 2, 180.00, 'shipped', '2025-04-02 19:05:59', NULL),
+(3, 1, 450.00, 'pending', '2025-04-02 19:06:49', NULL),
+(4, 2, 180.00, 'shipped', '2025-04-02 19:06:49', NULL),
+(6, 4, 236.00, 'pending', '2025-05-17 09:16:25', 'asda'),
+(7, 6, 611.00, 'pending', '2025-05-17 09:49:37', 'asdas');
 
 -- --------------------------------------------------------
 
@@ -335,7 +347,11 @@ CREATE TABLE `order_items` (
 INSERT INTO `order_items` (`order_item_id`, `order_id`, `frame_id`, `lens_id`, `prescription_id`, `quantity`, `price`) VALUES
 (4, 1, 1, 1, 1, 1, 200.00),
 (5, 1, 2, 3, 1, 1, 250.00),
-(6, 2, 2, 2, 2, 1, 180.00);
+(6, 2, 2, 2, 2, 1, 180.00),
+(7, 6, 2, 2, 2, 1, 195.00),
+(8, 7, 1, 1, 6, 1, 200.00),
+(9, 7, 1, 1, 7, 1, 200.00),
+(10, 7, 2, 1, NULL, 1, 170.00);
 
 -- --------------------------------------------------------
 
@@ -358,7 +374,9 @@ CREATE TABLE `payments` (
 
 INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `payment_method`, `status`, `created_at`) VALUES
 (1, 1, 450.00, 'credit_card', 'completed', '2025-04-02 19:07:04'),
-(2, 2, 180.00, 'paypal', 'completed', '2025-04-02 19:07:04');
+(2, 2, 180.00, 'paypal', 'completed', '2025-04-02 19:07:04'),
+(3, 6, 236.00, '', 'completed', '2025-05-17 09:16:25'),
+(4, 7, 611.00, '', 'completed', '2025-05-17 09:49:37');
 
 -- --------------------------------------------------------
 
@@ -383,7 +401,12 @@ CREATE TABLE `prescription` (
 
 INSERT INTO `prescription` (`prescription_id`, `user_id`, `left_eye_sph`, `right_eye_sph`, `left_eye_cyl`, `right_eye_cyl`, `axis`, `addition`) VALUES
 (1, 1, '-2.50', '-2.75', '-1.00', '-1.25', '90', '2.00'),
-(2, 2, '-1.75', '-2.00', '-0.75', '-1.00', '85', '1.50');
+(2, 2, '-1.75', '-2.00', '-0.75', '-1.00', '85', '1.50'),
+(3, NULL, '', '', '', '', '', ''),
+(4, 3, '', '', '', '', '', ''),
+(5, 3, '-0.50', '+0.50', '-0.25', '-0.75', '90', '+1.00'),
+(6, 6, '+1.50', '+1.50', '-0.25', '-0.50', '45', '+1.50'),
+(7, 6, '+1.00', '-0.50', '-0.50', '-0.75', '45', '+1.25');
 
 -- --------------------------------------------------------
 
@@ -397,16 +420,25 @@ CREATE TABLE `shipping` (
   `tracking_number` varchar(255) DEFAULT NULL,
   `shipping_address` text NOT NULL,
   `status` enum('pending','in_transit','delivered') NOT NULL DEFAULT 'pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `name` varchar(255) DEFAULT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `state` varchar(100) DEFAULT NULL,
+  `pincode` varchar(10) DEFAULT NULL,
+  `country` varchar(100) DEFAULT 'India'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `shipping`
 --
 
-INSERT INTO `shipping` (`shipping_id`, `order_id`, `tracking_number`, `shipping_address`, `status`, `created_at`) VALUES
-(1, 1, 'TRACK12345', '123 Main St, NY', 'in_transit', '2025-04-02 19:07:10'),
-(2, 2, 'TRACK67890', '456 Elm St, CA', 'delivered', '2025-04-02 19:07:10');
+INSERT INTO `shipping` (`shipping_id`, `order_id`, `tracking_number`, `shipping_address`, `status`, `created_at`, `name`, `phone`, `email`, `city`, `state`, `pincode`, `country`) VALUES
+(1, 1, 'TRACK12345', '123 Main St, NY', 'in_transit', '2025-04-02 19:07:10', NULL, NULL, NULL, NULL, NULL, NULL, 'India'),
+(2, 2, 'TRACK67890', '456 Elm St, CA', 'delivered', '2025-04-02 19:07:10', NULL, NULL, NULL, NULL, NULL, NULL, 'India'),
+(3, 6, NULL, 'A 403 prakruti appt suvidha sanjivani road, Ahmedabad, 380007, India', 'pending', '2025-05-17 09:16:25', 'Het Shah', '09427961426', 'hetshah6315@gmail.com', NULL, NULL, NULL, 'India'),
+(4, 7, NULL, 'A 403 prakruti appt suvidha sanjivani road, Ahmedabad, 380007, India', 'pending', '2025-05-17 09:49:37', 'Het Shah', '09427961426', 'hetshah6315@gmail.com', NULL, NULL, NULL, 'India');
 
 -- --------------------------------------------------------
 
@@ -422,19 +454,23 @@ CREATE TABLE `user` (
   `phone` varchar(15) NOT NULL,
   `address` text NOT NULL,
   `zip_code` varchar(10) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `city` varchar(100) DEFAULT NULL,
+  `state` varchar(100) DEFAULT NULL,
+  `country` varchar(100) DEFAULT 'India'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `name`, `email`, `password`, `phone`, `address`, `zip_code`, `created_at`) VALUES
-(1, 'Alice Brown', 'alice@example.com', 'alicepass', '9876543210', '123 Main St, NY', '10001', '2025-04-02 19:05:31'),
-(2, 'Bob White', 'bob@example.com', 'bobpass', '8765432109', '456 Elm St, CA', '90001', '2025-04-02 19:05:31'),
-(3, 'het shah', 'hetshah6312@gmail.com', '', '', '', '', '2025-04-28 05:51:11'),
-(4, 'het shah', 'hetshah6315@gmail.com', '', '', '', '', '2025-04-28 18:18:19'),
-(5, 'het', 'hetshah6313@gmail.com', '$2y$10$4uw.Lp2IvFTH6xCcMHDN6uqjiZq34XmcV.vFrPDRlRRv4cX6tNX4O', '', '', '', '2025-04-28 19:43:37');
+INSERT INTO `user` (`user_id`, `name`, `email`, `password`, `phone`, `address`, `zip_code`, `created_at`, `city`, `state`, `country`) VALUES
+(1, 'Alice Brown', 'alice@example.com', 'alicepass', '9876543210', '123 Main St, NY', '10001', '2025-04-02 19:05:31', NULL, NULL, 'India'),
+(2, 'Bob White', 'bob@example.com', 'bobpass', '8765432109', '456 Elm St, CA', '90001', '2025-04-02 19:05:31', NULL, NULL, 'India'),
+(3, 'het shah', 'hetshah6312@gmail.com', '', '', '', '', '2025-04-28 05:51:11', NULL, NULL, 'India'),
+(4, 'het shah', 'hetshah6315@gmail.com', '', '', '', '', '2025-04-28 18:18:19', NULL, NULL, 'India'),
+(5, 'het', 'hetshah6313@gmail.com', '$2y$10$4uw.Lp2IvFTH6xCcMHDN6uqjiZq34XmcV.vFrPDRlRRv4cX6tNX4O', '', '', '', '2025-04-28 19:43:37', NULL, NULL, 'India'),
+(6, 'het lj', 'hetlj6315@gmail.com', '', '', '', '', '2025-05-17 09:48:16', NULL, NULL, 'India');
 
 -- --------------------------------------------------------
 
@@ -601,25 +637,25 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `brand`
 --
 ALTER TABLE `brand`
-  MODIFY `brand_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `brand_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `employee`
@@ -673,37 +709,37 @@ ALTER TABLE `lens_category`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `prescription`
 --
 ALTER TABLE `prescription`
-  MODIFY `prescription_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `prescription_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `shipping`
 --
 ALTER TABLE `shipping`
-  MODIFY `shipping_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `shipping_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `wishlist`

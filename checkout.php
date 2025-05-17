@@ -82,8 +82,9 @@ $items_query = mysqli_query($conn, "
             </thead>
 
             <tbody>
-            <tbody>
               <?php
+              // Reset pointer for items_query
+              mysqli_data_seek($items_query, 0);
               while ($item = mysqli_fetch_assoc($items_query)) {
                 $frame_name = $item['frame_name'] ?? 'No Frame';
                 $lens_name = $item['lens_name'] ?? 'No Lens';
@@ -166,6 +167,10 @@ $items_query = mysqli_query($conn, "
     e.preventDefault();
 
     const form = document.getElementById('checkout-form');
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
     const formData = new FormData(form);
 
     const options = {
@@ -189,7 +194,7 @@ $items_query = mysqli_query($conn, "
           if (data.success) {
             window.location.href = 'thank_you.php';
           } else {
-            alert('Something went wrong saving your order.');
+            alert((data.message || 'Something went wrong saving your order.') + (data.error ? '\n' + data.error : ''));
           }
         });
       },
@@ -201,11 +206,8 @@ $items_query = mysqli_query($conn, "
       "theme": {
         "color": "#3399cc"
       },
-  "theme": {
-    "color": "#3399cc"
-  },
-  "method": ["card", "upi", "netbanking"]  // Include UPI in the list of available methods
-};
+      "method": ["card", "upi", "netbanking"]  // Include UPI in the list of available methods
+    };
 
     const rzp = new Razorpay(options);
     rzp.open();

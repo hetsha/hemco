@@ -4,10 +4,12 @@ include('include/header.php');
 
 $user_id = $_SESSION['user_id']; // Assumes user is logged in and session holds user_id
 
-// Get cart ID for current user
+$cart_ids = [];
 $cart_query = mysqli_query($conn, "SELECT cart_id FROM cart WHERE user_id = $user_id");
-$cart = mysqli_fetch_assoc($cart_query);
-$cart_id = $cart['cart_id'] ?? 0;
+while ($row = mysqli_fetch_assoc($cart_query)) {
+    $cart_ids[] = $row['cart_id'];
+}
+$cart_ids_str = implode(',', $cart_ids ?: [0]);
 
 $total = 0;
 
@@ -17,6 +19,7 @@ $items_query = mysqli_query($conn, "
   ci.frame_id,
   ci.lens_id,
   ci.quantity,
+  ci.prescription_id,
   f.name AS frame_name,
   f.price AS frame_price,
   l.type AS lens_name,
@@ -30,7 +33,8 @@ LEFT JOIN (
   FROM frame_images
   GROUP BY frame_id
 ) fi ON ci.frame_id = fi.frame_id
-WHERE ci.cart_id = $cart_id
+WHERE ci.cart_id IN ($cart_ids_str)
+ORDER BY ci.cart_item_id DESC
 ");
 ?>
 
@@ -87,12 +91,12 @@ WHERE ci.cart_id = $cart_id
                   <p class='table__description'>Lens: $lens_name</p>
                 </td>
                 <td>
-                  <span class='table__price'>Frame: $$frame_price</span><br>
-                  <span class='table__price'>Lens: $$lens_price</span>
+                  <span class='table__price'>Frame: ₹$frame_price</span><br>
+                  <span class='table__price'>Lens: ₹$lens_price</span>
                 </td>
-                <td><input type='number' value='$qty' class='quantity' /></td>
-                <td><span class='subtotal'>$$subtotal</span></td>
-                <td><a href='remove_item.php?frame_id={$item['frame_id']}&lens_id={$item['lens_id']}'><i class='fi fi-rs-trash table__trash'></i></a></td>
+                <td><input type='number' value='$qty' class='quantity' readonly /></td>
+                <td><span class='subtotal'>₹$subtotal</span></td>
+                <td><a href='remove_item.php?cart_item_id={$item['cart_item_id']}'><i class='fi fi-rs-trash table__trash'></i></a></td>
               </tr>
             ";
             }
@@ -166,7 +170,7 @@ WHERE ci.cart_id = $cart_id
               <td><span class="cart__total-price">₹<?php echo number_format($total + $shipping_cost, 2); ?></span></td>
             </tr>
           </table>
-          <a href="checkout.php" class="btn flex btn--md">
+          <a href="checkout.php" class="btn flex btn--md" id="proceed-checkout-btn">
             <i class="fi fi-rs-box-alt"></i> Proceed To Checkout
           </a>
         </div>
@@ -179,6 +183,18 @@ WHERE ci.cart_id = $cart_id
 
   <!--=============== FOOTER ===============-->
   <?php include('include/footer.php') ?>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('proceed-checkout-btn').addEventListener('click', function(e) {
+      var shipping = <?php echo isset($_SESSION['shipping_cost']) && $_SESSION['shipping_cost'] > 0 ? 'true' : 'false'; ?>;
+      if (!shipping) {
+        e.preventDefault();
+        alert('Please calculate shipping charge before proceeding to checkout.');
+        document.querySelector('input[name=state]').focus();
+      }
+    });
+  });
+  </script>
 </body>
 
 </html>

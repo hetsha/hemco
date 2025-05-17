@@ -207,144 +207,11 @@ if (isset($_GET['frame_id'])) {
         </ul>
         <div class="details__action">
           <input type="number" class="quantity" value="1" />
-          <button type="button" class="btn btn-primary" id="addToCartBtn">Add to Cart</button>
+          <button class="btn btn--md btn-primary" id="add-to-cart-btn">Add to Cart</button>
         </div>
       </div>
     </div>
   </section>
-
- <!-- Lens Category Modal -->
-<div class="modal fade" id="lensCategoryModal">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content border-0 rounded-4 shadow-sm">
-      <div class="modal-header border-0">
-        <h5 class="modal-title fw-bold fs-4 text-dark">Select Lens Type</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body bg-light-subtle">
-        <div class="d-grid gap-3" id="lensCategoryList">
-          <!-- Categories will be loaded here dynamically -->
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- Lens Company Modal -->
-<div class="modal fade" id="lensCompanyModal" tabindex="-1" aria-labelledby="lensCompanyModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-bottom-0 pb-0">
-                <div class="w-100 d-flex justify-content-between align-items-center">
-                    <h4 class="modal-title fw-bold" id="lensCompanyModalLabel">Select Lens Type</h4>
-                    <div>
-                        <button type="button" class="btn btn-outline-secondary btn-sm me-2" onclick="goBackToPreviousModal('#lenscat')">
-                            <i class="bi bi-arrow-left"></i> Back
-                        </button>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body pt-2"></div>
-        </div>
-    </div>
-</div>
-
-<!-- Prescription Modal -->
-<div class="modal fade" id="prescriptionModal" tabindex="-1" aria-labelledby="prescriptionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-bottom-0 pb-0">
-                <div class="w-100 d-flex justify-content-between align-items-center">
-                    <h4 class="modal-title fw-bold" id="prescriptionModalLabel">Enter Prescription</h4>
-                    <div>
-                        <button type="button" class="btn btn-outline-secondary btn-sm me-2" onclick="goBackToPreviousModal('#lenscompany')">
-                            <i class="bi bi-arrow-left"></i> Back
-                        </button>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body">
-                <form id="prescriptionForm" onsubmit="submitPrescription(event)">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="left_eye_sph" class="form-label">Left Eye Spherical</label>
-                            <input type="text" id="left_eye_sph" name="left_eye_sph" class="form-control" placeholder="Enter Spherical value" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="right_eye_sph" class="form-label">Right Eye Spherical</label>
-                            <input type="text" id="right_eye_sph" name="right_eye_sph" class="form-control" placeholder="Enter Spherical value" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="left_eye_cyl" class="form-label">Left Eye Cylindrical</label>
-                            <input type="text" id="left_eye_cyl" name="left_eye_cyl" class="form-control" placeholder="Enter Cylindrical value" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="right_eye_cyl" class="form-label">Right Eye Cylindrical</label>
-                            <input type="text" id="right_eye_cyl" name="right_eye_cyl" class="form-control" placeholder="Enter Cylindrical value" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="axis" class="form-label">Axis</label>
-                            <input type="text" id="axis" name="axis" class="form-control" placeholder="Enter Axis value" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="addition" class="form-label">Addition</label>
-                            <input type="text" id="addition" name="addition" class="form-control" placeholder="Enter Addition value">
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <h5>Or Upload Prescription Image</h5>
-                        <div class="input-group">
-                            <input type="file" id="prescription_image" name="prescription_image" class="form-control" accept="image/*">
-                            <label class="input-group-text" for="prescription_image"><i class="bi bi-file-earmark-image"></i></label>
-                        </div>
-                        <small class="text-muted">If you don't have a prescription now, you can skip and we will call you.</small>
-                    </div>
-
-                    <div class="d-flex justify-content-between">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle"></i> Submit Prescription
-                        </button>
-                        <button type="button" class="btn btn-secondary" onclick="skipPrescription()">
-                            <i class="bi bi-x-circle"></i> Skip Prescription
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End of Prescription Modal -->
-
-<!-- Success Modal -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center pb-4">
-                <div class="mb-4">
-                    <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
-                </div>
-                <h4 class="fw-bold mb-3">Added to Cart!</h4>
-                <p class="text-muted mb-4">Your item has been successfully added to your cart.</p>
-                <div class="d-grid gap-2">
-                    <a href="cart.php" class="btn btn-primary">
-                        <i class="bi bi-cart me-2"></i>View Cart
-                    </a>
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        Continue Shopping
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End of Success Modal -->
 
 <?php include 'include/news.php'; ?>
 <?php include 'include/footer.php'; ?>
@@ -353,17 +220,18 @@ if (isset($_GET['frame_id'])) {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Then Bootstrap Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Initialize Bootstrap -->
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all modals
-    var modals = document.querySelectorAll('.modal');
-    modals.forEach(function(modal) {
-      new bootstrap.Modal(modal);
-    });
+$(document).ready(function() {
+  $('#add-to-cart-btn').on('click', function() {
+    <?php if (!isset($_SESSION['user_id'])): ?>
+      window.location.href = 'login-register.php';
+      return;
+    <?php else: ?>
+      const frameId = <?php echo json_encode($productRow['frame_id']); ?>;
+      window.location.href = 'add_to_cart.php?frame_id=' + frameId;
+    <?php endif; ?>
   });
+});
 </script>
-<!-- Custom cart functionality -->
-<script src="assets/js/cart.js"></script>
 </body>
 </html>
