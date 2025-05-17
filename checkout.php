@@ -169,12 +169,12 @@ $items_query = mysqli_query($conn, "
     const formData = new FormData(form);
 
     const options = {
-      "key": "YOUR_RAZORPAY_KEY_ID",
+      "key": "rzp_test_d72gC817C1EAM8",
       "amount": <?php echo ($total + $shipping_cost) * 100; ?>,
       "currency": "INR",
-      "name": "My Shop",
+      "name": "Hemco opticals",
       "description": "Order Payment",
-      "image": "https://yourdomain.com/logo.png",
+      "image": "assets/img/logo.png",
       "handler": function(response) {
         // Append payment ID to form data
         formData.append('payment_id', response.razorpay_payment_id);
@@ -200,8 +200,12 @@ $items_query = mysqli_query($conn, "
       },
       "theme": {
         "color": "#3399cc"
-      }
-    };
+      },
+  "theme": {
+    "color": "#3399cc"
+  },
+  "method": ["card", "upi", "netbanking"]  // Include UPI in the list of available methods
+};
 
     const rzp = new Razorpay(options);
     rzp.open();
