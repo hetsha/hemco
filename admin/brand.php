@@ -2,6 +2,50 @@
 // Admin page for managing brands
 include 'config/db.php';
 if (!isset($_SESSION['admin_id'])) { header('Location: login.php'); exit; }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['add_brand'])) {
+        $name = trim($_POST['name'] ?? '');
+        if ($name) {
+            $stmt = $conn->prepare('INSERT INTO brand (name) VALUES (?)');
+            $stmt->bind_param('s', $name);
+            $stmt->execute();
+            $stmt->close();
+        }
+        header('Location: brand.php'); exit;
+    }
+    if (isset($_POST['edit_brand'])) {
+        $id = intval($_POST['brand_id'] ?? 0);
+        $name = trim($_POST['name'] ?? '');
+        if ($id && $name) {
+            $stmt = $conn->prepare('UPDATE brand SET name=? WHERE brand_id=?');
+            $stmt->bind_param('si', $name, $id);
+            $stmt->execute();
+            $stmt->close();
+        }
+        header('Location: brand.php'); exit;
+    }
+    if (isset($_POST['delete_brand'])) {
+        $id = intval($_POST['brand_id'] ?? 0);
+        if ($id) {
+            $stmt = $conn->prepare('DELETE FROM brand WHERE brand_id=?');
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $stmt->close();
+        }
+        header('Location: brand.php'); exit;
+    }
+}
+
+// Fetch brands for initial table load
+$brands = [];
+$sql = "SELECT * FROM brand ORDER BY brand_id DESC";
+$result = mysqli_query($conn, $sql);
+if ($result && mysqli_num_rows($result) > 0) {
+  while ($row = mysqli_fetch_assoc($result)) {
+    $brands[] = $row;
+  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,7 +88,23 @@ if (!isset($_SESSION['admin_id'])) { header('Location: login.php'); exit; }
                 </tr>
               </thead>
               <tbody id="brandTableBody">
-                <!-- Brand rows will be loaded by JS -->
+                <?php if (!empty($brands)): ?>
+                  <?php foreach ($brands as $brand): ?>
+                    <tr class="border-t border-blue-100 dark:border-gray-700">
+                      <td class="p-2"><?php echo $brand['brand_id']; ?></td>
+                      <td class="p-2"><?php echo htmlspecialchars($brand['name']); ?></td>
+                      <td class="p-2 space-x-2">
+                        <button onclick="openEditBrandModal('<?php echo $brand['brand_id']; ?>','<?php echo htmlspecialchars(addslashes($brand['name'])); ?>')" class="text-blue-600 hover:underline">Edit</button>
+                        <form method="post" action="" style="display:inline;" onsubmit="return confirm('Delete this brand?');">
+                          <input type="hidden" name="brand_id" value="<?php echo $brand['brand_id']; ?>">
+                          <button type="submit" name="delete_brand" class="text-red-600 hover:underline bg-transparent border-0 p-0 m-0 cursor-pointer">Delete</button>
+                        </form>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                <?php else: ?>
+                  <tr><td colspan="3" class="p-2 text-center text-gray-400">No brands found.</td></tr>
+                <?php endif; ?>
               </tbody>
             </table>
           </div>
@@ -57,14 +117,14 @@ if (!isset($_SESSION['admin_id'])) { header('Location: login.php'); exit; }
   <div id="addBrandModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white dark:bg-gray-800 p-6 rounded shadow-lg w-full max-w-md">
       <h3 class="text-xl font-semibold mb-4">Add Brand</h3>
-      <form id="addBrandForm" class="space-y-4">
+      <form id="addBrandForm" class="space-y-4" method="post" action="">
         <div>
           <label class="block text-sm">Brand Name</label>
           <input type="text" id="addBrandName" name="name" class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700" required />
         </div>
         <div class="flex justify-end space-x-2 mt-4">
           <button type="button" id="cancelAddBrand" class="px-4 py-2 rounded bg-gray-300 dark:bg-gray-600">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded bg-blue-600 text-white">Add</button>
+          <button type="submit" name="add_brand" class="px-4 py-2 rounded bg-blue-600 text-white">Add</button>
         </div>
       </form>
     </div>
@@ -74,15 +134,15 @@ if (!isset($_SESSION['admin_id'])) { header('Location: login.php'); exit; }
   <div id="editBrandModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white dark:bg-gray-800 p-6 rounded shadow-lg w-full max-w-md">
       <h3 class="text-xl font-semibold mb-4">Edit Brand</h3>
-      <form id="editBrandForm" class="space-y-4">
+      <form id="editBrandForm" class="space-y-4" method="post" action="">
         <div>
           <label class="block text-sm">Brand Name</label>
           <input type="text" id="editBrandName" name="name" class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700" required />
         </div>
-        <input type="hidden" id="editBrandId" name="id" />
+        <input type="hidden" id="editBrandId" name="brand_id" />
         <div class="flex justify-end space-x-2 mt-4">
           <button type="button" id="cancelEditBrand" class="px-4 py-2 rounded bg-gray-300 dark:bg-gray-600">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded bg-blue-600 text-white">Save</button>
+          <button type="submit" name="edit_brand" class="px-4 py-2 rounded bg-blue-600 text-white">Save</button>
         </div>
       </form>
     </div>
@@ -90,7 +150,6 @@ if (!isset($_SESSION['admin_id'])) { header('Location: login.php'); exit; }
 
   <?php include 'include/footer.php'; ?>
   <script>
-    // Modal logic
     document.getElementById('openAddBrandModal').onclick = () => {
       document.getElementById('addBrandModal').classList.remove('hidden');
     };
@@ -100,62 +159,11 @@ if (!isset($_SESSION['admin_id'])) { header('Location: login.php'); exit; }
     document.getElementById('cancelEditBrand').onclick = () => {
       document.getElementById('editBrandModal').classList.add('hidden');
     };
-    // Add Brand
-    document.getElementById('addBrandForm').onsubmit = function(e) {
-      e.preventDefault();
-      const name = document.getElementById('addBrandName').value.trim();
-      if (!name) return;
-      fetch('brand_actions.php', { method: 'POST', body: new URLSearchParams({action:'add', name}) })
-        .then(() => {
-          document.getElementById('addBrandModal').classList.add('hidden');
-          loadBrandsTable();
-        });
-    };
-    // Edit Brand
-    document.getElementById('editBrandForm').onsubmit = function(e) {
-      e.preventDefault();
-      const id = document.getElementById('editBrandId').value;
-      const name = document.getElementById('editBrandName').value.trim();
-      if (!id || !name) return;
-      fetch('brand_actions.php', { method: 'POST', body: new URLSearchParams({action:'edit', id, name}) })
-        .then(() => {
-          document.getElementById('editBrandModal').classList.add('hidden');
-          loadBrandsTable();
-        });
-    };
-    // Load Brands Table
-    function loadBrandsTable() {
-      fetch('brand_actions.php', { method: 'POST', body: new URLSearchParams({action:'get'}) })
-        .then(r => r.json())
-        .then(data => {
-          const tbody = document.getElementById('brandTableBody');
-          tbody.innerHTML = data.map(brand =>
-            `<tr class="border-t border-blue-100 dark:border-gray-700">
-              <td class="p-2">${brand.id || brand.brand_id}</td>
-              <td class="p-2">${brand.name}</td>
-              <td class="p-2 space-x-2">
-                <button onclick="openEditBrandModal('${brand.id || brand.brand_id}','${brand.name.replace(/'/g, "&#39;")}")" class="text-blue-600 hover:underline">Edit</button>
-                <button onclick="deleteBrand('${brand.id || brand.brand_id}')" class="text-red-600 hover:underline">Delete</button>
-              </td>
-            </tr>`
-          ).join('');
-        });
-    }
-    // Open Edit Modal
     window.openEditBrandModal = function(id, name) {
       document.getElementById('editBrandId').value = id;
       document.getElementById('editBrandName').value = name;
       document.getElementById('editBrandModal').classList.remove('hidden');
     };
-    // Delete Brand
-    window.deleteBrand = function(id) {
-      if (confirm('Delete this brand?')) {
-        fetch('brand_actions.php', { method: 'POST', body: new URLSearchParams({action:'delete', id}) })
-          .then(() => loadBrandsTable());
-      }
-    };
-    // Initial load
-    loadBrandsTable();
   </script>
 </body>
 </html>

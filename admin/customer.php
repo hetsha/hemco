@@ -5,21 +5,52 @@ if (!isset($_SESSION['admin_id'])) {
     exit;
 }
 
-// Fetch all users
+// Fetch all users with their most recent shipping info (if any)
 $query = "
   SELECT
-    u.id,
-    u.username,
+    u.user_id,
+    u.name,
     u.email,
-    u.phone_number,
+    u.phone,
     u.created_at,
-    COUNT(o.id) AS total_orders
-  FROM users u
-  LEFT JOIN orders o ON o.user_id = u.id
-  GROUP BY u.id
+    (
+      SELECT s.shipping_address
+      FROM shipping s
+      WHERE s.order_id = (
+        SELECT o.order_id FROM orders o WHERE o.user_id = u.user_id ORDER BY o.created_at DESC LIMIT 1
+      )
+      ORDER BY s.created_at DESC LIMIT 1
+    ) AS shipping_address,
+    (
+      SELECT s.city
+      FROM shipping s
+      WHERE s.order_id = (
+        SELECT o.order_id FROM orders o WHERE o.user_id = u.user_id ORDER BY o.created_at DESC LIMIT 1
+      )
+      ORDER BY s.created_at DESC LIMIT 1
+    ) AS shipping_city,
+    (
+      SELECT s.state
+      FROM shipping s
+      WHERE s.order_id = (
+        SELECT o.order_id FROM orders o WHERE o.user_id = u.user_id ORDER BY o.created_at DESC LIMIT 1
+      )
+      ORDER BY s.created_at DESC LIMIT 1
+    ) AS shipping_state,
+    (
+      SELECT s.country
+      FROM shipping s
+      WHERE s.order_id = (
+        SELECT o.order_id FROM orders o WHERE o.user_id = u.user_id ORDER BY o.created_at DESC LIMIT 1
+      )
+      ORDER BY s.created_at DESC LIMIT 1
+    ) AS shipping_country,
+    COUNT(o.order_id) AS total_orders
+  FROM user u
+  LEFT JOIN orders o ON o.user_id = u.user_id
+  GROUP BY u.user_id
   ORDER BY u.created_at DESC
 ";
-
 
 $result = mysqli_query($conn, $query);
 ?>
@@ -68,6 +99,10 @@ $result = mysqli_query($conn, $query);
                   <th class="p-2">Name</th>
                   <th class="p-2">Email</th>
                   <th class="p-2">Phone</th>
+                  <th class="p-2">Address</th>
+                  <th class="p-2">City</th>
+                  <th class="p-2">State</th>
+                  <th class="p-2">Country</th>
                   <th class="p-2">Joined</th>
                   <th class="p-2">Orders</th>
                   <th class="p-2">Action</th>
@@ -76,22 +111,26 @@ $result = mysqli_query($conn, $query);
               <tbody>
                 <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                   <tr class="border-t border-blue-100 dark:border-gray-700">
-                    <td class="p-2">C<?= str_pad($row['id'], 3, '0', STR_PAD_LEFT); ?></td>
-                    <td class="p-2"><?= htmlspecialchars($row['username']); ?></td>
+                    <td class="p-2">C<?= str_pad($row['user_id'], 3, '0', STR_PAD_LEFT); ?></td>
+                    <td class="p-2"><?= htmlspecialchars($row['name']); ?></td>
                     <td class="p-2"><?= htmlspecialchars($row['email']); ?></td>
-                    <td class="p-2"><?= htmlspecialchars($row['phone_number'] ?? 'N/A'); ?></td>
+                    <td class="p-2"><?= htmlspecialchars($row['phone']); ?></td>
+                    <td class="p-2"><?= htmlspecialchars($row['shipping_address'] ?: ''); ?></td>
+                    <td class="p-2"><?= htmlspecialchars($row['shipping_city'] ?: ''); ?></td>
+                    <td class="p-2"><?= htmlspecialchars($row['shipping_state'] ?: ''); ?></td>
+                    <td class="p-2"><?= htmlspecialchars($row['shipping_country'] ?: ''); ?></td>
                     <td class="p-2"><?= date('M d, Y', strtotime($row['created_at'])); ?></td>
                     <td class="p-2"><?= $row['total_orders']; ?></td>
                     <td class="p-2 space-x-2">
-                      <a href="view-customer.php?id=<?= $row['id']; ?>" class="text-blue-600 hover:underline">View</a>
-                      </td>
+                      <a href="view-customer.php?id=<?= $row['user_id']; ?>" class="text-blue-600 hover:underline">View</a>
+                    </td>
                   </tr>
                 <?php } ?>
               </tbody>
+              <?php if (mysqli_num_rows($result) === 0): ?>
+                <p class="text-center py-4 text-gray-500">No customers found.</p>
+              <?php endif; ?>
             </table>
-            <?php if (mysqli_num_rows($result) === 0): ?>
-              <p class="text-center py-4 text-gray-500">No customers found.</p>
-            <?php endif; ?>
           </div>
         </div>
       </main>

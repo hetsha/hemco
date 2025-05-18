@@ -7,38 +7,52 @@ if (!isset($_SESSION['admin_id'])) {
 
 // Check if 'id' is passed via URL
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-  $customer_id = $_GET['id'];
+  $customer_id = intval($_GET['id']);
 
   // Fetch customer details
   $query = "
     SELECT
-      id, username, email, phone_number, created_at, address_line_1, address_line_2, city, state, country, postal_code
-    FROM users
-    WHERE id = $customer_id
+      user_id, name, email, phone, created_at
+    FROM user
+    WHERE user_id = $customer_id
   ";
   $customer_result = mysqli_query($conn, $query);
   $customer = mysqli_fetch_assoc($customer_result);
 
-  // Fetch customer orders and address details
+  // Fetch most recent shipping address for this user
+  $shipping_query = "
+    SELECT s.shipping_address, s.city, s.state, s.country, s.pincode
+    FROM shipping s
+    WHERE s.order_id = (
+      SELECT o.order_id FROM orders o WHERE o.user_id = $customer_id ORDER BY o.created_at DESC LIMIT 1
+    )
+    ORDER BY s.created_at DESC LIMIT 1
+  ";
+  $shipping_result = mysqli_query($conn, $shipping_query);
+  $shipping = mysqli_fetch_assoc($shipping_result);
+
+  // Fetch customer orders and shipping details per order
   $order_query = "
     SELECT
-      o.id as order_id,
+      o.order_id,
       o.created_at AS order_date,
       o.status,
-      p.name AS product_name,
       oi.quantity,
       oi.price,
-      u.address_line_1,
-      u.address_line_2,
-      u.city,
-      u.state,
-      u.country,
-      u.postal_code,
-      u.phone_number
+      oi.frame_id,
+      oi.lens_id,
+      f.name AS frame_name,
+      l.type AS lens_type,
+      s.shipping_address,
+      s.city AS shipping_city,
+      s.state AS shipping_state,
+      s.country AS shipping_country,
+      s.pincode AS shipping_pincode
     FROM orders o
-    JOIN order_items oi ON oi.order_id = o.id
-    JOIN products p ON oi.product_id = p.id
-    JOIN users u ON o.user_id = u.id
+    JOIN order_items oi ON oi.order_id = o.order_id
+    LEFT JOIN frames f ON oi.frame_id = f.frame_id
+    LEFT JOIN lens l ON oi.lens_id = l.lens_id
+    LEFT JOIN shipping s ON s.order_id = o.order_id
     WHERE o.user_id = $customer_id
     ORDER BY o.created_at DESC
   ";
@@ -55,7 +69,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>View Customer | <?= htmlspecialchars($customer['username']) ?></title>
+  <title>View Customer | <?= htmlspecialchars($customer['name']) ?></title>
   <?php include 'include/header.php'; ?>
 </head>
 
@@ -83,11 +97,11 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
       <main class="p-4 overflow-auto">
         <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
           <h3 class="text-xl font-semibold mb-4">Customer Information</h3>
-          <p><strong>Customer ID:</strong> C<?= str_pad($customer['id'], 3, '0', STR_PAD_LEFT) ?></p>
-          <p><strong>Name:</strong> <?= htmlspecialchars($customer['username']) ?></p>
+          <p><strong>Customer ID:</strong> C<?= str_pad($customer['user_id'], 3, '0', STR_PAD_LEFT) ?></p>
+          <p><strong>Name:</strong> <?= htmlspecialchars($customer['name']) ?></p>
           <p><strong>Email:</strong> <?= htmlspecialchars($customer['email']) ?></p>
-          <p><strong>Phone:</strong> <?= htmlspecialchars($customer['phone_number'] ?? 'N/A') ?></p>
-          <p><strong>Address:</strong> <?= htmlspecialchars($customer['address_line_1']) ?>, <?= htmlspecialchars($customer['address_line_2']) ?>, <?= htmlspecialchars($customer['city']) ?>, <?= htmlspecialchars($customer['state']) ?>, <?= htmlspecialchars($customer['country']) ?>, <?= htmlspecialchars($customer['postal_code']) ?></p>
+          <p><strong>Phone:</strong> <?= htmlspecialchars($customer['phone'] ?? 'N/A') ?></p>
+          <p><strong>Address:</strong> <?= htmlspecialchars($shipping['shipping_address'] ?? '') ?><?= isset($shipping['shipping_address']) ? ',' : '' ?> <?= htmlspecialchars($shipping['city'] ?? '') ?><?= isset($shipping['city']) ? ',' : '' ?> <?= htmlspecialchars($shipping['state'] ?? '') ?><?= isset($shipping['state']) ? ',' : '' ?> <?= htmlspecialchars($shipping['country'] ?? '') ?><?= isset($shipping['country']) ? ',' : '' ?> <?= htmlspecialchars($shipping['pincode'] ?? '') ?></p>
           <p><strong>Joined:</strong> <?= date('M d, Y', strtotime($customer['created_at'])) ?></p>
 
           <h3 class="text-xl font-semibold mt-6 mb-4">Order History</h3>
@@ -102,6 +116,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                     <th class="p-2">Products</th>
                     <th class="p-2">Quantity</th>
                     <th class="p-2">Total Price</th>
+                    <th class="p-2">Shipping Address</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -110,9 +125,20 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                       <td class="p-2">#<?= str_pad($order['order_id'], 5, '0', STR_PAD_LEFT); ?></td>
                       <td class="p-2"><?= date('M d, Y', strtotime($order['order_date'])); ?></td>
                       <td class="p-2"><?= htmlspecialchars($order['status']); ?></td>
-                      <td class="p-2"><?= htmlspecialchars($order['product_name']); ?></td>
+                      <td class="p-2">
+                        <?php
+                          if ($order['frame_name']) {
+                            echo 'Frame: ' . htmlspecialchars($order['frame_name']);
+                          } elseif ($order['lens_type']) {
+                            echo 'Lens: ' . htmlspecialchars($order['lens_type']);
+                          } else {
+                            echo '-';
+                          }
+                        ?>
+                      </td>
                       <td class="p-2"><?= $order['quantity']; ?></td>
                       <td class="p-2"><?= '₹' . number_format($order['price'] * $order['quantity'], 2); ?></td>
+                      <td class="p-2"><?= htmlspecialchars($order['shipping_address']); ?><?= $order['shipping_address'] ? ',' : '' ?> <?= htmlspecialchars($order['shipping_city']); ?><?= $order['shipping_city'] ? ',' : '' ?> <?= htmlspecialchars($order['shipping_state']); ?><?= $order['shipping_state'] ? ',' : '' ?> <?= htmlspecialchars($order['shipping_country']); ?><?= $order['shipping_country'] ? ',' : '' ?> <?= htmlspecialchars($order['shipping_pincode']); ?></td>
                     </tr>
                   <?php } ?>
                 </tbody>

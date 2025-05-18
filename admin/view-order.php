@@ -94,9 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_shiprocket_ord
 // Handle Ship Now button
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ship_now'])) {
     // 1. Update local status
-    $update_status_sql = "UPDATE orders SET status = 'in_transit' WHERE order_id = $order_id";
+    $update_status_sql = "UPDATE orders SET status = 'pending' WHERE order_id = $order_id";
     mysqli_query($conn, $update_status_sql);
-    $update_ship_sql = "UPDATE shipping SET status = 'in_transit' WHERE order_id = $order_id";
+    $update_ship_sql = "UPDATE shipping SET status = 'pending' WHERE order_id = $order_id";
     mysqli_query($conn, $update_ship_sql);
 
     // 2. Trigger Shiprocket shipment creation (generate AWB)
@@ -257,6 +257,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ship_now'])) {
                   <br><a href="https://www.shiprocket.in/shipment-tracking/<?= urlencode($shipping['tracking_number']) ?>" target="_blank" class="text-blue-500 underline">Track on Shiprocket</a>
                 <?php endif; ?>
               </div>
+              <?php if (!empty($shipping['tracking_number']) && !empty($shipping['status']) && in_array($shipping['status'], ['in_transit','delivered'])): ?>
+                <div class="mt-2">
+                  <a href="https://apiv2.shiprocket.in/v1/external/orders/print/invoice?order_id=<?= urlencode($order['order_id']) ?>" target="_blank" class="btn btn--md bg-yellow-500 text-white hover:bg-yellow-600">Download Invoice (Shiprocket)</a>
+                </div>
+              <?php endif; ?>
             <?php endif; ?>
           <?php else: ?>
             <p><?= htmlspecialchars($order['address']) ?><br><?= htmlspecialchars($order['zip_code']) ?></p>

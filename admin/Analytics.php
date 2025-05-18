@@ -5,8 +5,8 @@ if (!isset($_SESSION['admin_id'])) {
     exit;
 }
 
-// 1. Total Revenue (paid orders) including shipping cost
-$res = mysqli_query($conn, "SELECT IFNULL(SUM(total_amount + shipping_cost), 0) AS total_revenue FROM orders WHERE status = 'paid'");
+// 1. Total Revenue (paid orders)
+$res = mysqli_query($conn, "SELECT IFNULL(SUM(total_price), 0) AS total_revenue FROM orders WHERE status = 'paid'");
 $total_revenue = mysqli_fetch_assoc($res)['total_revenue'];
 
 // 2. Orders This Month
@@ -14,64 +14,60 @@ $res = mysqli_query($conn, "SELECT COUNT(*) AS orders_this_month FROM orders WHE
 $orders_this_month = mysqli_fetch_assoc($res)['orders_this_month'];
 
 // 3. New Customers This Month
-$res = mysqli_query($conn, "SELECT COUNT(*) AS new_customers FROM users WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())");
+$res = mysqli_query($conn, "SELECT COUNT(*) AS new_customers FROM user WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())");
 $new_customers = mysqli_fetch_assoc($res)['new_customers'];
 
-// 4. Refunds (cancelled orders)
-$res = mysqli_query($conn, "SELECT IFNULL(SUM(shipping_cost), 0) AS shipping_cost FROM orders WHERE status = 'paid'");
-$shipping_cost = mysqli_fetch_assoc($res)['shipping_cost'];
-// 5. Revenue Breakdown (Product vs Shipping)
-$res = mysqli_query($conn, "SELECT
-  IFNULL(SUM(total_amount), 0) AS product_revenue,
-  IFNULL(SUM(shipping_cost), 0) AS shipping_revenue
-FROM orders WHERE status = 'paid'");
+// 4. Shipping Cost (set to 0, since not tracked in orders table)
+$shipping_cost = 0;
+
+// 5. Revenue Breakdown (Product only, since no shipping cost)
+$res = mysqli_query($conn, "SELECT IFNULL(SUM(total_price), 0) AS product_revenue FROM orders WHERE status = 'paid'");
 $revenue_data = mysqli_fetch_assoc($res);
 $product_revenue = $revenue_data['product_revenue'];
-$shipping_revenue = $revenue_data['shipping_revenue'];
+$shipping_revenue = 0;
 
-// Top 5 Selling Products
+// Top 5 Selling Products (frames and lens)
 $res = mysqli_query($conn, "
-  SELECT p.name, SUM(oi.quantity) AS total_sold
+  SELECT
+    COALESCE(f.name, l.type) AS product_name,
+    SUM(oi.quantity) AS total_sold
   FROM order_items oi
-  JOIN products p ON p.id = oi.product_id
-  JOIN orders o ON o.id = oi.order_id
+  LEFT JOIN frames f ON oi.frame_id = f.frame_id
+  LEFT JOIN lens l ON oi.lens_id = l.lens_id
+  JOIN orders o ON o.order_id = oi.order_id
   WHERE o.status = 'paid'
-  GROUP BY p.name
+  GROUP BY product_name
   ORDER BY total_sold DESC
   LIMIT 5
 ");
-
 $product_names = [];
 $product_sales = [];
 while ($row = mysqli_fetch_assoc($res)) {
-  $product_names[] = $row['name'];
+  $product_names[] = $row['product_name'];
   $product_sales[] = $row['total_sold'];
 }
 
-// Monthly Revenue: last 6 months
+// Top 6 Categories (frame_category and lens_category)
 $res = mysqli_query($conn, "
-  SELECT DATE_FORMAT(created_at, '%b') AS month, SUM(total_amount + shipping_cost) AS revenue
-  FROM orders
-  WHERE status = 'paid' AND created_at >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
-  GROUP BY MONTH(created_at)
-  ORDER BY MONTH(created_at)
-");
-
-$revenue_labels = [];
-$revenue_values = [];
-while ($row = mysqli_fetch_assoc($res)) {
-  $revenue_labels[] = $row['month'];
-  $revenue_values[] = (float)$row['revenue'];
-}
-
-$res = mysqli_query($conn, "
-  SELECT c.name AS category, SUM(oi.quantity) AS total_sold
-  FROM order_items oi
-  JOIN products p ON p.id = oi.product_id
-  JOIN categories c ON c.id = p.category_id
-  JOIN orders o ON o.id = oi.order_id
-  WHERE o.status = 'paid'
-  GROUP BY c.name
+  SELECT category, SUM(total_sold) AS total_sold FROM (
+    SELECT c.name AS category, SUM(oi.quantity) AS total_sold
+    FROM order_items oi
+    LEFT JOIN frames f ON oi.frame_id = f.frame_id
+    LEFT JOIN frame_category_map fmap ON fmap.frame_id = f.frame_id
+    LEFT JOIN frame_category c ON fmap.category_id = c.category_id
+    JOIN orders o ON o.order_id = oi.order_id
+    WHERE o.status = 'paid' AND c.name IS NOT NULL
+    GROUP BY c.name
+    UNION ALL
+    SELECT lc.type AS category, SUM(oi.quantity) AS total_sold
+    FROM order_items oi
+    LEFT JOIN lens l ON oi.lens_id = l.lens_id
+    LEFT JOIN lens_category lc ON l.category_id = lc.category_id
+    JOIN orders o ON o.order_id = oi.order_id
+    WHERE o.status = 'paid' AND lc.type IS NOT NULL
+    GROUP BY lc.type
+  ) AS all_cats
+  GROUP BY category
   ORDER BY total_sold DESC
   LIMIT 6
 ");
@@ -85,7 +81,7 @@ while ($row = mysqli_fetch_assoc($res)) {
 
 $res = mysqli_query($conn, "
   SELECT DATE_FORMAT(created_at, '%b') AS month, COUNT(*) AS count
-  FROM users
+  FROM user
   WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
   GROUP BY MONTH(created_at)
   ORDER BY MONTH(created_at)
@@ -184,14 +180,14 @@ while ($row = mysqli_fetch_assoc($res)) {
     </div>
   </div>
   <script>
-    // Revenue Breakdown Chart (Product vs Shipping as Pie Chart)
+    // Revenue Breakdown Chart (Product only as Pie Chart)
     new Chart(document.getElementById('revenueBreakdownChart'), {
       type: 'bar',
       data: {
-        labels: ['Product Revenue', 'Shipping Revenue'],
+        labels: ['Product Revenue'],
         datasets: [{
-          data: [<?= $product_revenue ?>, <?= $shipping_revenue ?>],
-          backgroundColor: ['#34d399', '#f87171'],
+          data: [<?= $product_revenue ?>],
+          backgroundColor: ['#34d399'],
           borderWidth: 1
         }]
       },

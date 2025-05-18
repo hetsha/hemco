@@ -1,7 +1,55 @@
 <?php
 // Admin page for managing lens categories
 include 'config/db.php';
+// session_start();
 if (!isset($_SESSION['admin_id'])) { header('Location: login.php'); exit; }
+
+// Handle add/edit/delete actions
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['add_lenscat'])) {
+        $name = trim($_POST['name'] ?? '');
+        $desc = trim($_POST['description'] ?? '');
+        if ($name) {
+            $stmt = $conn->prepare('INSERT INTO lens_category (type, description) VALUES (?, ?)');
+            $stmt->bind_param('ss', $name, $desc);
+            $stmt->execute();
+            $stmt->close();
+        }
+        header('Location: lenscat.php'); exit;
+    }
+    if (isset($_POST['edit_lenscat'])) {
+        $id = intval($_POST['category_id'] ?? 0);
+        $name = trim($_POST['name'] ?? '');
+        $desc = trim($_POST['description'] ?? '');
+        if ($id && $name) {
+            $stmt = $conn->prepare('UPDATE lens_category SET type=?, description=? WHERE category_id=?');
+            $stmt->bind_param('ssi', $name, $desc, $id);
+            $stmt->execute();
+            $stmt->close();
+        }
+        header('Location: lenscat.php'); exit;
+    }
+    if (isset($_POST['delete_lenscat'])) {
+        $id = intval($_POST['category_id'] ?? 0);
+        if ($id) {
+            $stmt = $conn->prepare('DELETE FROM lens_category WHERE category_id=?');
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $stmt->close();
+        }
+        header('Location: lenscat.php'); exit;
+    }
+}
+
+// Fetch lens categories for initial table load
+$lensCats = [];
+$sql = "SELECT * FROM lens_category ORDER BY category_id DESC";
+$result = mysqli_query($conn, $sql);
+if ($result && mysqli_num_rows($result) > 0) {
+  while ($row = mysqli_fetch_assoc($result)) {
+    $lensCats[] = $row;
+  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,12 +87,30 @@ if (!isset($_SESSION['admin_id'])) { header('Location: login.php'); exit; }
               <thead>
                 <tr class="text-gray-500 dark:text-gray-300">
                   <th class="p-2">#</th>
-                  <th class="p-2">Category Name</th>
+                  <th class="p-2">Type</th>
+                  <th class="p-2">Description</th>
                   <th class="p-2">Action</th>
                 </tr>
               </thead>
               <tbody id="lensCatTableBody">
-                <!-- Lens Category rows will be loaded by JS -->
+                <?php if (!empty($lensCats)): ?>
+                  <?php foreach ($lensCats as $i => $cat): ?>
+                    <tr class="border-t border-blue-100 dark:border-gray-700">
+                      <td class="p-2"><?php echo $cat['category_id']; ?></td>
+                      <td class="p-2"><?php echo htmlspecialchars($cat['type']); ?></td>
+                      <td class="p-2"><?php echo htmlspecialchars($cat['description']); ?></td>
+                      <td class="p-2 space-x-2">
+                        <button onclick="openEditLensCatModal('<?php echo $cat['category_id']; ?>','<?php echo htmlspecialchars(addslashes($cat['type'])); ?>','<?php echo htmlspecialchars(addslashes($cat['description'])); ?>')" class="text-blue-600 hover:underline">Edit</button>
+                        <form method="post" action="" style="display:inline;" onsubmit="return confirm('Delete this lens category?');">
+                          <input type="hidden" name="category_id" value="<?php echo $cat['category_id']; ?>">
+                          <button type="submit" name="delete_lenscat" class="text-red-600 hover:underline bg-transparent border-0 p-0 m-0 cursor-pointer">Delete</button>
+                        </form>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                <?php else: ?>
+                  <tr><td colspan="4" class="p-2 text-center text-gray-400">No lens categories found.</td></tr>
+                <?php endif; ?>
               </tbody>
             </table>
           </div>
@@ -57,14 +123,18 @@ if (!isset($_SESSION['admin_id'])) { header('Location: login.php'); exit; }
   <div id="addLensCatModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white dark:bg-gray-800 p-6 rounded shadow-lg w-full max-w-md">
       <h3 class="text-xl font-semibold mb-4">Add Lens Category</h3>
-      <form id="addLensCatForm" class="space-y-4">
+      <form id="addLensCatForm" class="space-y-4" method="post" action="">
         <div>
-          <label class="block text-sm">Category Name</label>
+          <label class="block text-sm">Type</label>
           <input type="text" id="addLensCatName" name="name" class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700" required />
+        </div>
+        <div>
+          <label class="block text-sm">Description</label>
+          <textarea id="addLensCatDesc" name="description" class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700"></textarea>
         </div>
         <div class="flex justify-end space-x-2 mt-4">
           <button type="button" id="cancelAddLensCat" class="px-4 py-2 rounded bg-gray-300 dark:bg-gray-600">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded bg-blue-600 text-white">Add</button>
+          <button type="submit" name="add_lenscat" class="px-4 py-2 rounded bg-blue-600 text-white">Add</button>
         </div>
       </form>
     </div>
@@ -74,22 +144,25 @@ if (!isset($_SESSION['admin_id'])) { header('Location: login.php'); exit; }
   <div id="editLensCatModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white dark:bg-gray-800 p-6 rounded shadow-lg w-full max-w-md">
       <h3 class="text-xl font-semibold mb-4">Edit Lens Category</h3>
-      <form id="editLensCatForm" class="space-y-4">
+      <form id="editLensCatForm" class="space-y-4" method="post" action="">
         <div>
-          <label class="block text-sm">Category Name</label>
+          <label class="block text-sm">Type</label>
           <input type="text" id="editLensCatName" name="name" class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700" required />
         </div>
-        <input type="hidden" id="editLensCatId" name="id" />
+        <div>
+          <label class="block text-sm">Description</label>
+          <textarea id="editLensCatDesc" name="description" class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700"></textarea>
+        </div>
+        <input type="hidden" id="editLensCatId" name="category_id" />
         <div class="flex justify-end space-x-2 mt-4">
           <button type="button" id="cancelEditLensCat" class="px-4 py-2 rounded bg-gray-300 dark:bg-gray-600">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded bg-blue-600 text-white">Save</button>
+          <button type="submit" name="edit_lenscat" class="px-4 py-2 rounded bg-blue-600 text-white">Save</button>
         </div>
       </form>
     </div>
   </div>
 
   <?php include 'include/footer.php'; ?>
-  <script src="lenscat.js"></script>
   <script>
     // Modal logic
     document.getElementById('openAddLensCatModal').onclick = () => {
@@ -101,62 +174,12 @@ if (!isset($_SESSION['admin_id'])) { header('Location: login.php'); exit; }
     document.getElementById('cancelEditLensCat').onclick = () => {
       document.getElementById('editLensCatModal').classList.add('hidden');
     };
-    // Add Lens Category
-    document.getElementById('addLensCatForm').onsubmit = function(e) {
-      e.preventDefault();
-      const name = document.getElementById('addLensCatName').value.trim();
-      if (!name) return;
-      fetch('lenscat_actions.php', { method: 'POST', body: new URLSearchParams({action:'add', name}) })
-        .then(() => {
-          document.getElementById('addLensCatModal').classList.add('hidden');
-          loadLensCatTable();
-        });
-    };
-    // Edit Lens Category
-    document.getElementById('editLensCatForm').onsubmit = function(e) {
-      e.preventDefault();
-      const id = document.getElementById('editLensCatId').value;
-      const name = document.getElementById('editLensCatName').value.trim();
-      if (!id || !name) return;
-      fetch('lenscat_actions.php', { method: 'POST', body: new URLSearchParams({action:'edit', id, name}) })
-        .then(() => {
-          document.getElementById('editLensCatModal').classList.add('hidden');
-          loadLensCatTable();
-        });
-    };
-    // Load Lens Categories Table
-    function loadLensCatTable() {
-      fetch('lenscat_actions.php', { method: 'POST', body: new URLSearchParams({action:'get'}) })
-        .then(r => r.json())
-        .then(data => {
-          const tbody = document.getElementById('lensCatTableBody');
-          tbody.innerHTML = data.map(cat =>
-            `<tr class="border-t border-blue-100 dark:border-gray-700">
-              <td class="p-2">${cat.id || cat.category_id}</td>
-              <td class="p-2">${cat.name || cat.type}</td>
-              <td class="p-2 space-x-2">
-                <button onclick="openEditLensCatModal('${cat.id || cat.category_id}','${(cat.name || cat.type).replace(/'/g, "&#39;")}")" class="text-blue-600 hover:underline">Edit</button>
-                <button onclick="deleteLensCat('${cat.id || cat.category_id}')" class="text-red-600 hover:underline">Delete</button>
-              </td>
-            </tr>`
-          ).join('');
-        });
-    }
-    // Open Edit Modal
-    window.openEditLensCatModal = function(id, name) {
+    window.openEditLensCatModal = function(id, name, desc) {
       document.getElementById('editLensCatId').value = id;
       document.getElementById('editLensCatName').value = name;
+      document.getElementById('editLensCatDesc').value = desc;
       document.getElementById('editLensCatModal').classList.remove('hidden');
     };
-    // Delete Lens Category
-    window.deleteLensCat = function(id) {
-      if (confirm('Delete this lens category?')) {
-        fetch('lenscat_actions.php', { method: 'POST', body: new URLSearchParams({action:'delete', id}) })
-          .then(() => loadLensCatTable());
-      }
-    };
-    // Initial load
-    loadLensCatTable();
   </script>
 </body>
 </html>

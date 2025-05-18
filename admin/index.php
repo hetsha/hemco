@@ -21,10 +21,8 @@ $totalOrders = $result->fetch_assoc()['count'] ?? 0;
 $result = $conn->query("SELECT COUNT(DISTINCT user_id) as count FROM orders");
 $activeCustomers = $result->fetch_assoc()['count'] ?? 0;
 
-// Out of Stock Frames (frames with no details or 0 stock if you track stock)
-// For now, count frames with no details as 'out of stock'
-$result = $conn->query("SELECT COUNT(f.frame_id) as count FROM frames f LEFT JOIN frame_details fd ON f.frame_id = fd.frame_id WHERE fd.detail_id IS NULL");
-$outOfStock = $result->fetch_assoc()['count'] ?? 0;
+// Shiprocket Balance (will be updated via JS fetch)
+$shiprocketBalance = 'Loading...';
 
 // Sales Over Time (monthly total sales for last 6 months)
 $salesData = [];
@@ -107,8 +105,10 @@ while ($row = $result->fetch_assoc()) {
             <h2 class="text-xl font-bold text-indigo-500"><?= $activeCustomers ?></h2>
           </div>
           <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-            <p class="text-sm">Out of Stock Frames</p>
-            <h2 class="text-xl font-bold text-red-500"><?= $outOfStock ?></h2>
+            <p class="text-sm">Shiprocket Balance</p>
+            <h2 class="text-xl font-bold text-yellow-500" id="shiprocket-balance">
+              <?= $shiprocketBalance ?>
+            </h2>
           </div>
         </div>
 
@@ -217,6 +217,20 @@ while ($row = $result->fetch_assoc()) {
         }
       }
     });
+
+    // Fetch Shiprocket balance and update the card
+    fetch('api/get_shiprocket_balance.php')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.balance !== null) {
+          document.getElementById('shiprocket-balance').textContent = '₹' + parseFloat(data.balance).toFixed(2);
+        } else {
+          document.getElementById('shiprocket-balance').textContent = 'N/A';
+        }
+      })
+      .catch(() => {
+        document.getElementById('shiprocket-balance').textContent = 'N/A';
+      });
   </script>
 </body>
 

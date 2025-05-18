@@ -1,7 +1,7 @@
 <!-- Sidebar -->
 <aside id="sidebar" class="w-64 bg-white dark:bg-gray-800 border-r border-blue-100 dark:border-gray-700 p-4 space-y-4 hidden md:block">
-    <img src="../img/padmavati.png" alt="" class="w-32 h-auto mx-auto">
-  <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-400">Shri Padmavati Gruh Udhyog</h1>
+    <img src="../assets/img/logo.png" alt="" class="w-32 h-auto mx-auto bg-white dark:bg-gray-800 rounded">
+  <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-400">Hemco Optical</h1>
   <nav class="space-y-2 w-48">
     <a href="index.php" class="block p-2 rounded hover:bg-blue-100 dark:hover:bg-gray-700">Dashboard</a>
     <a href="order.php" class="block p-2 rounded hover:bg-blue-100 dark:hover:bg-gray-700">Orders</a>
