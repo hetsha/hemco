@@ -71,6 +71,21 @@ ORDER BY ci.cart_item_id DESC
           </thead>
           <tbody>
             <?php
+            // Fetch all prescription details for cart items in one query
+            $prescription_map = [];
+            $presc_ids = [];
+            mysqli_data_seek($items_query, 0); // Reset pointer
+            while ($item = mysqli_fetch_assoc($items_query)) {
+              if ($item['prescription_id']) {
+                $presc_ids[] = (int)$item['prescription_id'];
+              }
+            }
+            $presc_ids_str = implode(',', $presc_ids ?: [0]);
+            $presc_query = mysqli_query($conn, "SELECT * FROM prescription WHERE prescription_id IN ($presc_ids_str)");
+            while ($presc = mysqli_fetch_assoc($presc_query)) {
+              $prescription_map[$presc['prescription_id']] = $presc;
+            }
+            mysqli_data_seek($items_query, 0); // Reset pointer again for main loop
             while ($item = mysqli_fetch_assoc($items_query)) {
               $frame_name = $item['frame_name'] ?? 'No Frame';
               $lens_name = $item['lens_name'] ?? 'No Lens';
@@ -78,17 +93,22 @@ ORDER BY ci.cart_item_id DESC
               $lens_price = $item['lens_price'] ?? 0;
               $image = $item['frame_image'] ?? 'assets/img/default.jpg';
               $qty = $item['quantity'];
-
               $item_price = $frame_price + $lens_price;
               $subtotal = $item_price * $qty;
               $total += $subtotal;
-
+              $presc_id = $item['prescription_id'];
+              $presc = $presc_id && isset($prescription_map[$presc_id]) ? $prescription_map[$presc_id] : null;
+              $presc_data = $presc ? htmlspecialchars(json_encode($presc), ENT_QUOTES, 'UTF-8') : '';
+              $lens_html = $lens_name;
+              if ($presc) {
+                $lens_html = "<a href=\"#\" class='lens-presc-link' data-presc='$presc_data'>" . htmlspecialchars($lens_name) . " <i class='fi fi-rs-eye'></i></a>";
+              }
               echo "
               <tr>
                 <td><img src='$image' alt='' class='table__img' /></td>
                 <td>
                   <h3 class='table__title'>Frame: $frame_name</h3>
-                  <p class='table__description'>Lens: $lens_name</p>
+                  <p class='table__description'>Lens: $lens_html</p>
                 </td>
                 <td>
                   <span class='table__price'>Frame: ₹$frame_price</span><br>
@@ -177,6 +197,17 @@ ORDER BY ci.cart_item_id DESC
       </div>
     </section>
 
+    <!-- Prescription Modal -->
+    <div id="prescription-modal" class="modal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;">
+      <div class="modal-content" style="background:#fff;padding:2rem;max-width:400px;margin:auto;position:relative;border-radius:8px;">
+        <span id="close-presc-modal" style="position:absolute;top:10px;right:16px;font-size:1.5rem;cursor:pointer;">&times;</span>
+        <h3>Prescription Details</h3>
+        <div id="presc-modal-body">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
     <!--=============== NEWSLETTER ===============-->
     <?php include('include/news.php') ?>
   </main>
@@ -193,6 +224,40 @@ ORDER BY ci.cart_item_id DESC
         document.querySelector('input[name=state]').focus();
       }
     });
+
+    // Prescription modal logic
+    document.querySelectorAll('.lens-presc-link').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var presc = JSON.parse(this.getAttribute('data-presc'));
+        var html = '';
+        if (presc.prescription_image) {
+          html += '<div><b>Image:</b><br><img src="'+presc.prescription_image+'" alt="Prescription Image" style="max-width:100%;border:1px solid #eee;margin-bottom:1em;"/></div>';
+        }
+        if (presc.left_eye_sph || presc.right_eye_sph || presc.left_eye_cyl || presc.right_eye_cyl || presc.axis || presc.addition) {
+          html += '<div><b>Manual Entry:</b><br>';
+          html += '<table style="width:100%;border-collapse:collapse;">';
+          html += '<tr><th></th><th>Left</th><th>Right</th></tr>';
+          html += '<tr><td>Sphere</td><td>'+(presc.left_eye_sph||'')+'</td><td>'+(presc.right_eye_sph||'')+'</td></tr>';
+          html += '<tr><td>Cylinder</td><td>'+(presc.left_eye_cyl||'')+'</td><td>'+(presc.right_eye_cyl||'')+'</td></tr>';
+          html += '<tr><td>Axis</td><td>'+(presc.axis||'')+'</td><td>'+(presc.axis||'')+'</td></tr>';
+          html += '<tr><td>Addition</td><td>'+(presc.addition||'')+'</td><td>'+(presc.addition||'')+'</td></tr>';
+          html += '</table></div>';
+        }
+        if (!html) html = '<em>No prescription details available.</em>';
+        document.getElementById('presc-modal-body').innerHTML = html;
+        document.getElementById('prescription-modal').style.display = 'flex';
+      });
+    });
+    document.getElementById('close-presc-modal').onclick = function() {
+      document.getElementById('prescription-modal').style.display = 'none';
+    };
+    window.onclick = function(event) {
+      var modal = document.getElementById('prescription-modal');
+      if (event.target == modal) {
+        modal.style.display = 'none';
+      }
+    };
   });
   </script>
 </body>
