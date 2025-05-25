@@ -4,8 +4,18 @@ include('include/navbar.php');
 
 // Handle filters
 $category = isset($_GET['category']) ? $_GET['category'] : '';
-$gender = isset($_GET['gender']) ? $_GET['gender'] : '';
 $material = isset($_GET['material']) ? $_GET['material'] : '';
+$gender = isset($_GET['gender']) ? $_GET['gender'] : '';
+
+// Restrict categories to only the three required
+$category_options = ['eyeglasses', 'screen glass', 'contact lenses'];
+
+// Gender options (from DB, but only men, women, child)
+$gender_options = [];
+$gender_result = mysqli_query($conn, "SELECT DISTINCT gender FROM frames WHERE gender IN ('men','women','child')");
+while ($gender_row = mysqli_fetch_assoc($gender_result)) {
+    $gender_options[] = $gender_row['gender'];
+}
 
 // Pagination settings
 $limit = 9; // 9 products per page
@@ -17,11 +27,11 @@ $where = "WHERE 1";
 if (!empty($category)) {
     $where .= " AND fc.name = '" . mysqli_real_escape_string($conn, $category) . "'";
 }
-if (!empty($gender)) {
-    $where .= " AND f.gender = '" . mysqli_real_escape_string($conn, $gender) . "'";
-}
 if (!empty($material)) {
     $where .= " AND f.material = '" . mysqli_real_escape_string($conn, $material) . "'";
+}
+if (!empty($gender)) {
+    $where .= " AND f.gender = '" . mysqli_real_escape_string($conn, $gender) . "'";
 }
 
 // Fetch frames with filters and pagination
@@ -123,14 +133,15 @@ $total_pages = ceil($total_products / $limit);
 <br>
     <!--=============== FILTERS ===============-->
     <section class="filters container section--sm">
-    <form method="GET" action="shop.php" class="filters__form grid">
+    <form method="GET" action="shop.php" class="filters__form grid" id="filterForm">
 
         <div class="filter__group">
             <label for="category"><i class="fi fi-rs-apps"></i> Category</label>
             <select id="category" name="category" class="filter__select">
                 <option value="">All Categories</option>
-                <option value="Sunglasses" <?php if($category == 'Sunglasses') echo 'selected'; ?>>Sunglasses</option>
-                <option value="Eyeglasses" <?php if($category == 'Eyeglasses') echo 'selected'; ?>>Eyeglasses</option>
+                <?php foreach($category_options as $cat): ?>
+                    <option value="<?php echo htmlspecialchars($cat); ?>" <?php if($category == $cat) echo 'selected'; ?>><?php echo htmlspecialchars(ucwords($cat)); ?></option>
+                <?php endforeach; ?>
             </select>
         </div>
 
@@ -138,9 +149,9 @@ $total_pages = ceil($total_products / $limit);
             <label for="gender"><i class="fi fi-rs-user"></i> Gender</label>
             <select id="gender" name="gender" class="filter__select">
                 <option value="">All Genders</option>
-                <option value="Men" <?php if($gender == 'Men') echo 'selected'; ?>>Men</option>
-                <option value="Women" <?php if($gender == 'Women') echo 'selected'; ?>>Women</option>
-                <option value="Unisex" <?php if($gender == 'Unisex') echo 'selected'; ?>>Unisex</option>
+                <?php foreach($gender_options as $g): ?>
+                    <option value="<?php echo htmlspecialchars($g); ?>" <?php if($gender == $g) echo 'selected'; ?>><?php echo ucfirst($g); ?></option>
+                <?php endforeach; ?>
             </select>
         </div>
 
@@ -153,11 +164,17 @@ $total_pages = ceil($total_products / $limit);
             </select>
         </div>
 
-        <div class="filter__group">
-            <button type="submit" class="btn btn--filter"><i class="fi fi-rs-search"></i> Filter</button>
-        </div>
-
     </form>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var selects = document.querySelectorAll('#filterForm select');
+      selects.forEach(function(sel) {
+        sel.addEventListener('change', function() {
+          document.getElementById('filterForm').submit();
+        });
+      });
+    });
+    </script>
 </section>
 
 
@@ -169,8 +186,8 @@ $total_pages = ceil($total_products / $limit);
             <div class="product__item">
                 <div class="product__banner">
                     <a href="details.php?frame_id=<?php echo $row['frame_id']; ?>" class="product__images">
-                        <img src="<?php echo $row['image_url']; ?>" alt="<?php echo htmlspecialchars($row['frame_name']); ?>" class="product__img default" />
-                        <img src="<?php echo $row['image_url']; ?>" alt="<?php echo htmlspecialchars($row['frame_name']); ?>" class="product__img hover" />
+                        <img src="uploads/<?php echo $row['image_url']; ?>" alt="<?php echo htmlspecialchars($row['frame_name']); ?>" class="product__img default" />
+                        <img src="uploads/<?php echo $row['image_url']; ?>" alt="<?php echo htmlspecialchars($row['frame_name']); ?>" class="product__img hover" />
                     </a>
                     <div class="product__actions">
                         <a href="details.php?frame_id=<?php echo $row['frame_id']; ?>" class="action__btn" aria-label="Quick View">
@@ -178,9 +195,6 @@ $total_pages = ceil($total_products / $limit);
                         </a>
                         <a href="#" class="action__btn" aria-label="Add to Wishlist">
                             <i class="fi fi-rs-heart"></i>
-                        </a>
-                        <a href="#" class="action__btn" aria-label="Compare">
-                            <i class="fi fi-rs-shuffle"></i>
                         </a>
                     </div>
                     <div class="product__badge light-pink">Hot</div>
@@ -211,18 +225,18 @@ $total_pages = ceil($total_products / $limit);
         <!--=============== PAGINATION ===============-->
         <div class="pagination flex">
             <?php if ($page > 1): ?>
-                <a href="?page=<?php echo ($page-1); ?>&category=<?php echo $category; ?>&gender=<?php echo $gender; ?>&material=<?php echo $material; ?>" class="pagination__btn">Prev</a>
+                <a href="?page=<?php echo ($page-1); ?>&category=<?php echo $category; ?>&material=<?php echo $material; ?>&gender=<?php echo $gender; ?>" class="pagination__btn">Prev</a>
             <?php endif; ?>
 
             <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <a href="?page=<?php echo $i; ?>&category=<?php echo $category; ?>&gender=<?php echo $gender; ?>&material=<?php echo $material; ?>"
+                <a href="?page=<?php echo $i; ?>&category=<?php echo $category; ?>&material=<?php echo $material; ?>&gender=<?php echo $gender; ?>"
                    class="pagination__btn <?php if($i == $page) echo 'active'; ?>">
                    <?php echo $i; ?>
                 </a>
             <?php endfor; ?>
 
             <?php if ($page < $total_pages): ?>
-                <a href="?page=<?php echo ($page+1); ?>&category=<?php echo $category; ?>&gender=<?php echo $gender; ?>&material=<?php echo $material; ?>" class="pagination__btn">Next</a>
+                <a href="?page=<?php echo ($page+1); ?>&category=<?php echo $category; ?>&material=<?php echo $material; ?>&gender=<?php echo $gender; ?>" class="pagination__btn">Next</a>
             <?php endif; ?>
         </div>
 

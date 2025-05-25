@@ -2,7 +2,9 @@
 include('include/db_connect.php');
 
 $message = "";
-
+if (isset($_GET['msg'])) {
+    $message = htmlspecialchars($_GET['msg']);
+}
 // Login functionality
 if (isset($_POST['login'])) {
   $email = $_POST['login_email'];
@@ -22,7 +24,13 @@ if (isset($_POST['login'])) {
         $_SESSION['user_id'] = $row['user_id'];
         $_SESSION['user_name'] = $row['name'];
         $_SESSION['user_email'] = $row['email'];
-        header("Location: index.php"); // Redirect to homepage
+        // Redirect to return URL if set, else homepage
+        if (isset($_GET['return']) && !empty($_GET['return'])) {
+          $returnUrl = filter_var($_GET['return'], FILTER_SANITIZE_URL);
+          header("Location: " . $returnUrl);
+        } else {
+          header("Location: index.php");
+        }
         exit;
       } else {
         $message = "Invalid password.";
@@ -77,15 +85,13 @@ if (isset($_POST['register'])) {
       <li><span class="breadcrumb__link">></span></li>
       <li><span class="breadcrumb__link">Login / Register</span></li>
     </ul>
-    <?php if ($message != "") { ?>
+    <?php /* if ($message != "") { ?>
       <div style="color: red; margin-bottom:20px;"><?php echo $message; ?></div>
-    <?php } ?>
+    <?php } */ ?>
   </section>
 
   <section class="login-register section--lg">
     <div class="login-register__container container grid">
-
-
 
       <div class="login">
         <h3 class="section__title">Login</h3>
@@ -120,6 +126,22 @@ if (isset($_POST['register'])) {
 
   <?php include('include/news.php') ?>
 </main>
+
+<!-- Toast Popup -->
+<div id="toast-message" style="display:none;position:fixed;top:30px;right:30px;z-index:9999;min-width:220px;padding:16px 28px;background:linear-gradient(90deg,#2563eb 0,#1e293b 100%);color:#fff;border-radius:10px;box-shadow:0 4px 18px #0003;font-size:1.08em;font-weight:500;letter-spacing:0.01em;transition:all 0.3s;"></div>
+
+<script>
+<?php if ($message != "") { ?>
+  document.addEventListener('DOMContentLoaded', function() {
+    var toast = document.getElementById('toast-message');
+    toast.textContent = <?php echo json_encode($message); ?>;
+    toast.style.display = 'block';
+    setTimeout(function() {
+      toast.style.display = 'none';
+    }, 3500);
+  });
+<?php } ?>
+</script>
 
 <?php include('include/footer.php'); ?>
 </body>

@@ -17,6 +17,17 @@ function getCategories($conn)
   return $categories;
 }
 
+function getBrands($conn) {
+  $brands = [];
+  $result = $conn->query("SELECT brand_id, name FROM brand ORDER BY name ASC");
+  while ($row = $result->fetch_assoc()) {
+    $brands[] = $row;
+  }
+  return $brands;
+}
+
+$brands = getBrands($conn);
+
 $action = $_POST['action'] ?? '';
 
 // Common input fields
@@ -32,9 +43,10 @@ $gender   = $_POST['gender'] ?? '';
 $tag      = $_POST['tag'] ?? '';
 $brand_id = $_POST['brand_id'] ?? null;
 
-// Get category ID
+// Get category ID (force only allowed categories)
+$allowed_categories = ['eyeglasses', 'screen glass', 'contact lenses'];
 $category_id = null;
-if ($category) {
+if ($category && in_array($category, $allowed_categories)) {
   $stmt = $conn->prepare("SELECT category_id FROM frame_category WHERE name = ?");
   $stmt->bind_param("s", $category);
   $stmt->execute();
@@ -55,7 +67,7 @@ if ($action == 'add') {
   $image = '';
   if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
     $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-    $filename = 'uploads/' . time() . '_' . uniqid() . '.' . $ext;
+    $filename = '../uploads/' . time() . '_' . uniqid() . '.' . $ext;
     move_uploaded_file($_FILES['image']['tmp_name'], $filename);
     $image = $filename;
   }
@@ -65,6 +77,10 @@ if ($action == 'add') {
   $frame_id = $stmt->insert_id;
   // Category map
   if ($category_id) {
+    // Remove any previous mapping for this frame (shouldn't exist for add, but safe)
+    $stmt2 = $conn->prepare("DELETE FROM frame_category_map WHERE frame_id = ?");
+    $stmt2->bind_param("i", $frame_id);
+    $stmt2->execute();
     $stmt2 = $conn->prepare("INSERT INTO frame_category_map (frame_id, category_id) VALUES (?, ?)");
     $stmt2->bind_param("ii", $frame_id, $category_id);
     $stmt2->execute();
@@ -83,7 +99,7 @@ if ($action == 'edit' && $id) {
   // Check if a new image is uploaded
   if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
     $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-    $filename = 'uploads/' . time() . '_' . uniqid() . '.' . $ext;
+    $filename = '../uploads/' . time() . '_' . uniqid() . '.' . $ext;
     move_uploaded_file($_FILES['image']['tmp_name'], $filename);
     $image = $filename;
     // Delete old image if exists
@@ -274,12 +290,9 @@ if ($action == 'get_product' && $id) {
           <label>Category</label>
           <select name="category" id="productCategory" required class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700">
             <option value="">Select Category</option>
-            <?php
-            $categories = getCategories($conn);
-            foreach ($categories as $cat) {
-              echo "<option value=\"$cat\">$cat</option>";
-            }
-            ?>
+            <option value="eyeglasses">Eyeglasses</option>
+            <option value="screen glass">Screen Glass</option>
+            <option value="contact lenses">Contact Lenses</option>
           </select>
         </div>
 
@@ -305,7 +318,12 @@ if ($action == 'get_product' && $id) {
 
         <div class="mb-3">
           <label>Gender</label>
-          <input type="text" name="gender" id="productGender" required class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700">
+          <select name="gender" id="productGender" required class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700">
+            <option value="">Select Gender</option>
+            <option value="men">Men</option>
+            <option value="women">Women</option>
+            <option value="child">Child</option>
+          </select>
         </div>
 
         <div class="mb-3">
@@ -314,8 +332,13 @@ if ($action == 'get_product' && $id) {
         </div>
 
         <div class="mb-3">
-          <label>Brand ID</label>
-          <input type="number" name="brand_id" id="productBrandId" required class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700">
+          <label>Brand</label>
+          <select name="brand_id" id="productBrandId" required class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700">
+            <option value="">Select Brand</option>
+            <?php foreach($brands as $brand): ?>
+              <option value="<?php echo $brand['brand_id']; ?>"><?php echo htmlspecialchars($brand['name']); ?></option>
+            <?php endforeach; ?>
+          </select>
         </div>
 
         <div class="mb-3">
@@ -347,7 +370,9 @@ if ($action == 'get_product' && $id) {
           <label>Category</label>
           <select name="category" id="editProductCategory" required class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700">
             <option value="">Select Category</option>
-            <!-- Fill options dynamically with JS or PHP -->
+            <option value="eyeglasses">Eyeglasses</option>
+            <option value="screen glass">Screen Glass</option>
+            <option value="contact lenses">Contact Lenses</option>
           </select>
         </div>
 
@@ -373,7 +398,12 @@ if ($action == 'get_product' && $id) {
 
         <div class="mb-3">
           <label>Gender</label>
-          <input type="text" name="gender" id="editProductGender" required class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700">
+          <select name="gender" id="editProductGender" required class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700">
+            <option value="">Select Gender</option>
+            <option value="men">Men</option>
+            <option value="women">Women</option>
+            <option value="child">Child</option>
+          </select>
         </div>
 
         <div class="mb-3">
@@ -382,8 +412,13 @@ if ($action == 'get_product' && $id) {
         </div>
 
         <div class="mb-3">
-          <label>Brand ID</label>
-          <input type="number" name="brand_id" id="editProductBrandId" required class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700">
+          <label>Brand</label>
+          <select name="brand_id" id="editProductBrandId" required class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700">
+            <option value="">Select Brand</option>
+            <?php foreach($brands as $brand): ?>
+              <option value="<?php echo $brand['brand_id']; ?>"><?php echo htmlspecialchars($brand['name']); ?></option>
+            <?php endforeach; ?>
+          </select>
         </div>
 
         <div class="mb-3">
@@ -429,7 +464,6 @@ if ($action == 'get_product' && $id) {
         document.getElementById('productTag').value = product.tag;
         document.getElementById('productBrandId').value = product.brand_id;
         document.getElementById('productDescription').value = product.description;
-        document.querySelector('input[name="price[]"]#productPrice')?.removeAttribute('id'); // Remove any duplicate id
         let priceInput = document.querySelector('#productForm input[name="price[]"]');
         if (priceInput) priceInput.value = product.price;
       }
@@ -491,7 +525,7 @@ if ($action == 'get_product' && $id) {
     function openEditModal(product) {
       document.getElementById('editProductId').value = product.frame_id;
       document.getElementById('editProductName').value = product.name;
-      fillCategorySelect('editProductCategory', product.category);
+      document.getElementById('editProductCategory').value = product.category;
       document.getElementById('editProductDescription').value = product.description || '';
       document.getElementById('editProductPrice').value = product.price;
       document.getElementById('editProductMaterial').value = product.material;
@@ -523,11 +557,12 @@ if ($action == 'get_product' && $id) {
   <script>
     // Utility to fill category selects in both modals
     function fillCategorySelect(selectId, selectedValue = '') {
-      // Get categories from the add modal (already rendered by PHP)
       const addCatSelect = document.getElementById('productCategory');
       const editCatSelect = document.getElementById(selectId);
-      editCatSelect.innerHTML = addCatSelect.innerHTML; // Copy all options
-      if (selectedValue) editCatSelect.value = selectedValue;
+      editCatSelect.innerHTML = addCatSelect.innerHTML;
+      if (selectedValue) {
+        editCatSelect.value = selectedValue;
+      }
     }
   </script>
 </body>

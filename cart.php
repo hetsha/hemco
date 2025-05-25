@@ -1,7 +1,13 @@
 <?php
 include('include/db_connect.php'); // Replace with your actual DB connection script
 include('include/header.php');
-
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to login with message and return URL
+    $msg = urlencode('Please login to view your cart.');
+    $return = urlencode('cart.php');
+    header("Location: login-register.php?msg=$msg&return=$return");
+    exit;
+}
 $user_id = $_SESSION['user_id']; // Assumes user is logged in and session holds user_id
 
 $cart_ids = [];
