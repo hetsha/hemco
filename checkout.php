@@ -123,32 +123,7 @@ $items_query = mysqli_query($conn, "
             </tbody>
           </table>
           <div class="payment__methods">
-            <h3 class="checkout__title payment__title">Payment</h3>
-            <div class="payment__option flex">
-              <input
-                type="radio"
-                name="radio"
-                id="l1"
-                checked
-                class="payment__input" />
-              <label for="l1" class="payment__label">Direct Bank Transfer</label>
-            </div>
-            <div class="payment__option flex">
-              <input
-                type="radio"
-                name="radio"
-                id="l2"
-                class="payment__input" />
-              <label for="l2" class="payment__label">Check Payment</label>
-            </div>
-            <div class="payment__option flex">
-              <input
-                type="radio"
-                name="radio"
-                id="l3"
-                class="payment__input" />
-              <label for="l3" class="payment__label">Paypal</label>
-            </div>
+          
           </div>
           <button class="btn btn--md" id="pay-btn">Place Order</button>
         </div>

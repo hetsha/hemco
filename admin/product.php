@@ -122,7 +122,7 @@ if ($action == 'edit' && $id) {
     echo "Error preparing UPDATE frames: " . $conn->error;
     exit;
   }
-  if (!$stmt->bind_param("ssdssssi", $name, $description, $price, $material, $shape, $gender, $tag, $brand_id, $id)) {
+  if (!$stmt->bind_param("ssdssssii", $name, $description, $price, $material, $shape, $gender, $tag, $brand_id, $id)) {
     echo "Error binding UPDATE frames: " . $stmt->error;
     exit;
   }

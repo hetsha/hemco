@@ -3,51 +3,51 @@
   <h3 class="section__title">Select by Categories</h3>
   <div class="categories__container swiper">
     <div class="swiper-wrapper">
-      <a href="shop.php?cat=eyeglasses" class="category__item swiper-slide enhanced-category">
+      <a href="shop.php?category=eyeglasses" class="category__item swiper-slide enhanced-category">
         <div class="category__img-wrap-alt">
-          <img src="assets/cat/eyeglasses.png" alt="Eyeglasses" class="category__img" />
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=256&q=80" alt="Eyeglasses" class="category__img" />
         </div>
         <h3 class="category__title">Eyeglasses</h3>
       </a>
-      <a href="shop.php?cat=men" class="category__item swiper-slide enhanced-category">
+      <a href="shop.php?gender=men" class="category__item swiper-slide enhanced-category">
         <div class="category__img-wrap-alt">
-          <img src="assets/cat/men.png" alt="Men" class="category__img" />
+          <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=facearea&w=256&q=80" alt="Men" class="category__img" />
         </div>
         <h3 class="category__title">Men</h3>
       </a>
-      <a href="shop.php?cat=women" class="category__item swiper-slide enhanced-category">
+      <a href="shop.php?gender=women" class="category__item swiper-slide enhanced-category">
         <div class="category__img-wrap-alt">
-          <img src="assets/cat/women.png" alt="Women" class="category__img" />
+          <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=facearea&w=256&q=80" alt="Women" class="category__img" />
         </div>
         <h3 class="category__title">Women</h3>
       </a>
-      <a href="shop.php?cat=kids" class="category__item swiper-slide enhanced-category">
+      <a href="shop.php?gender=child" class="category__item swiper-slide enhanced-category">
         <div class="category__img-wrap-alt">
-          <img src="assets/cat/kids.png" alt="Kids" class="category__img" />
+          <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=facearea&w=256&q=80" alt="Kids" class="category__img" />
         </div>
         <h3 class="category__title">Kids</h3>
       </a>
-      <a href="shop.php?cat=sunglasses" class="category__item swiper-slide enhanced-category">
+      <a href="shop.php?category=sunglasses" class="category__item swiper-slide enhanced-category">
         <div class="category__img-wrap-alt">
-          <img src="assets/cat/sunglasses.png" alt="Sunglasses" class="category__img" />
+          <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=facearea&w=256&q=80" alt="Sunglasses" class="category__img" />
         </div>
         <h3 class="category__title">Sunglasses</h3>
       </a>
-      <a href="shop.php?cat=computer" class="category__item swiper-slide enhanced-category">
+      <a href="shop.php?category=computer" class="category__item swiper-slide enhanced-category">
         <div class="category__img-wrap-alt">
-          <img src="assets/cat/computer.png" alt="Computer Glasses" class="category__img" />
+          <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=facearea&w=256&q=80" alt="Computer Glasses" class="category__img" />
         </div>
         <h3 class="category__title">Computer Glasses</h3>
       </a>
-      <a href="shop.php?cat=power" class="category__item swiper-slide enhanced-category">
+      <a href="shop.php?category=power" class="category__item swiper-slide enhanced-category">
         <div class="category__img-wrap-alt">
-          <img src="assets/cat/power.png" alt="Power Glasses" class="category__img" />
+          <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=facearea&w=256&q=80" alt="Power Glasses" class="category__img" />
         </div>
         <h3 class="category__title">Power Glasses</h3>
       </a>
-      <a href="shop.php?cat=accessories" class="category__item swiper-slide enhanced-category">
+      <a href="shop.php?category=accessories" class="category__item swiper-slide enhanced-category">
         <div class="category__img-wrap-alt">
-          <img src="assets/cat/accessories.png" alt="Accessories" class="category__img" />
+          <img src="https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=facearea&w=256&q=80" alt="Accessories" class="category__img" />
         </div>
         <h3 class="category__title">Accessories</h3>
       </a>
@@ -83,8 +83,8 @@
 .category__img-wrap-alt {
   background: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 100%);
   border-radius: 16px;
-  padding: 10px;
-  margin-bottom: 0.7rem;
+  padding: 0;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,11 +93,15 @@
   height: 70px;
 }
 .category__img {
-  width: 44px;
-  height: 44px;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
   filter: drop-shadow(0 2px 6px #2563eb22);
   border-radius: 10px;
+  background: #f3f4f6;
+  display: block;
+  margin: 0;
 }
 .category__title {
   font-size: 1.08em;
@@ -120,9 +124,11 @@
     border-radius: 10px;
   }
   .category__img {
-    width: 26px;
-    height: 26px;
+    width: 100%;
+    height: 100%;
     border-radius: 6px;
+    object-fit: cover;
+    object-position: center;
   }
   .category__title {
     font-size: 0.98em;
@@ -131,53 +137,56 @@
 </style>
 <!--=============== END ENHANCED CATEGORIES ===============-->
 <section class="categories container section none" style="display: none;">
-  <h3 class="section__title">Popular Eyeglasses</h3>
+  <h3 class="section__title">Popular Eyewear</h3>
   <div class="categories__container swiper">
     <div class="swiper-wrapper">
-      <a href="shop.php?cat=tshirt" class="category__item swiper-slide">
-        <img src="assets/cat/test.jpg" alt="" class="category__img" />
-        <h3 class="category__title">T-Shirt</h3>
+      <a href="shop.php?category=eyeglasses" class="category__item swiper-slide enhanced-category">
+        <div class="category__img-wrap-alt">
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=256&q=80" alt="Eyeglasses" class="category__img" />
+        </div>
+        <h3 class="category__title">Eyeglasses</h3>
       </a>
-      <a href="shop.php?cat=bags" class="category__item swiper-slide">
-        <img src="assets/cat/test.jpg" alt="" class="category__img" />
-        <h3 class="category__title">Bags</h3>
+      <a href="shop.php?gender=men" class="category__item swiper-slide enhanced-category">
+        <div class="category__img-wrap-alt">
+          <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=facearea&w=256&q=80" alt="Men" class="category__img" />
+        </div>
+        <h3 class="category__title">Men</h3>
       </a>
-      <a href="shop.php?cat=sandal" class="category__item swiper-slide">
-        <img src="assets/cat/test.jpg" alt="" class="category__img" />
-        <h3 class="category__title">Sandal</h3>
+      <a href="shop.php?gender=women" class="category__item swiper-slide enhanced-category">
+        <div class="category__img-wrap-alt">
+          <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=facearea&w=256&q=80" alt="Women" class="category__img" />
+        </div>
+        <h3 class="category__title">Women</h3>
       </a>
-      <a href="shop.php?cat=scarfcap" class="category__item swiper-slide">
-        <img src="assets/cat/test.jpg" alt="" class="category__img" />
-        <h3 class="category__title">Scarf Cap</h3>
+      <a href="shop.php?gender=child" class="category__item swiper-slide enhanced-category">
+        <div class="category__img-wrap-alt">
+          <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=facearea&w=256&q=80" alt="Kids" class="category__img" />
+        </div>
+        <h3 class="category__title">Kids</h3>
       </a>
-    </div>
-    <div class="swiper-button-prev">
-      <i class="fi fi-rs-angle-left"></i>
-    </div>
-    <div class="swiper-button-next">
-      <i class="fi fi-rs-angle-right"></i>
-    </div>
-  </div>
-</section>
-<section class="categories container section none" style="display: none;">
-  <h3 class="section__title">Popular Sunglasses</h3>
-  <div class="categories__container swiper">
-    <div class="swiper-wrapper">
-      <a href="shop.php?cat=tshirt" class="category__item swiper-slide">
-        <img src="assets/cat/test.jpg" alt="" class="category__img" />
-        <h3 class="category__title">T-Shirt</h3>
+      <a href="shop.php?category=sunglasses" class="category__item swiper-slide enhanced-category">
+        <div class="category__img-wrap-alt">
+          <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=facearea&w=256&q=80" alt="Sunglasses" class="category__img" />
+        </div>
+        <h3 class="category__title">Sunglasses</h3>
       </a>
-      <a href="shop.php?cat=bags" class="category__item swiper-slide">
-        <img src="assets/cat/test.jpg" alt="" class="category__img" />
-        <h3 class="category__title">Bags</h3>
+      <a href="shop.php?category=computer" class="category__item swiper-slide enhanced-category">
+        <div class="category__img-wrap-alt">
+          <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=facearea&w=256&q=80" alt="Computer Glasses" class="category__img" />
+        </div>
+        <h3 class="category__title">Computer Glasses</h3>
       </a>
-      <a href="shop.php?cat=sandal" class="category__item swiper-slide">
-        <img src="assets/cat/test.jpg" alt="" class="category__img" />
-        <h3 class="category__title">Sandal</h3>
+      <a href="shop.php?category=power" class="category__item swiper-slide enhanced-category">
+        <div class="category__img-wrap-alt">
+          <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=facearea&w=256&q=80" alt="Power Glasses" class="category__img" />
+        </div>
+        <h3 class="category__title">Power Glasses</h3>
       </a>
-      <a href="shop.php?cat=scarfcap" class="category__item swiper-slide">
-        <img src="assets/cat/test.jpg" alt="" class="category__img" />
-        <h3 class="category__title">Scarf Cap</h3>
+      <a href="shop.php?category=accessories" class="category__item swiper-slide enhanced-category">
+        <div class="category__img-wrap-alt">
+          <img src="https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=facearea&w=256&q=80" alt="Accessories" class="category__img" />
+        </div>
+        <h3 class="category__title">Accessories</h3>
       </a>
     </div>
     <div class="swiper-button-prev">
@@ -192,21 +201,29 @@
   <h3 class="section__title">Special Powers</h3>
   <div class="categories__container swiper">
     <div class="swiper-wrapper">
-      <a href="shop.php?cat=tshirt" class="category__item swiper-slide">
-        <img src="assets/cat/test.jpg" alt="" class="category__img" />
-        <h3 class="category__title">T-Shirt</h3>
+      <a href="shop.php?category=power" class="category__item swiper-slide enhanced-category">
+        <div class="category__img-wrap-alt">
+          <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=facearea&w=256&q=80" alt="Power Glasses" class="category__img" />
+        </div>
+        <h3 class="category__title">Power Glasses</h3>
       </a>
-      <a href="shop.php?cat=bags" class="category__item swiper-slide">
-        <img src="assets/cat/test.jpg" alt="" class="category__img" />
-        <h3 class="category__title">Bags</h3>
+      <a href="shop.php?category=computer" class="category__item swiper-slide enhanced-category">
+        <div class="category__img-wrap-alt">
+          <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=facearea&w=256&q=80" alt="Computer Glasses" class="category__img" />
+        </div>
+        <h3 class="category__title">Computer Glasses</h3>
       </a>
-      <a href="shop.php?cat=sandal" class="category__item swiper-slide">
-        <img src="assets/cat/test.jpg" alt="" class="category__img" />
-        <h3 class="category__title">Sandal</h3>
+      <a href="shop.php?category=sunglasses" class="category__item swiper-slide enhanced-category">
+        <div class="category__img-wrap-alt">
+          <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=facearea&w=256&q=80" alt="Sunglasses" class="category__img" />
+        </div>
+        <h3 class="category__title">Sunglasses</h3>
       </a>
-      <a href="shop.php?cat=scarfcap" class="category__item swiper-slide">
-        <img src="assets/cat/test.jpg" alt="" class="category__img" />
-        <h3 class="category__title">Scarf Cap</h3>
+      <a href="shop.php?category=eyeglasses" class="category__item swiper-slide enhanced-category">
+        <div class="category__img-wrap-alt">
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=256&q=80" alt="Eyeglasses" class="category__img" />
+        </div>
+        <h3 class="category__title">Eyeglasses</h3>
       </a>
     </div>
     <div class="swiper-button-prev">

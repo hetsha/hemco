@@ -7,14 +7,25 @@ $category = isset($_GET['category']) ? $_GET['category'] : '';
 $material = isset($_GET['material']) ? $_GET['material'] : '';
 $gender = isset($_GET['gender']) ? $_GET['gender'] : '';
 
-// Restrict categories to only the three required
-$category_options = ['eyeglasses', 'screen glass', 'contact lenses'];
+// Fetch all categories from frame_category table for filter
+$category_options = [];
+$cat_result = mysqli_query($conn, "SELECT name FROM frame_category ORDER BY name ASC");
+while ($cat_row = mysqli_fetch_assoc($cat_result)) {
+    $category_options[] = $cat_row['name'];
+}
 
-// Gender options (from DB, but only men, women, child)
+// Gender options (from DB, all unique values in frames table)
 $gender_options = [];
-$gender_result = mysqli_query($conn, "SELECT DISTINCT gender FROM frames WHERE gender IN ('men','women','child')");
+$gender_result = mysqli_query($conn, "SELECT DISTINCT gender FROM frames WHERE gender IS NOT NULL AND gender != ''");
 while ($gender_row = mysqli_fetch_assoc($gender_result)) {
     $gender_options[] = $gender_row['gender'];
+}
+
+// Material options (from DB, all unique values in frames table)
+$material_options = [];
+$material_result = mysqli_query($conn, "SELECT DISTINCT material FROM frames WHERE material IS NOT NULL AND material != ''");
+while ($material_row = mysqli_fetch_assoc($material_result)) {
+    $material_options[] = $material_row['material'];
 }
 
 // Pagination settings
@@ -159,8 +170,9 @@ $total_pages = ceil($total_products / $limit);
             <label for="material"><i class="fi fi-rs-diamond"></i> Material</label>
             <select id="material" name="material" class="filter__select">
                 <option value="">All Materials</option>
-                <option value="Metal" <?php if($material == 'Metal') echo 'selected'; ?>>Metal</option>
-                <option value="Plastic" <?php if($material == 'Plastic') echo 'selected'; ?>>Plastic</option>
+                <?php foreach($material_options as $mat): ?>
+                    <option value="<?php echo htmlspecialchars($mat); ?>" <?php if($material == $mat) echo 'selected'; ?>><?php echo ucfirst($mat); ?></option>
+                <?php endforeach; ?>
             </select>
         </div>
 
@@ -214,7 +226,7 @@ $total_pages = ceil($total_products / $limit);
                     <div class="product__price flex">
                         <span class="new__price">$<?php echo $row['price']; ?></span>
                     </div>
-                    <a href="cart.php?add=<?php echo $row['frame_id']; ?>" class="action__btn cart__btn" aria-label="Add To Cart">
+                    <a href="#" class="action__btn cart__btn add-to-cart-btn" data-frame-id="<?php echo $row['frame_id']; ?>" aria-label="Add To Cart">
                         <i class="fi fi-rs-shopping-bag-add"></i>
                     </a>
                 </div>
@@ -245,5 +257,32 @@ $total_pages = ceil($total_products / $limit);
 
 <?php include('include/news.php') ?>
 <?php include('include/footer.php') ?>
+<script>
+document.querySelectorAll('.add-to-cart-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var frameId = btn.getAttribute('data-frame-id');
+        var fd = new FormData();
+        fd.append('frame_id', frameId);
+        fetch('api/save_to_cart.php', {
+            method: 'POST',
+            body: fd
+        })
+        .then(response => response.json())
+        .then(function(res) {
+            if (res.success) {
+                window.location.href = 'cart.php';
+            } else if (res.message && res.message.toLowerCase().includes('user') && res.message.toLowerCase().includes('login')) {
+                window.location.href = 'login-register.php';
+            } else {
+                alert(res.message || 'Error adding to cart');
+            }
+        })
+        .catch(function() {
+            alert('Error adding to cart');
+        });
+    });
+});
+</script>
 </body>
 </html>

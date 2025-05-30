@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2025 at 12:28 PM
+-- Generation Time: May 30, 2025 at 02:46 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -40,9 +40,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`admin_id`, `name`, `email`, `password`, `created_at`) VALUES
-(1, 'Admin One', 'admin1@example.com', 'adminpass1', '2025-04-02 19:05:31'),
-(2, 'Admin Two', 'admin2@example.com', 'adminpass2', '2025-04-02 19:05:31'),
-(3, 'Het Shah', 'hetshah6315@gmail.com', '$2y$10$G2wTiU6tZYNuibK.6qCk3O07GtovnzjC/b9/wB26qN4d.rI36unXW', '2025-05-17 10:09:25');
+(1, 'Het Shah', 'hetshah6315@gmail.com', '$2y$10$M0DpMdWTV/sJL2FALhqN3uVwSKbYq.uEAvjckBZHlnGxeVbw6dQ8u', '2025-05-30 10:37:38');
 
 -- --------------------------------------------------------
 
@@ -60,10 +58,8 @@ CREATE TABLE `brand` (
 --
 
 INSERT INTO `brand` (`brand_id`, `name`) VALUES
-(3, 'Gucci'),
-(2, 'Oakley'),
-(1, 'Ray-Ban'),
-(4, 'sad');
+(1, 'gucchi'),
+(2, 'sadand.');
 
 -- --------------------------------------------------------
 
@@ -82,12 +78,7 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`cart_id`, `user_id`, `created_at`) VALUES
-(1, 4, '2025-04-02 19:05:51'),
-(2, 4, '2025-04-02 19:05:51'),
-(3, 5, '2025-04-02 19:06:43'),
-(4, 3, '2025-04-02 19:06:43'),
-(5, NULL, '2025-05-17 07:40:11'),
-(6, 4, '2025-05-17 07:55:25');
+(2, 1, '2025-05-30 12:42:37');
 
 -- --------------------------------------------------------
 
@@ -110,14 +101,8 @@ CREATE TABLE `cart_items` (
 --
 
 INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `frame_id`, `lens_id`, `prescription_id`, `quantity`, `price`) VALUES
-(4, 1, 1, 1, 1, 1, 200.00),
-(5, 1, 2, 3, 1, 1, 250.00),
-(7, 5, 1, 1, NULL, 1, 200.00),
-(8, 5, 1, 2, 3, 1, 225.00),
-(9, 5, 1, 2, 4, 1, 225.00),
-(10, 5, 1, 1, 5, 1, 200.00),
-(11, 5, 1, 1, NULL, 1, 200.00),
-(14, 1, 1, 1, NULL, 1, 200.00);
+(1, 2, 2, NULL, NULL, 1, 400.00),
+(2, 2, 2, 1, 1, 1, 600.00);
 
 -- --------------------------------------------------------
 
@@ -133,14 +118,6 @@ CREATE TABLE `employee` (
   `role` varchar(100) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `employee`
---
-
-INSERT INTO `employee` (`employee_id`, `name`, `email`, `password`, `role`, `created_at`) VALUES
-(1, 'John Doe', 'employee1@example.com', 'emp123', 'Manager', '2025-04-02 19:05:31'),
-(2, 'Jane Smith', 'employee2@example.com', 'emp456', 'Sales', '2025-04-02 19:05:31');
 
 -- --------------------------------------------------------
 
@@ -165,8 +142,8 @@ CREATE TABLE `frames` (
 --
 
 INSERT INTO `frames` (`frame_id`, `brand_id`, `gender`, `description`, `name`, `material`, `shape`, `price`, `tag`) VALUES
-(1, 1, 'men', 'Classic black frame', 'Ray-Ban Aviator', 'Metal', 'Round', 150.00, 'featured'),
-(2, 2, 'women', 'Lightweight design', 'Oakley Sports', 'Plastic', 'Rectangle', 120.00, 'popular');
+(1, 1, 'men', 'asdada', 'test', 'Plastic', 'Rectangle', 500.00, 'popular'),
+(2, 1, 'women', 'sadads', 'test', 'Metal', 'Rectangle', 400.00, 'featured');
 
 -- --------------------------------------------------------
 
@@ -184,9 +161,10 @@ CREATE TABLE `frame_category` (
 --
 
 INSERT INTO `frame_category` (`category_id`, `name`) VALUES
-(1, 'Men'),
-(2, 'Women'),
-(3, 'Child');
+(4, 'sunglasses'),
+(5, 'lens'),
+(6, 'frames'),
+(7, 'reading lens');
 
 -- --------------------------------------------------------
 
@@ -205,7 +183,8 @@ CREATE TABLE `frame_category_map` (
 --
 
 INSERT INTO `frame_category_map` (`map_id`, `frame_id`, `category_id`) VALUES
-(4, 1, 3);
+(1, 1, 4),
+(5, 2, 5);
 
 -- --------------------------------------------------------
 
@@ -224,14 +203,6 @@ CREATE TABLE `frame_details` (
   `uv_protection` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `frame_details`
---
-
-INSERT INTO `frame_details` (`detail_id`, `frame_id`, `size`, `color`, `weight`, `hinge_type`, `nose_pad`, `uv_protection`) VALUES
-(1, 1, 'Medium', 'Black', 30.00, 'Spring Hinge', 1, 1),
-(2, 2, 'Large', 'Blue', 28.50, 'Standard', 0, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -249,9 +220,8 @@ CREATE TABLE `frame_images` (
 --
 
 INSERT INTO `frame_images` (`image_id`, `frame_id`, `image_url`) VALUES
-(1, 1, 'images/img1.png'),
-(2, 1, 'images/img2.png'),
-(3, 2, 'images/img3.png');
+(1, 1, '../uploads/1748602176_68398d40c2b4f.png'),
+(2, 2, '../uploads/1748602198_68398d56b1027.jpg');
 
 -- --------------------------------------------------------
 
@@ -272,9 +242,9 @@ CREATE TABLE `lens` (
 --
 
 INSERT INTO `lens` (`lens_id`, `category_id`, `type`, `price`, `description`) VALUES
-(1, 1, 'Basic Single Vision', 50.00, 'Affordable single vision lenses'),
-(2, 2, 'Bifocal Standard', 75.00, 'Traditional bifocal lenses'),
-(3, 3, 'Premium Progressive', 120.00, 'High-quality progressive lenses');
+(1, 1, 'adasda', 200.00, 'asdasdasd'),
+(2, 2, 'asdasdasd', 50.00, 'sdfsdfs'),
+(3, 3, 'sdfsdfsfds', 500.00, 'sadsadadasd');
 
 -- --------------------------------------------------------
 
@@ -293,9 +263,9 @@ CREATE TABLE `lens_category` (
 --
 
 INSERT INTO `lens_category` (`category_id`, `type`, `description`) VALUES
-(1, 'Single Vision', 'Corrects for one field of vision'),
-(2, 'Bifocal', 'Lenses with two focal points'),
-(3, 'Progressive', 'Seamless transition between multiple focal points');
+(1, 'biofocal', 'asdadsasdhkajsjhdkajh'),
+(2, 'focus', 'sdkkjhjbflksjfb'),
+(3, 'testdsf', 'sxdfsdfsfsdfsdfs');
 
 -- --------------------------------------------------------
 
@@ -311,18 +281,6 @@ CREATE TABLE `orders` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `order_note` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`order_id`, `user_id`, `total_price`, `status`, `created_at`, `order_note`) VALUES
-(1, 1, 450.00, 'pending', '2025-04-02 19:05:59', NULL),
-(2, 2, 180.00, 'shipped', '2025-04-02 19:05:59', NULL),
-(3, 1, 450.00, 'pending', '2025-04-02 19:06:49', NULL),
-(4, 2, 180.00, 'shipped', '2025-04-02 19:06:49', NULL),
-(6, 4, 236.00, 'pending', '2025-05-17 09:16:25', 'asda'),
-(7, 6, 611.00, 'pending', '2025-05-17 09:49:37', 'asdas');
 
 -- --------------------------------------------------------
 
@@ -340,19 +298,6 @@ CREATE TABLE `order_items` (
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `order_items`
---
-
-INSERT INTO `order_items` (`order_item_id`, `order_id`, `frame_id`, `lens_id`, `prescription_id`, `quantity`, `price`) VALUES
-(4, 1, 1, 1, 1, 1, 200.00),
-(5, 1, 2, 3, 1, 1, 250.00),
-(6, 2, 2, 2, 2, 1, 180.00),
-(7, 6, 2, 2, 2, 1, 195.00),
-(8, 7, 1, 1, 6, 1, 200.00),
-(9, 7, 1, 1, 7, 1, 200.00),
-(10, 7, 2, 1, NULL, 1, 170.00);
-
 -- --------------------------------------------------------
 
 --
@@ -368,16 +313,6 @@ CREATE TABLE `payments` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `payments`
---
-
-INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `payment_method`, `status`, `created_at`) VALUES
-(1, 1, 450.00, 'credit_card', 'completed', '2025-04-02 19:07:04'),
-(2, 2, 180.00, 'paypal', 'completed', '2025-04-02 19:07:04'),
-(3, 6, 236.00, '', 'completed', '2025-05-17 09:16:25'),
-(4, 7, 611.00, '', 'completed', '2025-05-17 09:49:37');
-
 -- --------------------------------------------------------
 
 --
@@ -392,21 +327,16 @@ CREATE TABLE `prescription` (
   `left_eye_cyl` varchar(10) DEFAULT NULL,
   `right_eye_cyl` varchar(10) DEFAULT NULL,
   `axis` varchar(10) DEFAULT NULL,
-  `addition` varchar(10) DEFAULT NULL
+  `addition` varchar(10) DEFAULT NULL,
+  `prescription_image` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `prescription`
 --
 
-INSERT INTO `prescription` (`prescription_id`, `user_id`, `left_eye_sph`, `right_eye_sph`, `left_eye_cyl`, `right_eye_cyl`, `axis`, `addition`) VALUES
-(1, 1, '-2.50', '-2.75', '-1.00', '-1.25', '90', '2.00'),
-(2, 2, '-1.75', '-2.00', '-0.75', '-1.00', '85', '1.50'),
-(3, NULL, '', '', '', '', '', ''),
-(4, 3, '', '', '', '', '', ''),
-(5, 3, '-0.50', '+0.50', '-0.25', '-0.75', '90', '+1.00'),
-(6, 6, '+1.50', '+1.50', '-0.25', '-0.50', '45', '+1.50'),
-(7, 6, '+1.00', '-0.50', '-0.50', '-0.75', '45', '+1.25');
+INSERT INTO `prescription` (`prescription_id`, `user_id`, `left_eye_sph`, `right_eye_sph`, `left_eye_cyl`, `right_eye_cyl`, `axis`, `addition`, `prescription_image`) VALUES
+(1, 1, '-1.50', '-0.50', '0.00', '-0.25', '180', '+1.75', NULL);
 
 -- --------------------------------------------------------
 
@@ -429,16 +359,6 @@ CREATE TABLE `shipping` (
   `pincode` varchar(10) DEFAULT NULL,
   `country` varchar(100) DEFAULT 'India'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `shipping`
---
-
-INSERT INTO `shipping` (`shipping_id`, `order_id`, `tracking_number`, `shipping_address`, `status`, `created_at`, `name`, `phone`, `email`, `city`, `state`, `pincode`, `country`) VALUES
-(1, 1, 'TRACK12345', '123 Main St, NY', 'in_transit', '2025-04-02 19:07:10', NULL, NULL, NULL, NULL, NULL, NULL, 'India'),
-(2, 2, 'TRACK67890', '456 Elm St, CA', 'delivered', '2025-04-02 19:07:10', NULL, NULL, NULL, NULL, NULL, NULL, 'India'),
-(3, 6, NULL, 'A 403 prakruti appt suvidha sanjivani road, Ahmedabad, 380007, India', 'pending', '2025-05-17 09:16:25', 'Het Shah', '09427961426', 'hetshah6315@gmail.com', NULL, NULL, NULL, 'India'),
-(4, 7, NULL, 'A 403 prakruti appt suvidha sanjivani road, Ahmedabad, 380007, India', 'pending', '2025-05-17 09:49:37', 'Het Shah', '09427961426', 'hetshah6315@gmail.com', NULL, NULL, NULL, 'India');
 
 -- --------------------------------------------------------
 
@@ -465,12 +385,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `name`, `email`, `password`, `phone`, `address`, `zip_code`, `created_at`, `city`, `state`, `country`) VALUES
-(1, 'Alice Brown', 'alice@example.com', 'alicepass', '9876543210', '123 Main St, NY', '10001', '2025-04-02 19:05:31', NULL, NULL, 'India'),
-(2, 'Bob White', 'bob@example.com', 'bobpass', '8765432109', '456 Elm St, CA', '90001', '2025-04-02 19:05:31', NULL, NULL, 'India'),
-(3, 'het shah', 'hetshah6312@gmail.com', '', '', '', '', '2025-04-28 05:51:11', NULL, NULL, 'India'),
-(4, 'het shah', 'hetshah6315@gmail.com', '', '', '', '', '2025-04-28 18:18:19', NULL, NULL, 'India'),
-(5, 'het', 'hetshah6313@gmail.com', '$2y$10$4uw.Lp2IvFTH6xCcMHDN6uqjiZq34XmcV.vFrPDRlRRv4cX6tNX4O', '', '', '', '2025-04-28 19:43:37', NULL, NULL, 'India'),
-(6, 'het lj', 'hetlj6315@gmail.com', '', '', '', '', '2025-05-17 09:48:16', NULL, NULL, 'India');
+(1, 'het shah', 'hetshah6315@gmail.com', '', '', '', '', '2025-05-30 12:26:34', NULL, NULL, 'India');
 
 -- --------------------------------------------------------
 
@@ -637,31 +552,31 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `brand`
 --
 ALTER TABLE `brand`
-  MODIFY `brand_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `brand_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `frames`
@@ -673,25 +588,25 @@ ALTER TABLE `frames`
 -- AUTO_INCREMENT for table `frame_category`
 --
 ALTER TABLE `frame_category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `frame_category_map`
 --
 ALTER TABLE `frame_category_map`
-  MODIFY `map_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `map_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `frame_details`
 --
 ALTER TABLE `frame_details`
-  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `frame_images`
 --
 ALTER TABLE `frame_images`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `lens`
@@ -709,37 +624,37 @@ ALTER TABLE `lens_category`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `prescription`
 --
 ALTER TABLE `prescription`
-  MODIFY `prescription_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `prescription_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `shipping`
 --
 ALTER TABLE `shipping`
-  MODIFY `shipping_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `shipping_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `wishlist`

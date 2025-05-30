@@ -8,8 +8,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Accept both JSON and multipart/form-data
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['prescription_image'])) {
-    // Multipart/form-data (with file upload)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_FILES['prescription_image']) || isset($_POST['frame_id']))) {
+    // Multipart/form-data (with file upload) or normal POST
     $data = $_POST;
     // Parse prescription JSON if present
     if (isset($data['prescription'])) {
@@ -20,8 +20,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['prescription_image']
     $data = json_decode(file_get_contents('php://input'), true);
 }
 
-if (!isset($data['frame_id'])) {
-    echo json_encode(['success' => false, 'message' => 'Missing required parameters']);
+if (!isset($data['frame_id']) || empty($data['frame_id'])) {
+    echo json_encode(['success' => false, 'message' => 'Missing required parameters: frame_id']);
+    exit;
+}
+
+// Check user login
+$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+if (!$user_id) {
+    echo json_encode(['success' => false, 'message' => 'User not logged in. Please login to add to cart.']);
     exit;
 }
 
@@ -33,7 +40,6 @@ try {
     $conn->begin_transaction();
 
     // Get or create cart (ALWAYS use only one cart per user)
-    $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
     // Find existing cart for user
     $cart_id = null;
     $cart_query = $conn->prepare("SELECT cart_id FROM cart WHERE user_id = ? LIMIT 1");
