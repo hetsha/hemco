@@ -17,6 +17,43 @@ function loadFrameCategories($conn) {
 }
 
 $frame_categories = loadFrameCategories($conn);
+
+// Handle Add Category
+if (isset($_POST['action']) && $_POST['action'] === 'add_category') {
+    $name = trim($_POST['name'] ?? '');
+    if ($name !== '') {
+        $stmt = $conn->prepare("INSERT INTO frame_category (name) VALUES (?)");
+        $stmt->bind_param("s", $name);
+        $stmt->execute();
+    }
+    header('Location: category.php');
+    exit;
+}
+
+// Handle Edit Category
+if (isset($_POST['action']) && $_POST['action'] === 'edit_category') {
+    $id = intval($_POST['id'] ?? 0);
+    $name = trim($_POST['name'] ?? '');
+    if ($id > 0 && $name !== '') {
+        $stmt = $conn->prepare("UPDATE frame_category SET name = ? WHERE category_id = ?");
+        $stmt->bind_param("si", $name, $id);
+        $stmt->execute();
+    }
+    header('Location: category.php');
+    exit;
+}
+
+// Handle Delete Category
+if (isset($_POST['action']) && $_POST['action'] === 'delete_category') {
+    $id = intval($_POST['id'] ?? 0);
+    if ($id > 0) {
+        $stmt = $conn->prepare("DELETE FROM frame_category WHERE category_id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+    }
+    header('Location: category.php');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -68,7 +105,10 @@ $frame_categories = loadFrameCategories($conn);
                     <td class="p-2"><?php echo $category['name']; ?></td>
                     <td class="p-2 space-x-2">
                       <button onclick="openEditModal(<?php echo $category['category_id']; ?>, '<?php echo htmlspecialchars($category['name'], ENT_QUOTES); ?>')" class="text-blue-600 hover:underline">Edit</button>
-                      <a href="delete_category.php?id=<?php echo $category['category_id']; ?>" class="text-red-600 hover:underline">Delete</a>
+                      <form method="POST" action="category.php" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                        <input type="hidden" name="id" value="<?php echo $category['category_id']; ?>">
+                        <button type="submit" name="action" value="delete_category" class="text-red-600 hover:underline bg-transparent border-0 p-0 m-0 cursor-pointer">Delete</button>
+                      </form>
                     </td>
                   </tr>
                 <?php endforeach; ?>

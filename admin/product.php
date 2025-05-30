@@ -43,10 +43,9 @@ $gender   = $_POST['gender'] ?? '';
 $tag      = $_POST['tag'] ?? '';
 $brand_id = $_POST['brand_id'] ?? null;
 
-// Get category ID (force only allowed categories)
-$allowed_categories = ['eyeglasses', 'screen glass', 'contact lenses'];
+// Get category ID (allow any category from DB)
 $category_id = null;
-if ($category && in_array($category, $allowed_categories)) {
+if ($category) {
   $stmt = $conn->prepare("SELECT category_id FROM frame_category WHERE name = ?");
   $stmt->bind_param("s", $category);
   $stmt->execute();
@@ -119,16 +118,46 @@ if ($action == 'edit' && $id) {
   }
   // Update frame
   $stmt = $conn->prepare("UPDATE frames SET name = ?, description = ?, price = ?, material = ?, shape = ?, gender = ?, tag = ?, brand_id = ? WHERE frame_id = ?");
-  $stmt->bind_param("ssdssssi", $name, $description, $price, $material, $shape, $gender, $tag, $brand_id, $id);
-  $stmt->execute();
+  if (!$stmt) {
+    echo "Error preparing UPDATE frames: " . $conn->error;
+    exit;
+  }
+  if (!$stmt->bind_param("ssdssssi", $name, $description, $price, $material, $shape, $gender, $tag, $brand_id, $id)) {
+    echo "Error binding UPDATE frames: " . $stmt->error;
+    exit;
+  }
+  if (!$stmt->execute()) {
+    echo "Error executing UPDATE frames: " . $stmt->error;
+    exit;
+  }
   // Update category map
   if ($category_id) {
     $del = $conn->prepare("DELETE FROM frame_category_map WHERE frame_id = ?");
-    $del->bind_param("i", $id);
-    $del->execute();
+    if (!$del) {
+      echo "Error preparing DELETE frame_category_map: " . $conn->error;
+      exit;
+    }
+    if (!$del->bind_param("i", $id)) {
+      echo "Error binding DELETE frame_category_map: " . $del->error;
+      exit;
+    }
+    if (!$del->execute()) {
+      echo "Error executing DELETE frame_category_map: " . $del->error;
+      exit;
+    }
     $stmt2 = $conn->prepare("INSERT INTO frame_category_map (frame_id, category_id) VALUES (?, ?)");
-    $stmt2->bind_param("ii", $id, $category_id);
-    $stmt2->execute();
+    if (!$stmt2) {
+      echo "Error preparing INSERT frame_category_map: " . $conn->error;
+      exit;
+    }
+    if (!$stmt2->bind_param("ii", $id, $category_id)) {
+      echo "Error binding INSERT frame_category_map: " . $stmt2->error;
+      exit;
+    }
+    if (!$stmt2->execute()) {
+      echo "Error executing INSERT frame_category_map: " . $stmt2->error;
+      exit;
+    }
   }
   echo "Frame updated";
   exit;
@@ -246,7 +275,7 @@ if ($action == 'get_product' && $id) {
               </thead>
               <tbody>
                 <?php
-                $sql = "SELECT f.frame_id, f.name, f.description, f.price, f.material, f.shape, f.gender, f.tag, f.brand_id, fc.name AS category, fi.image_url
+                $sql = "SELECT f.frame_id, f.name, f.description, f.price, f.material, f.shape, f.gender, f.tag, f.brand_id, GROUP_CONCAT(fc.name SEPARATOR ', ') AS category, fi.image_url
                         FROM frames f
                         LEFT JOIN frame_category_map fcm ON f.frame_id = fcm.frame_id
                         LEFT JOIN frame_category fc ON fcm.category_id = fc.category_id
@@ -290,9 +319,12 @@ if ($action == 'get_product' && $id) {
           <label>Category</label>
           <select name="category" id="productCategory" required class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700">
             <option value="">Select Category</option>
-            <option value="eyeglasses">Eyeglasses</option>
-            <option value="screen glass">Screen Glass</option>
-            <option value="contact lenses">Contact Lenses</option>
+            <?php
+              $categories = getCategories($conn);
+              foreach ($categories as $cat) {
+                echo "<option value=\"$cat\">$cat</option>";
+              }
+            ?>
           </select>
         </div>
 
@@ -370,9 +402,12 @@ if ($action == 'get_product' && $id) {
           <label>Category</label>
           <select name="category" id="editProductCategory" required class="w-full p-2 rounded bg-blue-100 dark:bg-gray-700">
             <option value="">Select Category</option>
-            <option value="eyeglasses">Eyeglasses</option>
-            <option value="screen glass">Screen Glass</option>
-            <option value="contact lenses">Contact Lenses</option>
+            <?php
+              $categories = getCategories($conn);
+              foreach ($categories as $cat) {
+                echo "<option value=\"$cat\" >$cat</option>";
+              }
+            ?>
           </select>
         </div>
 
@@ -525,7 +560,14 @@ if ($action == 'get_product' && $id) {
     function openEditModal(product) {
       document.getElementById('editProductId').value = product.frame_id;
       document.getElementById('editProductName').value = product.name;
-      document.getElementById('editProductCategory').value = product.category;
+      // Set the selected category
+      const catSelect = document.getElementById('editProductCategory');
+      for (let i = 0; i < catSelect.options.length; i++) {
+        if (catSelect.options[i].value === product.category) {
+          catSelect.selectedIndex = i;
+          break;
+        }
+      }
       document.getElementById('editProductDescription').value = product.description || '';
       document.getElementById('editProductPrice').value = product.price;
       document.getElementById('editProductMaterial').value = product.material;
