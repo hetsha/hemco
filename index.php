@@ -16,13 +16,33 @@
 
       <!--=============== DEALS ===============-->
 
-      <?php include('include/deals.php') ?>
+      <?php //include('include/deals.php') ?>
 
       <!--=============== NEW ARRIVALS ===============-->
       <?php include('include/product.php') ?>
 
       <!--=============== SHOWCASE ===============-->
-      <?php include('include/show.php') ?>
+      <?php //include('include/show.php') ?>
+
+      <!--=============== ABOUT / STORY SECTION ===============-->
+      <section class="about-story-section container section" style="margin-top: 3.5rem; margin-bottom: 3.5rem;">
+        <div class="about-story-wrapper" style="display: flex; flex-wrap: wrap; align-items: center; gap: 2.5rem;">
+          <div class="about-story-image" style="flex: 1 1 320px; min-width: 280px; max-width: 480px;">
+            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=600&q=80" alt="Our Eyewear Story" style="width: 100%; border-radius: 1.5rem; box-shadow: 0 8px 32px #0002; object-fit: cover;">
+          </div>
+          <div class="about-story-content" style="flex: 2 1 400px; min-width: 280px;">
+            <h2 style="font-size: 2.2rem; font-weight: 800; color: #1e293b; margin-bottom: 1.1rem;">Our Story</h2>
+            <p style="font-size: 1.18rem; color: #334155; margin-bottom: 1.2rem; line-height: 1.7;">
+              Founded with a passion for vision and style, <b>Hemco Optical</b> has been helping people see the world more clearly and confidently for over a decade. Our journey began with a simple belief: everyone deserves high-quality, fashionable eyewear at a fair price.<br><br>
+              From classic frames to the latest trends, we handpick every collection to ensure comfort, durability, and a look you'll love. Our team is dedicated to providing expert advice, personalized service, and a seamless shopping experience—whether you're buying your first pair or adding to your collection.
+            </p>
+            <p style="font-size: 1.08rem; color: #64748b; margin-bottom: 0.7rem;">
+              We believe eyewear is more than just vision correction—it's a statement of who you are. Thank you for making us part of your story.
+            </p>
+            <a href="shop.php" class="banner-btn" style="margin-top: 1.2rem;">Explore Our Collection</a>
+          </div>
+        </div>
+      </section>
 
       <!--=============== NEWSLETTER ===============-->
       <?php include('include/news.php') ?>
@@ -33,6 +53,7 @@
     <?php include('include/footer.php') ?>
 
     <!-- Offer Popup Modal -->
+    <!--
     <style>
       #offerModal {
         animation: fadeIn 0.5s;
@@ -201,7 +222,7 @@
         <span class="sparkle" style="top:18px; left:30px; animation-delay:0s;"></span>
         <span class="sparkle" style="top:60px; right:40px; animation-delay:0.5s;"></span>
         <span class="sparkle" style="bottom:30px; left:60px; animation-delay:1s;"></span>
-        <span class="sparkle" style="bottom:40px; right:30px; animation-delay:1.3s;"></span>
+        <span class="sparkle" style="bottom:40px; right:30px; animation-delay=1.3s;"></span>
       </div>
     </div>
     <script>

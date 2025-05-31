@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 30, 2025 at 02:46 PM
+-- Generation Time: May 31, 2025 at 08:07 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -78,7 +78,7 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`cart_id`, `user_id`, `created_at`) VALUES
-(2, 1, '2025-05-30 12:42:37');
+(3, 1, '2025-05-30 15:50:25');
 
 -- --------------------------------------------------------
 
@@ -101,8 +101,7 @@ CREATE TABLE `cart_items` (
 --
 
 INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `frame_id`, `lens_id`, `prescription_id`, `quantity`, `price`) VALUES
-(1, 2, 2, NULL, NULL, 1, 400.00),
-(2, 2, 2, 1, 1, 1, 600.00);
+(4, 3, 1, 1, 3, 1, 700.00);
 
 -- --------------------------------------------------------
 
@@ -244,7 +243,8 @@ CREATE TABLE `lens` (
 INSERT INTO `lens` (`lens_id`, `category_id`, `type`, `price`, `description`) VALUES
 (1, 1, 'adasda', 200.00, 'asdasdasd'),
 (2, 2, 'asdasdasd', 50.00, 'sdfsdfs'),
-(3, 3, 'sdfsdfsfds', 500.00, 'sadsadadasd');
+(3, 3, 'sdfsdfsfds', 500.00, 'sadsadadasd'),
+(4, 1, 'proget50', 200.00, 'dfgf');
 
 -- --------------------------------------------------------
 
@@ -282,6 +282,13 @@ CREATE TABLE `orders` (
   `order_note` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `user_id`, `total_price`, `status`, `created_at`, `order_note`) VALUES
+(1, 1, 1762.30, 'pending', '2025-05-30 15:45:28', '');
+
 -- --------------------------------------------------------
 
 --
@@ -298,6 +305,15 @@ CREATE TABLE `order_items` (
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`order_item_id`, `order_id`, `frame_id`, `lens_id`, `prescription_id`, `quantity`, `price`) VALUES
+(1, 1, 2, NULL, NULL, 1, 400.00),
+(2, 1, 2, 1, 1, 1, 600.00),
+(3, 1, 1, 1, 2, 1, 700.00);
+
 -- --------------------------------------------------------
 
 --
@@ -312,6 +328,13 @@ CREATE TABLE `payments` (
   `status` enum('pending','completed','failed') NOT NULL DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `payment_method`, `status`, `created_at`) VALUES
+(1, 1, 1762.30, '', 'completed', '2025-05-30 15:45:28');
 
 -- --------------------------------------------------------
 
@@ -336,7 +359,9 @@ CREATE TABLE `prescription` (
 --
 
 INSERT INTO `prescription` (`prescription_id`, `user_id`, `left_eye_sph`, `right_eye_sph`, `left_eye_cyl`, `right_eye_cyl`, `axis`, `addition`, `prescription_image`) VALUES
-(1, 1, '-1.50', '-0.50', '0.00', '-0.25', '180', '+1.75', NULL);
+(1, 1, '-1.50', '-0.50', '0.00', '-0.25', '180', '+1.75', NULL),
+(2, 1, '+1.50', '+0.50', '0.00', '-0.75', '90', '+1.25', NULL),
+(3, 1, '', '', '', '', '', '', 'uploads/1748620225_3440b11420.png');
 
 -- --------------------------------------------------------
 
@@ -359,6 +384,13 @@ CREATE TABLE `shipping` (
   `pincode` varchar(10) DEFAULT NULL,
   `country` varchar(100) DEFAULT 'India'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `shipping`
+--
+
+INSERT INTO `shipping` (`shipping_id`, `order_id`, `tracking_number`, `shipping_address`, `status`, `created_at`, `name`, `phone`, `email`, `city`, `state`, `pincode`, `country`) VALUES
+(1, 1, NULL, 'A 403 prakruti appt suvidha sanjivani road, Ahmedabad, 380007, India', 'pending', '2025-05-30 15:45:28', 'Het Shah', '9427961426', 'hetshah6315@gmail.com', NULL, NULL, NULL, 'India');
 
 -- --------------------------------------------------------
 
@@ -385,7 +417,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `name`, `email`, `password`, `phone`, `address`, `zip_code`, `created_at`, `city`, `state`, `country`) VALUES
-(1, 'het shah', 'hetshah6315@gmail.com', '', '', '', '', '2025-05-30 12:26:34', NULL, NULL, 'India');
+(1, 'het shah', 'hetshah6315@gmail.com', '', '', '', '', '2025-05-30 12:26:34', NULL, NULL, 'India'),
+(2, 'het shah', 'hetshah6312@gmail.com', '', '', '', '', '2025-05-31 09:19:52', NULL, NULL, 'India');
 
 -- --------------------------------------------------------
 
@@ -399,6 +432,14 @@ CREATE TABLE `wishlist` (
   `product_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `wishlist`
+--
+
+INSERT INTO `wishlist` (`wishlist_id`, `user_id`, `product_id`, `created_at`) VALUES
+(1, 1, 1, '2025-05-31 18:03:14'),
+(3, 1, 2, '2025-05-31 18:06:05');
 
 --
 -- Indexes for dumped tables
@@ -564,13 +605,13 @@ ALTER TABLE `brand`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `employee`
@@ -612,7 +653,7 @@ ALTER TABLE `frame_images`
 -- AUTO_INCREMENT for table `lens`
 --
 ALTER TABLE `lens`
-  MODIFY `lens_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `lens_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `lens_category`
@@ -624,43 +665,43 @@ ALTER TABLE `lens_category`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `prescription`
 --
 ALTER TABLE `prescription`
-  MODIFY `prescription_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `prescription_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `shipping`
 --
 ALTER TABLE `shipping`
-  MODIFY `shipping_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `shipping_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables

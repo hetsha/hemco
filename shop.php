@@ -205,7 +205,7 @@ $total_pages = ceil($total_products / $limit);
                         <a href="details.php?frame_id=<?php echo $row['frame_id']; ?>" class="action__btn" aria-label="Quick View">
                             <i class="fi fi-rs-eye"></i>
                         </a>
-                        <a href="#" class="action__btn" aria-label="Add to Wishlist">
+                        <a href="#" class="action__btn wishlist__btn" data-frame-id="<?php echo $row['frame_id']; ?>" aria-label="Add to Wishlist">
                             <i class="fi fi-rs-heart"></i>
                         </a>
                     </div>
@@ -280,6 +280,60 @@ document.querySelectorAll('.add-to-cart-btn').forEach(function(btn) {
         })
         .catch(function() {
             alert('Error adding to cart');
+        });
+    });
+});
+
+// Add to Wishlist AJAX
+// Popup message function
+function showPopupMessage(message, color = '#ff6f61') {
+    let popup = document.createElement('div');
+    popup.textContent = message;
+    popup.style.position = 'fixed';
+    popup.style.top = '30px';
+    popup.style.left = '50%';
+    popup.style.transform = 'translateX(-50%)';
+    popup.style.background = color;
+    popup.style.color = '#fff';
+    popup.style.padding = '14px 32px';
+    popup.style.borderRadius = '8px';
+    popup.style.boxShadow = '0 2px 12px rgba(0,0,0,0.12)';
+    popup.style.fontSize = '1.1rem';
+    popup.style.zIndex = 9999;
+    popup.style.opacity = '0.95';
+    document.body.appendChild(popup);
+    setTimeout(() => {
+        popup.style.transition = 'opacity 0.5s';
+        popup.style.opacity = '0';
+        setTimeout(() => popup.remove(), 500);
+    }, 1800);
+}
+
+document.querySelectorAll('.wishlist__btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var frameId = btn.getAttribute('data-frame-id');
+        var fd = new FormData();
+        fd.append('frame_id', frameId);
+        fetch('add_to_wishlist.php', {
+            method: 'POST',
+            body: fd
+        })
+        .then(response => response.json())
+        .then(function(res) {
+            if (res.success) {
+                btn.querySelector('i').classList.add('wishlist-added');
+                btn.querySelector('i').style.color = '#ff6f61';
+                btn.title = 'Added to Wishlist';
+                showPopupMessage('Added to wishlist!');
+            } else if (res.message && res.message.toLowerCase().includes('login')) {
+                window.location.href = 'login-register.php';
+            } else {
+                showPopupMessage(res.message || 'Error adding to wishlist', '#e74c3c');
+            }
+        })
+        .catch(function() {
+            showPopupMessage('Error adding to wishlist', '#e74c3c');
         });
     });
 });

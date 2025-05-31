@@ -75,9 +75,9 @@ if ($count_result) {
         <li class="nav__item">
           <a href="accounts.php" class="nav__link">My Account</a>
         </li>
-        <li class="nav__item">
+        <!-- <li class="nav__item">
           <a href="compare.php" class="nav__link">Compare</a>
-        </li>
+        </li> -->
         <li class="nav__item">
           <a href="contact.php" class="nav__link">Contact</a>
         </li>

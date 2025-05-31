@@ -1,45 +1,18 @@
 <?php
-// Fetch frames with a single main image (first one), along with details
-// Fetch frames with only one (the first) image using subquery
+// Fetch all frames with their first and second images, no category condition
 $sql = "
   SELECT f.frame_id, f.name, f.price, f.description,
          fd.size, fd.color, fd.weight,
-         first_image.image_url AS first_image,
-         second_image.image_url AS second_image,
+         (SELECT image_url FROM frame_images WHERE frame_id = f.frame_id ORDER BY image_id ASC LIMIT 1) AS first_image,
+         (SELECT image_url FROM frame_images WHERE frame_id = f.frame_id ORDER BY image_id ASC LIMIT 1 OFFSET 1) AS second_image,
          fc.name AS gender
   FROM frames f
   LEFT JOIN frame_details fd ON f.frame_id = fd.frame_id
-  LEFT JOIN (
-    SELECT fi1.frame_id, fi1.image_url
-    FROM frame_images fi1
-    WHERE fi1.image_id = (
-      SELECT MIN(image_id)
-      FROM frame_images
-      WHERE frame_id = fi1.frame_id
-    )
-  ) AS first_image ON f.frame_id = first_image.frame_id
-  LEFT JOIN (
-    SELECT fi2.frame_id, fi2.image_url
-    FROM frame_images fi2
-    WHERE fi2.image_id = (
-      SELECT MIN(image_id)
-      FROM frame_images
-      WHERE frame_id = fi2.frame_id AND image_id NOT IN (
-        SELECT MIN(image_id)
-        FROM frame_images
-        GROUP BY frame_id
-      )
-    )
-  ) AS second_image ON f.frame_id = second_image.frame_id
   LEFT JOIN frame_category_map fcm ON f.frame_id = fcm.frame_id
   LEFT JOIN frame_category fc ON fcm.category_id = fc.category_id
-  WHERE fc.name IN ('Men', 'Women', 'Child')
-  GROUP BY f.frame_id
   ORDER BY f.frame_id DESC
-  LIMIT 8
+  LIMIT 10
 ";
-
-
 
 $result = $conn->query($sql);
 
@@ -67,11 +40,8 @@ $result = $conn->query($sql);
               <a href="#" class="action__btn" aria-label="Add to Wishlist">
                 <i class="fi fi-rs-heart"></i>
               </a>
-              <a href="#" class="action__btn" aria-label="Compare">
-                <i class="fi fi-rs-shuffle"></i>
-              </a>
             </div>
-            <div class="product__badge light-green">Hot</div>
+            <div class="product__badge light-green">New</div>
           </div>
           <div class="product__content">
             <span class="product__category"><?= ucfirst($row['gender']) ?> Glasses</span>

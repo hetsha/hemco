@@ -64,9 +64,7 @@ $new      = getFramesByTag($conn, 'new');
                 <a href="#" class="action__btn" aria-label="Add to Wishlist">
                   <i class="fi fi-rs-heart"></i>
                 </a>
-                <a href="#" class="action__btn" aria-label="Compare">
-                  <i class="fi fi-rs-shuffle"></i>
-                </a>
+                
               </div>
               <div class="product__badge light-pink">Hot</div>
             </div>
@@ -154,9 +152,7 @@ $new      = getFramesByTag($conn, 'new');
                 <a href="#" class="action__btn" aria-label="Add to Wishlist">
                   <i class="fi fi-rs-heart"></i>
                 </a>
-                <a href="#" class="action__btn" aria-label="Compare">
-                  <i class="fi fi-rs-shuffle"></i>
-                </a>
+
               </div>
               <div class="product__badge light-pink">Hot</div>
             </div>
